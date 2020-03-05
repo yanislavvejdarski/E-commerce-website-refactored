@@ -1,0 +1,68 @@
+﻿
+Emag
+Action Map
+
+
+
+
+
+
+Target:Users 
+
+-login
+-register
+-edit
+-delete
+-logout
+
+
+
+
+Target address:
+
+-get
+-add 
+-delete 
+-change 
+
+
+
+
+Target Products: 
+(As Admin)
+-getAll
+-add
+-delete
+-change
+
+(As User)
+-getByCategories
+-getBySub_categories
+-getByType
+-getById
+-getFavorites
+-like
+-unlike
+
+-getAllCommentsForProduct
+-rate+writeComment
+-getmyRated
+-getReviewById
+-editReview
+
+-addToBasket
+-removeFromBasket
+
+
+
+
+Target Home:
+-search
+
+
+
+
+
+Target Orders:
+-add
+-get
