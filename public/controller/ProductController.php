@@ -49,10 +49,11 @@ class ProductController
                      include_once "view/showProductsFromType.php";
 
                      foreach ($products as $product) {
+
                          $productDAO = new ProductDAO();
                          $productList = $productDAO->findProduct($product["id"]);
 
-                         $productList->showByType();
+
                      }
 
                  $rrp=99;

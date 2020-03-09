@@ -36,7 +36,7 @@ $types=$typeDAO->getTypes();
                         </ul>
                     </li>
                     <?php
-                }?>
+                }  ?>
 
             </ul>
         </li>

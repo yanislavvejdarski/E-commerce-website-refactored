@@ -45,7 +45,9 @@ if(!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_RE
 <body>
 
 <?php
+ob_start();
 include_once "view/header.php";
+
 ?>
 <?php
 }
@@ -67,7 +69,7 @@ if (class_exists($controllerClassName)){
     echo "error: controller not found $controllerClassName\n";
     die();
 }
-
+ob_end_clean();
 ?>
 
 

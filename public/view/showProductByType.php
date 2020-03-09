@@ -2,7 +2,7 @@
 namespace view;
 
 
-if(isset($filters)  && isset($products)&& isset($totalPages) && isset($page)) {
+if(isset($filters)  && isset($products)) {
 
 
     ?>
