@@ -43,7 +43,7 @@ namespace view;
                 </tr>
                 <tr>
                     <td>
-                        <form action="index.php?target=rating&action=editRatedPage" method="post">
+                        <form action="?target=rating&action=editRatedPage" method="post">
                             <input type="submit" name="editRating" value="Edit">
                             <input type="hidden" name="rating_id" value="<?= $myRating->rating_id ?>">
                             <input type="hidden" name="image_url" value="<?= $myRating->image_url ?>">

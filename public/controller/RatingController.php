@@ -29,7 +29,7 @@ class ratingController
 
                     $ratingDAO=new RatingDAO();
                     $ratingDAO->addRating($_SESSION["logged_user_id"], $_POST["product_id"], $_POST["rating"], $_POST["comment"]);
-                    header("Location: index.php?target=product&action=show&prdId=".$_POST["product_id"]);
+                    header("Location: ?target=product&action=show&prdId=".$_POST["product_id"]);
 
                 }else{
                     throw new BadRequestException("$msg");
@@ -63,7 +63,7 @@ class ratingController
             }elseif($msg == "") {
                $ratingDAO=new RatingDAO();
                 $ratingDAO->editRating($_POST["rating_id"], $_POST["rating"], $_POST["comment"]);
-                header("Location: index.php?target=rating&action=myRated");
+                header("Location: ?target=rating&action=myRated");
 
             }
         }else{

@@ -16,7 +16,9 @@ class FavouriteController{
         $validateSession->validateForLoggedUser();
         $userController=new UserController();
         $favouriteDAO=new FavouriteDAO();
-        $favourites = $favouriteDAO->showFavourites($_SESSION["logged_user_id"]);
+        if (!empty($_SESSION["logged_user_id"])) {
+            $favourites = $favouriteDAO->showFavourites($_SESSION["logged_user_id"]);
+        }
         if(!isset($_SESSION["logged_user_id"])){
             include_once "view/login.php";
         }else{
@@ -43,7 +45,7 @@ class FavouriteController{
                     $cheker = $productDAO->findProduct($_GET["id"]);
                     if ($cheker->id != ""){
                         $favoriteDAO->addToFavourites($_GET["id"],$_SESSION["logged_user_id"]);
-                        header("Location: index.php?target=product&action=show&prdId=$prdId");
+                        header("Location: ?target=product&action=show&prdId=$prdId");
                     }
                     else{
                         $this->show();
@@ -87,12 +89,9 @@ class FavouriteController{
         if (isset($_POST["like"])){
             $prdId = $_POST["like"];
             if (isset($_GET["id"]) && is_numeric($_GET["id"])){
-
-
                 $favoriteDAO=new FavouriteDAO();
                 $favoriteDAO->deleteFromFavourites($_GET["id"] , $_SESSION["logged_user_id"]);
-                header("Location:index.php?target=product&action=show&prdId=".$prdId);
-
+                header("Location: ?target=product&action=show&prdId=".$prdId);
             }else{
                 $this->show();
                 throw new NotFoundException("Can't add Invalid Product to Favourites");

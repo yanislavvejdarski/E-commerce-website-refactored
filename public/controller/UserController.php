@@ -1,5 +1,4 @@
 <?php
-
 namespace controller;
 use exception\BadRequestException;
 use exception\NotAuthorizedException;
@@ -46,7 +45,7 @@ class UserController{
 
 
             if($msg==""){
-                header("Location:index.php?target=product&action=main");
+                header("Location:?target=product&action=main");
             }else{
                 include_once "view/login.php";
                 throw new BadRequestException ("$msg");
@@ -111,7 +110,7 @@ class UserController{
                 $_SESSION["logged_user_role"] = $newUser->getRole();
                 $_SESSION["logged_user_first_name"] = $newUser->getFirstName();
                 $_SESSION["logged_user_last_name"] = $newUser->getLastName();
-                header("Location: index.php?target=product&action=main");
+                header("Location: ?target=product&action=main");
             } else {
 
                 throw new BadRequestException("$msg");
@@ -206,7 +205,7 @@ class UserController{
             unset($_SESSION);
             session_destroy();
 
-            header("Location: index.php?target=product&action=main");
+            header("Location: ?target=product&action=main");
         }
     }
 
@@ -219,13 +218,17 @@ class UserController{
         include_once "view/register.php";
     }
     public function account(){
-        $this->validateForLoggedUser();
+        if (isset($_SESSION["logged_user_id"])){
+            $userDAO=new UserDAO();
+            $user=$userDAO->getUserByid($_SESSION["logged_user_id"]);
+            $addressDAO=new AddressDAO();
+            $addresses=$addressDAO->getAll($_SESSION["logged_user_id"]);
+            include_once "view/account.php";
+        }
+        else{
+           include_once "view/login.php";
+        }
 
-        $userDAO=new UserDAO();
-        $user=$userDAO->getUserByid($_SESSION["logged_user_id"]);
-        $addressDAO=new AddressDAO();
-        $addresses=$addressDAO->getAll($_SESSION["logged_user_id"]);
-        include_once "view/account.php";
     }
 
     public function editPage(){
@@ -295,12 +298,13 @@ class UserController{
 
     public static function validateForLoggedUser(){
         if(!isset($_SESSION["logged_user_id"])){
-            header("Location: index.php?target=user&action=loginPage");
+            header("Location:?target=user&action=loginPage");
         }
     }
+
     public static function validateForAdmin(){
         if(!isset($_SESSION["logged_user_id"]) || $_SESSION["logged_user_role"]!="admin"){
-            header("Location: index.php?target=product&action=main");
+            header("Location: ?target=product&action=main");
         }
     }
 
@@ -343,7 +347,7 @@ class UserController{
         $mail->isHTML(true);                                  // Set email format to HTML
 
         $mail->Subject = 'Forgotten Password!!!';
-        $mail->Body = "$newPassword is your new password , You can change it in your profile ! Login " . "<a href='http://localhost:8888/It-talents/index.php?target=user&action=loginPage'>here</a>" ;
+        $mail->Body = "$newPassword is your new password , You can change it in your profile ! Login " . "<a href='http://localhost:8888/It-talents/?target=user&action=loginPage'>here</a>" ;
         $mail->AltBody = '';
 
         if (!$mail->send()) {
@@ -353,8 +357,5 @@ class UserController{
             $msg = 'Message has been sent';
         }
     }
-
 }
-
-?>
 

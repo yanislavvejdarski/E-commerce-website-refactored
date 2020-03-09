@@ -19,8 +19,6 @@ set_exception_handler("handleExceptions");
 $controllerName = isset($_GET["target"]) ? $_GET["target"] : "main";
 $methodName = isset($_GET["action"]) ? $_GET["action"] : "render";
 
-
-
 $controllerClassName = "\\controller\\" . ucfirst($controllerName) . "Controller";
 
 
@@ -61,14 +59,12 @@ if (class_exists($controllerClassName)){
 
     }else{
         echo "error: method not found: $controllerClassName -> $methodName\n";
-
         die();
     }
 
     exit();
 }else{
     echo "error: controller not found $controllerClassName\n";
-
     die();
 }
 

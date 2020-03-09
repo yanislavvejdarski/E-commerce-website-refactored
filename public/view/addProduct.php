@@ -27,7 +27,7 @@ $types=$productController->getTypes();
     if (isset($msg) && $msg!="") {
         echo $msg;
     }?> <br>
-    <form action="index.php?target=product&action=add" method="post" enctype="multipart/form-data">
+    <form action="?target=product&action=add" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td>Name</td>

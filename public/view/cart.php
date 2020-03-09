@@ -25,13 +25,13 @@ use model\ProductDAO;
                 <div class="row no-gutters">
 
                     <div class="col-md-4">
-                        <a href="index.php?target=product&action=show&prdId=<?=$productInfo->id?>"> <img src="<?=$productInfo->imageUrl?>" class="card-img" alt="..."></a>
+                        <a href="?target=product&action=show&prdId=<?=$productInfo->id?>"> <img src="<?=$productInfo->imageUrl?>" class="card-img" alt="..."></a>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title"><?=$productInfo->name?></h5>
                             <div class="row">
-                                <form action="index.php?target=cart&action=update" method="post">
+                                <form action="?target=cart&action=update" method="post">
                                     <input type="hidden" value="<?= $product["product_id"] ?>" name="productId">
                                     <input type="number" value="<?= $product["quantity"] ?>" name="quantity" min="1" class="form-control" placeholder="Quantity:" aria-label="Input group example" style="width: auto; margin-left: 5px;">
                                     <input type="submit" name="updateQuantity" class="btn btn-primary" style="margin-left: 5px;" value="Update">
@@ -39,14 +39,14 @@ use model\ProductDAO;
                             </div>
                             <h5 class="card-title"><?=$productInfo->price?> Euro</h5>
                             <div class="row">
-                                <a class="btn btn-primary" href="index.php?target=cart&action=delete&productId=<?= $product["product_id"] ?>" role="button" style="margin-left: 5px;">Remove From Cart</a>
+                                <a class="btn btn-primary" href="?target=cart&action=delete&productId=<?= $product["product_id"] ?>" role="button" style="margin-left: 5px;">Remove From Cart</a>
                                 <?php
                                 $favoriteDAO=new FavouriteDAO();
                                 if ($favoriteDAO->checkIfInFavourites($productInfo->id, $_SESSION["logged_user_id"])) { ?>
-                                    <a class="btn btn-primary" href="index.php?target=favourite&action=delete&id=<?= $productInfo->id ?>" role="button" style="margin-left: 5px;">Remove From Favourite</a>
+                                    <a class="btn btn-primary" href="?target=favourite&action=delete&id=<?= $productInfo->id ?>" role="button" style="margin-left: 5px;">Remove From Favourite</a>
                                 <?php } else {
                                 ?>
-                                <a class="btn btn-primary" href="index.php?target=favourite&action=add&id=<?= $productInfo->id ?>" role="button" style="margin-left: 5px;">Add To Favourite</a>
+                                <a class="btn btn-primary" href="?target=favourite&action=add&id=<?= $productInfo->id ?>" role="button" style="margin-left: 5px;">Add To Favourite</a>
           <?php
     } ?>
                             </div>
@@ -80,7 +80,7 @@ use model\ProductDAO;
                     $addressController=new AddressController();
                     if ($addressController->checkUserAddress()) {
                     ?>
-                    <form action="index.php?action=order&target=order" method="post">
+                    <form action="?action=order&target=order" method="post">
                         <select name="address" required class="form-control">
                             <option value="">Select Address For Delivery</option>
                             <?php foreach ($myAddresses as $address) {
@@ -100,7 +100,7 @@ use model\ProductDAO;
                     } else {?>
                     <div>
                         <h4>You can't finish order without Address!</h4>
-                        <a href="index.php?target=address&action=newAddress">
+                        <a href="?target=address&action=newAddress">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add Address</button>
                         </a>
                     </div>
