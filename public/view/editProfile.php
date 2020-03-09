@@ -38,7 +38,7 @@ $user=$userController->getUserById();
         </div>
         <?php
     }?>
-    <form action="index.php?target=User&action=edit" method="post">
+    <form action="?target=User&action=edit" method="post">
 
 
         <div class="form-group">
@@ -105,7 +105,7 @@ $user=$userController->getUserById();
 
         <button name="edit" type="submit" class="btn btn-primary">Save changes</button>
     </form>
-    <a href="index.php?target=User&action=account"><button name="myAccount" class="btn btn-primary">Back to My Account</button></a>
+    <a href="?target=User&action=account"><button name="myAccount" class="btn btn-primary">Back to My Account</button></a>
 </div>
 </body>
 </html>

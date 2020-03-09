@@ -29,7 +29,7 @@ $cities=$addressController->getCities();
         <?php
     }
     ?>
-    <form action="index.php?target=address&action=edit" method="post" class="form-group">
+    <form action="?target=address&action=edit" method="post" class="form-group">
         <input class="form-group" type="hidden" name="address_id" value="<?php echo $address->id ?>">
         <table>
             <tr>
@@ -51,7 +51,7 @@ $cities=$addressController->getCities();
             <tr><td colspan="2"><input type="submit" class="btn btn-primary mb-2" name="save" value="Save changes"></td></tr>
         </table>
     </form>
-    <a href="index.php?target=user&action=account"><button class="btn btn-primary mb-2">Back</button></a>
+    <a href="?target=user&action=account"><button class="btn btn-primary mb-2">Back</button></a>
 </div>
 </body>
 </html>

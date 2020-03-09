@@ -30,22 +30,22 @@ namespace view;
                     </div>
                     <hr>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="index.php?target=order&action=show" style="width: 100%">
+                        <a href="?target=order&action=show" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">My orders</button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="index.php?target=rating&action=myRated" style="width: 100%">
+                        <a href="?target=rating&action=myRated" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">My rated products</button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="index.php?target=address&action=newAddress" style="width: 100%">
+                        <a href="?target=address&action=newAddress" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">Add Address</button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="index.php?target=user&action=logout" style="width: 100%">
+                        <a href="?target=user&action=logout" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">Log Out</button>
                         </a>
                     </div>
@@ -69,7 +69,7 @@ namespace view;
                     <p class="card-text"> Email: <?php echo $user->email; ?></p>
                     <p class="card-text">  Age: <?php echo $user->age ?></p>
                     <p class="card-text">  Phone Number: <?php echo "+359". $user->phone_number ?></p>
-                    <a href="index.php?target=User&action=editPage" class="btn btn-primary">Edit Profile</a>
+                    <a href="?target=User&action=editPage" class="btn btn-primary">Edit Profile</a>
                 </div>
             </div>
 
@@ -86,12 +86,12 @@ namespace view;
                             <div class="card-body">
                                 <p class="card-text"><?php echo $address->street_name . ', ' . $address->city_name; ?></p>
                                 <div class="row">
-                                    <form action='index.php?target=address&action=editAddress' method="post" style="margin-left: 15px;">
+                                    <form action='?target=address&action=editAddress' method="post" style="margin-left: 15px;">
                                         <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
                                         <input type="submit" class="btn btn-primary" name="editAddress" value="Edit" >
                                     </form>
 
-                                    <form action='index.php?target=address&action=delete' method="post" style="margin-left: 15px;">
+                                    <form action='?target=address&action=delete' method="post" style="margin-left: 15px;">
                                         <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
                                         <input type="submit" class="btn btn-primary" name="deleteAddress" value="Delete">
                                     </form>

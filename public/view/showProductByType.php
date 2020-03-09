@@ -2,7 +2,7 @@
 namespace view;
 
 
-if(isset($filters)  && isset($products)&& isset($totalPages) && isset($page)) {
+if(isset($filters)  && isset($products)) {
 
 
     ?>
@@ -51,7 +51,7 @@ if(isset($filters)  && isset($products)&& isset($totalPages) && isset($page)) {
                     ?>
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card">
-                            <a href="index.php?target=product&action=show&prdId=<?= $product->id ?>"><img class="card-img-top" width="170" height="250" src="<?= $product->image_url ?>" alt="Card image cap"></a>
+                            <a href="?target=product&action=show&prdId=<?= $product->id ?>"><img class="card-img-top" width="170" height="250" src="<?= $product->image_url ?>" alt="Card image cap"></a>
                             <div class="card-body">
                                 <h4 class="card-title"><a href="product.html" title="View Product"><?= $product->name ?></a></h4>
                                 <div class="row">
@@ -65,7 +65,7 @@ if(isset($filters)  && isset($products)&& isset($totalPages) && isset($page)) {
                                     ?>
 
                                     <div class="col">
-                                        <a class="btn btn-success btn-block" href="index.php?target=cart&action=add&id=<?= $product->id ?>">Add to cart</a>
+                                        <a class="btn btn-success btn-block" href="?target=cart&action=add&id=<?= $product->id ?>">Add to cart</a>
                                     </div>
                                 </div>
                             </div>
@@ -81,15 +81,15 @@ if(isset($filters)  && isset($products)&& isset($totalPages) && isset($page)) {
                 <div v-for="p in products">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card">
-                            <a :href="'index.php?target=product&action=show&prdId=' + p.id"> <img class="card-img-top" width="170" height="250" :src="p.image_url" alt="Card image cap"></a>
+                            <a :href="'?target=product&action=show&prdId=' + p.id"> <img class="card-img-top" width="170" height="250" :src="p.image_url" alt="Card image cap"></a>
                             <div class="card-body">
-                                <h4 class="card-title"><a :href="'index.php?target=product&action=show&prdId=' + p.id" title="View Product">{{p.name}}</a></h4>
+                                <h4 class="card-title"><a :href="'?target=product&action=show&prdId=' + p.id" title="View Product">{{p.name}}</a></h4>
                                 <div class="row">
                                     <div class="col">
                                         <p class="btn btn-danger btn-block">{{p.price}} Euro</p>
                                     </div>
                                     <div class="col">
-                                        <a :href="'index.php?target=cart&action=add&id=' + p.id" class="btn btn-success btn-block">Add to cart</a>
+                                        <a :href="'?target=cart&action=add&id=' + p.id" class="btn btn-success btn-block">Add to cart</a>
                                     </div>
                                 </div>
                             </div>

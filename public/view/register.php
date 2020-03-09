@@ -18,7 +18,7 @@ if (isset($msg) && $msg!=""){
 
 <div class="container">
     <h1>Register here:</h1>
-    <form action="index.php?target=User&action=register" method="post">
+    <form action="?target=User&action=register" method="post">
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
@@ -61,7 +61,7 @@ if (isset($msg) && $msg!=""){
         <button name="register" type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-    <a href="index.php?target=user&action=loginPage"><button name="register" type="submit" class="btn btn-primary"><-- Back to login page</button></a>
+    <a href="?target=user&action=loginPage"><button name="register" type="submit" class="btn btn-primary"><-- Back to login page</button></a>
 </div>
 </body>
 

@@ -49,10 +49,11 @@ class ProductController
                      include_once "view/showProductsFromType.php";
 
                      foreach ($products as $product) {
+
                          $productDAO = new ProductDAO();
                          $productList = $productDAO->findProduct($product["id"]);
 
-                         $productList->showByType();
+
                      }
 
                  $rrp=99;
@@ -81,11 +82,11 @@ class ProductController
 
              }
              else{
-                 header("Location: index.php?target=main&action=render");
+                 header("Location: ?target=main&action=render");
              }
 
 
-            include_once "View/showProductByType.php";
+            include_once "view/showProductByType.php";
         }
     }
 
@@ -238,7 +239,7 @@ class ProductController
             $productId = $_POST["product_id"];
             include_once "view/editProduct.php";
         }else{
-            header("Location:index.php?target=product&action=main");
+            header("Location:?target=product&action=main");
         }
 
     }
@@ -456,7 +457,7 @@ class ProductController
             $mail->isHTML(true);                                  // Set email format to HTML
 
             $mail->Subject = 'Your Product is on Sale !!!';
-            $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents/index.php?target=product&action=show&prdId=$productId>Open Here</a>";
+            $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents/?target=product&action=show&prdId=$productId>Open Here</a>";
             $mail->AltBody = 'Click For Register';
 
 

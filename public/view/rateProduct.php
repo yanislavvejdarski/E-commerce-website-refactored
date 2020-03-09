@@ -15,7 +15,7 @@ namespace view;
 </head>
 <body>
 <div class="container">
-    <form action="index.php?target=rating&action=rate" method="post">
+    <form action="?target=rating&action=rate" method="post">
         <table>
             <tr><input type="hidden" name="product_id" value="<?php echo $_GET['id'] ;?>"></tr>
             <tr>

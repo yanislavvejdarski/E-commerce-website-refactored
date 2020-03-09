@@ -22,7 +22,7 @@ $cities=$addressController->getCities();
         <?php
     }
     ?>
-    <form action="index.php?target=address&action=add" method="post">
+    <form action="?target=address&action=add" method="post">
         <div class="form-group">
             <tr>
                 <td>City</td>
@@ -46,5 +46,5 @@ $cities=$addressController->getCities();
         </div>
 
     </form>
-    <a href="index.php?target=user&action=account"><button class="btn btn-primary mb-2">Go Back</button></a>
+    <a href="?target=user&action=account"><button class="btn btn-primary mb-2">Go Back</button></a>
 </div>
