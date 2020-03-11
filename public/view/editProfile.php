@@ -105,7 +105,7 @@ $user=$userController->getUserById();
 
         <button name="edit" type="submit" class="btn btn-primary">Save changes</button>
     </form>
-    <a href="/myaccount"><button name="myAccount" class="btn btn-primary">Back to My Account</button></a>
+    <a href="/myAccount"><button name="myAccount" class="btn btn-primary">Back to My Account</button></a>
 </div>
 </body>
 </html>

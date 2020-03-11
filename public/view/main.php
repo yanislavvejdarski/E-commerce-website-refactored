@@ -37,7 +37,7 @@ $products=$productController->getMostCelledProducts();
                                         <p class="btn btn-danger btn-block"><?= $product->price ?> Euro</p>
                                     </div>
                                     <div class="col">
-                                        <a href="/addToCart/<?= $product->id ?>" class="btn btn-success btn-block">Add to cart</a>
+                                        <a href="/cart/add/<?= $product->id ?>" class="btn btn-success btn-block">Add to cart</a>
                                     </div>
                                 </div>
                             </div>

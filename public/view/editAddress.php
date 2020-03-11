@@ -51,7 +51,7 @@ $cities=$addressController->getCities();
             <tr><td colspan="2"><input type="submit" class="btn btn-primary mb-2" name="save" value="Save changes"></td></tr>
         </table>
     </form>
-    <a href="/myaccount"><button class="btn btn-primary mb-2">Back</button></a>
+    <a href="/myAccount"><button class="btn btn-primary mb-2">Back</button></a>
 </div>
 </body>
 </html>

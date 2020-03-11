@@ -63,7 +63,7 @@ class ratingController
             }elseif($msg == "") {
                $ratingDAO=new RatingDAO();
                 $ratingDAO->editRating($_POST["rating_id"], $_POST["rating"], $_POST["comment"]);
-                header("Location: /ratedproducts");
+                header("Location: /ratedProducts");
 
             }
         }else{

@@ -1,89 +1,92 @@
 <?php
-$routes = new Router();
-$uri = $_SERVER["REQUEST_URI"];
+$routes = new Router($_SERVER["REQUEST_URI"]);
 
 // Home Page
-$routes::route("/home", "MainController@render", $uri);
+$routes->route("/home", "MainController@render");
 // Single Product Page
-$routes::route("/product/{:id}", "ProductController@show", $uri);
+$routes->route("/product/{:id}", "ProductController@show");
 // Cart Page
-$routes::route("/cart", "CartController@show", $uri);
+$routes->route("/cart", "CartController@show");
 // Update Cart
-$routes::route("/updateCart", "CartController@update", $uri);
+$routes->route("/cart/update", "CartController@update");
 // Favourites Page
-$routes::route("/favourites", "FavouriteController@show", $uri);
+$routes->route("/favourites", "FavouriteController@show");
 // Add To Favourites
-$routes::route("/addToFavourites/{:id}", "FavouriteController@add", $uri);
+$routes->route("/favourites/add/{:id}", "FavouriteController@add");
 // Remove From Favourites
-$routes::route("/removeFromFavourites/{:id}", "FavouriteController@delete", $uri);
+$routes->route("/favourites/remove/{:id}", "FavouriteController@delete");
 // Add Product To Cart
-$routes::route("/addToCart/{:id}", "CartController@add", $uri);
+$routes->route("/cart/add/{:id}", "CartController@add");
 // Remove Product From Cart
-$routes::route("/removeFromCart/{:id}", "CartController@delete", $uri);
+$routes->route("/cart/remove/{:id}", "CartController@delete");
 // Customer Rate Product
-$routes::route("/rateProduct/{:id}", "RatingController@rateProduct", $uri);
+$routes->route("/rateProduct/{:id}", "RatingController@rateProduct");
 // Customer Submit Rating Product
-$routes::route("/rate", "RatingController@rate", $uri);
+$routes->route("/rate", "RatingController@rate");
 // Edit Rated Page
-$routes::route("/editRatedPage", "RatingController@editRatedPage", $uri);
+$routes->route("/editRatedPage", "RatingController@editRatedPage");
 // Edit Rated Product
-$routes::route("/editRate", "RatingController@editRate", $uri);
+$routes->route("/editRate", "RatingController@editRate");
 // Personal Customer Rated Products
-$routes::route("/ratedproducts", "RatingController@myRated", $uri);
+$routes->route("/ratedProducts", "RatingController@myRated");
 // My Account
-$routes::route("/myaccount", "UserController@account", $uri);
+$routes->route("/myAccount", "UserController@account");
 // Edit Profile Page
-$routes::route("/editProfilePage", "UserController@editPage", $uri);
+$routes->route("/editProfilePage", "UserController@editPage");
 // Edit Profile/Save Changes
-$routes::route("/editProfile", "UserController@edit", $uri);
+$routes->route("/editProfile", "UserController@edit");
 // My Orders
-$routes::route("/myorders", "OrderController@show", $uri);
+$routes->route("/orders", "OrderController@show");
 // Add Address Page
-$routes::route("/addaddress", "AddressController@newAddress", $uri);
+$routes->route("/addAddress", "AddressController@newAddress");
 // Add New Address
-$routes::route("/addNewAddress", "AddressController@add", $uri);
+$routes->route("/addNewAddress", "AddressController@add");
 // Edit Address Page
-$routes::route("/editAddressPage", "AddressController@editAddress", $uri);
+$routes->route("/editAddressPage", "AddressController@editAddress");
 // Edit Address
-$routes::route("/editAddress", "AddressController@edit", $uri);
+$routes->route("/editAddress", "AddressController@edit");
 // Delete Address
-$routes::route("/deleteAddress", "AddressController@delete", $uri);
+$routes->route("/deleteAddress", "AddressController@delete");
 //Register Page
-$routes::route("/registerPage", "UserController@registerPage", $uri);
+$routes->route("/registerPage", "UserController@registerPage");
 //Register User
-$routes::route("/register", "UserController@register", $uri);
+$routes->route("/register", "UserController@register");
 // Log Out
-$routes::route("/logout", "UserController@logout", $uri);
+$routes->route("/logout", "UserController@logout");
 // Log In
-$routes::route("/login", "UserController@login", $uri);
+$routes->route("/login", "UserController@login");
 // Log In Page
-$routes::route("/loginPage", "UserController@loginPage", $uri);
+$routes->route("/loginPage", "UserController@loginPage");
 // Forgotten Password Page
-$routes::route("/forgottenPassword", "UserController@forgottenPassword", $uri);
+$routes->route("/forgottenPassword", "UserController@forgottenPassword");
 // Send New Password
-$routes::route("/sendNewPassword", "UserController@sendNewPassword", $uri);
+$routes->route("/sendNewPassword", "UserController@sendNewPassword");
 // Search Bar
-$routes::route("/render", "SearchController@render", $uri);
+$routes->route("/render", "SearchController@render");
 // Show Types From Categorie Id
-$routes::route("/ctgId/{:id}", "ProductController@show", $uri);
+$routes->route("/ctgId/{:id}", "ProductController@show");
 // Show Products From Type Id
-$routes::route("/typeId/{:id}", "ProductController@show", $uri);
+$routes->route("/typeId/{:id}", "ProductController@show");
 // Make a Order
-$routes::route("/order", "OrderController@order", $uri);
+$routes->route("/order", "OrderController@order");
 // VueJS Product Filtration
-$routes::route("/filterProducts", "ProductController@filterProducts", $uri);
+$routes->route("/filterProducts", "ProductController@filterProducts");
 // Admin Add Product Page
-$routes::route("/addProductPage", "ProductController@addProductPage", $uri);
+$routes->route("/admin/addProductPage", "ProductController@addProductPage");
 // Admin Add Product
-$routes::route("/addProduct", "ProductController@addProduct", $uri);
+$routes->route("/admin/addProduct", "ProductController@addProduct");
 // Admin Edit Product Page
-$routes::route("/editProductPage", "ProductController@editProductPage", $uri);
+$routes->route("/admin/editProductPage", "ProductController@editProductPage");
 // Admin Edit Product Page
-$routes::route("/editProduct", "ProductController@editProduct", $uri);
+$routes->route("/admin/editProduct", "ProductController@editProduct");
 // Admin Remove Discount
-$routes::route("/removeDiscount", "ProductController@removeDiscount", $uri);
-// Admin Add Discount
-$routes::route("/addDiscount", "ProductController@addDiscount", $uri);
+$routes->route("/admin/removeDiscount", "ProductController@removeDiscount");
+
+// If entered wrong route,this method will execute  
+$routes->error404();
+
+
+
 
 
 

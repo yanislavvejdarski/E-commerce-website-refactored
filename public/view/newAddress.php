@@ -46,5 +46,5 @@ $cities=$addressController->getCities();
         </div>
 
     </form>
-    <a href="/myaccount"><button class="btn btn-primary mb-2">Go Back</button></a>
+    <a href="/myAccount"><button class="btn btn-primary mb-2">Go Back</button></a>
 </div>

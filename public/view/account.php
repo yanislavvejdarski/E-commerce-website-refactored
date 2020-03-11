@@ -30,17 +30,17 @@ namespace view;
                     </div>
                     <hr>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="/myorders" style="width: 100%">
+                        <a href="/orders" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">My orders</button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="/ratedproducts" style="width: 100%">
+                        <a href="/ratedProducts" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">My rated products</button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="/addaddress" style="width: 100%">
+                        <a href="/addAddress" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">Add Address</button>
                         </a>
                     </div>

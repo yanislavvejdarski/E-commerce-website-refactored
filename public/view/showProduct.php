@@ -82,7 +82,7 @@ use model\RatingDAO;
                         <div class="row">
  <?php if(isset($_SESSION["logged_user_role"]) && $_SESSION["logged_user_role"]=="admin"){?>
 
-                <form action="/editProductPage" method="post">
+                <form action="admin/editProductPage" method="post">
                     <input type="hidden" name="product_id" value="<?= $this->id ?>">
                     <input type="submit" name="editProduct" value="Edit this product">
                 </form>
@@ -93,7 +93,7 @@ use model\RatingDAO;
                             <?php if (isset($_SESSION["logged_user_role"])){
                                 ?>
 
-                                    <a href="/addToCart/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Add To Cart </a>
+                                    <a href="/cart/add/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Add To Cart </a>
 
                                 <?php
                                 $favouriteDAO=new FavouriteDAO;
@@ -108,7 +108,7 @@ use model\RatingDAO;
                                 if ($checker)
                                 {
                                     ?>
-                                        <form action="/removeFromFavourites/<?=$this->id?>" method="post">
+                                        <form action="/favourites/remove/<?=$this->id?>" method="post">
                                             <input type="hidden" value="<?=$this->id?>" name="like">
                                             <button type="submit"><img src="../icons/like.svg" width="50" height="50"></button>
                                         </form>
@@ -117,7 +117,7 @@ use model\RatingDAO;
                                 else{
 
                                     ?>
-                                            <form action="/addToFavourites/<?=$this->id?>" method="post">
+                                            <form action="/favourites/add/<?=$this->id?>" method="post">
                                                 <input type="hidden" value="<?=$this->id?>" name="like">
                                                 <button type="submit"><img src="../icons/unlike.svg" width="50" height="50"></button>
                                             </form>

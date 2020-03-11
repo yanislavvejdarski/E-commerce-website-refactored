@@ -2,9 +2,37 @@
 
 class Router
 {
-    public static function route($url, $pattern, $uri)
+    public $uri;
+
+
+    public function __construct($serverURI)
     {
-        $uriParams = explode("/", $uri);
+        $this->uri = $serverURI;
+    }
+
+    /*
+     * This is route functioning
+     *
+     * @param string $url
+     * @param string $pattern
+     * @return NULL
+     */
+    public function route($url, $pattern)
+    {
+        $uriParams = explode("/", $this->uri);
+
+        $helperUrl = $this->generateDynamicRoute($uriParams);
+        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern);
+    }
+
+    /*
+     * generating Dynamic Route
+     *
+     * @param string $uriParams
+     * @return NULL
+     */
+    public function generateDynamicRoute($uriParams)
+    {
         $helperUrl = '';
 
         foreach ($uriParams as $item) {
@@ -12,15 +40,28 @@ class Router
                 continue;
             }
 
-
             if (is_numeric($item)) {
                 $helperUrl .= '/{:id}';
                 continue;
             }
 
             $helperUrl .= '/' . $item;
-        }
 
+        }
+        return $helperUrl;
+    }
+
+    /*
+    * Match Route
+    *
+    * @param string $helperUrl
+    * @param string $url
+    * @param array $uriParams
+    * @param string $pattern
+    * @return NULL
+    */
+    public function matchRoute($helperUrl, $url, $uriParams, $pattern)
+    {
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
             $params = [];
@@ -28,10 +69,8 @@ class Router
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
                     $params[$explodedUrl[$i - 1]] = $uriParams[$i];
-
                 }
             }
-
             $command = explode("@", $pattern);
             $controller = "controller\\" . $command[0];
 
@@ -40,10 +79,24 @@ class Router
             $object = new $controller;
 
             if (empty($params)) {
-                $object->$action();
+                if (class_exists($controller) && method_exists($object,$action)){
+//                    var_dump(123);
+                    return $object->$action();
+                }
+                else{
+                    header("Location:/http");
+                }
             } else {
-                $object->$action($params);
+                if (class_exists($controller) && method_exists($object,$action)){
+                    return $object->$action($params);
+                }
+                else{
+                    header("Location:/http");
+                }
             }
         }
+    }
+    public function error404(){
+        include_once "view/404.php";
     }
 }

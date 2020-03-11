@@ -27,7 +27,7 @@ $types=$productController->getTypes();
     if (isset($msg) && $msg!="") {
         echo $msg;
     }?> <br>
-    <form action="/addProduct" method="post" enctype="multipart/form-data">
+    <form action="admin/addProduct" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td>Name</td>

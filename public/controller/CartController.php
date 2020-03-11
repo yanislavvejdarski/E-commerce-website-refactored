@@ -13,16 +13,16 @@ class CartController{
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 
-            if (isset($params["addToCart"]) && is_numeric($params["addToCart"])){
+            if (isset($params["add"]) && is_numeric($params["add"])){
 
                 $cartDAO=new CartDAO();
                 $productDAO = new ProductDAO();
-                $quantity = $productDAO->checkQuantity($params["addToCart"]);
-                    $check = $cartDAO->checkIfInCart($params["addToCart"] , $_SESSION["logged_user_id"]);
+                $quantity = $productDAO->checkQuantity($params["add"]);
+                    $check = $cartDAO->checkIfInCart($params["add"] , $_SESSION["logged_user_id"]);
                     if ($check){
                         if ($check["quantity"] < $quantity["quantity"] && $quantity["quantity"] > 0) {
 
-                            $cartDAO->updateQuantityOfProductInCart($params["addToCart"] , $_SESSION["logged_user_id"]);
+                            $cartDAO->updateQuantityOfProductInCart($params["add"] , $_SESSION["logged_user_id"]);
                             $this->show();
                         }
                         else{
@@ -32,7 +32,7 @@ class CartController{
                         }
                     }
                     elseif($quantity["quantity"] > 0){
-                        $cartDAO->putInCart($params["addToCart"] , $_SESSION["logged_user_id"]);
+                        $cartDAO->putInCart($params["add"] , $_SESSION["logged_user_id"]);
                         $this->show();
 
 
@@ -86,7 +86,7 @@ class CartController{
         $validateSession->validateForLoggedUser();
 
             $cartDAO=new CartDAO();
-            $cartDAO->deleteProductFromCart($params["removeFromCart"] , $_SESSION["logged_user_id"]);
+            $cartDAO->deleteProductFromCart($params["remove"] , $_SESSION["logged_user_id"]);
             $this->show();
 
     }
