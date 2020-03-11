@@ -28,24 +28,24 @@ class FavouriteController{
     }
 
 
-    public function add(){
+    public function add($params){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        if (isset($_GET["id"])){
+        if (isset($params["addToFavourites"])){
             if (isset($_POST["like"])) {
                 $prdId = $_POST["like"];
                 $favoriteDAO=new FavouriteDAO();
-                $check = $favoriteDAO->checkIfInFavourites($_GET["id"] , $_SESSION["logged_user_id"]);
+                $check = $favoriteDAO->checkIfInFavourites($params["addToFavourites"] , $_SESSION["logged_user_id"]);
 
                 if ($check){
                     echo "Already added in Favourites";
                 }
                 else{
                     $productDAO = new ProductDAO();
-                    $cheker = $productDAO->findProduct($_GET["id"]);
+                    $cheker = $productDAO->findProduct($params["addToFavourites"]);
                     if ($cheker->id != ""){
-                        $favoriteDAO->addToFavourites($_GET["id"],$_SESSION["logged_user_id"]);
-                        header("Location: ?target=product&action=show&prdId=$prdId");
+                        $favoriteDAO->addToFavourites($params["addToFavourites"],$_SESSION["logged_user_id"]);
+                        header("Location:/product/$prdId");
                     }
                     else{
                         $this->show();
@@ -56,16 +56,16 @@ class FavouriteController{
             }
             else{
                 $favoriteDAO=new FavouriteDAO();
-                $check = $favoriteDAO->checkIfInFavourites($_GET["id"] , $_SESSION["logged_user_id"]);
+                $check = $favoriteDAO->checkIfInFavourites($params["addToFavourites"] , $_SESSION["logged_user_id"]);
 
                 if ($check){
                     echo "Already added in Favourites";
                 }
                 else{
                     $productDAO = new ProductDAO();
-                    $cheker = $productDAO->findProduct($_GET["id"]);
+                    $cheker = $productDAO->findProduct($params["addToFavourites"]);
                     if ($cheker->id != ""){
-                        $favoriteDAO->addToFavourites($_GET["id"],$_SESSION["logged_user_id"]);
+                        $favoriteDAO->addToFavourites($params["addToFavourites"],$_SESSION["logged_user_id"]);
                         $this->show();
                         include_once "view/favourites.php";
                     }
@@ -83,26 +83,26 @@ class FavouriteController{
     }
 
 
-    public function delete(){
+    public function delete($params){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
         if (isset($_POST["like"])){
             $prdId = $_POST["like"];
-            if (isset($_GET["id"]) && is_numeric($_GET["id"])){
+            if (isset($params["removeFromFavourites"]) && is_numeric($params["removeFromFavourites"])){
                 $favoriteDAO=new FavouriteDAO();
-                $favoriteDAO->deleteFromFavourites($_GET["id"] , $_SESSION["logged_user_id"]);
-                header("Location: ?target=product&action=show&prdId=".$prdId);
+                $favoriteDAO->deleteFromFavourites($params["removeFromFavourites"] , $_SESSION["logged_user_id"]);
+                header("Location: /product/".$prdId);
             }else{
                 $this->show();
                 throw new NotFoundException("Can't add Invalid Product to Favourites");
             }
         }
         else{
-            if (isset($_GET["id"]) && is_numeric($_GET["id"])){
+            if (isset($params["removeFromFavourites"]) && is_numeric($params["removeFromFavourites"])){
 
 
                 $favoriteDAO=new FavouriteDAO();
-                $favoriteDAO->deleteFromFavourites($_GET["id"] , $_SESSION["logged_user_id"]);
+                $favoriteDAO->deleteFromFavourites($params["removeFromFavourites"] , $_SESSION["logged_user_id"]);
                 $this->show();
 
             }else{

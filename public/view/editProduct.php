@@ -70,7 +70,7 @@ if ($product["old_price"]!=NULL) {
 <hr>
 
 <h3>Edit this product:</h3>
-<form action="?target=product&action=edit" method="post" enctype="multipart/form-data">
+<form action="/editProduct" method="post" enctype="multipart/form-data">
     <table>
         <tr>
             <td>Name</td>
@@ -131,7 +131,7 @@ if ($product["old_price"]!=NULL) {
     </table>
 </form>
 
-<form action="?target=product&action=removeDiscount" method="post">
+<form action="/removeDiscount" method="post">
     <input type="hidden" name="product_id" value="<?= $productId?>">
     <input type="hidden" name="product_old_price" value="<?=$product["old_price"]?>">
     <input type="submit" name="remove" value="Remove Promotion">

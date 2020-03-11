@@ -82,7 +82,7 @@ use model\RatingDAO;
                         <div class="row">
  <?php if(isset($_SESSION["logged_user_role"]) && $_SESSION["logged_user_role"]=="admin"){?>
 
-                <form action="?target=product&action=editProduct" method="post">
+                <form action="/editProductPage" method="post">
                     <input type="hidden" name="product_id" value="<?= $this->id ?>">
                     <input type="submit" name="editProduct" value="Edit this product">
                 </form>
@@ -93,7 +93,7 @@ use model\RatingDAO;
                             <?php if (isset($_SESSION["logged_user_role"])){
                                 ?>
 
-                                    <a href="?target=cart&action=add&id=<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Add To Cart </a>
+                                    <a href="/addToCart/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Add To Cart </a>
 
                                 <?php
                                 $favouriteDAO=new FavouriteDAO;
@@ -101,25 +101,25 @@ use model\RatingDAO;
 
                                 ?>
 
-                                <a href="?target=rating&action=rateProduct&id=<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
+                                <a href="/rateProduct/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
 
                                 <?php
 
                                 if ($checker)
                                 {
                                     ?>
-                                        <form action="?target=favourite&action=delete&id=<?=$this->id?>" method="post">
+                                        <form action="/removeFromFavourites/<?=$this->id?>" method="post">
                                             <input type="hidden" value="<?=$this->id?>" name="like">
-                                            <button type="submit"><img src="icons/like.svg" width="50" height="50"></button>
+                                            <button type="submit"><img src="../icons/like.svg" width="50" height="50"></button>
                                         </form>
                                     <?php
                                 }
                                 else{
 
                                     ?>
-                                            <form action="?target=favourite&action=add&id=<?=$this->id?>" method="post">
+                                            <form action="/addToFavourites/<?=$this->id?>" method="post">
                                                 <input type="hidden" value="<?=$this->id?>" name="like">
-                                                <button type="submit"><img src="icons/unlike.svg" width="50" height="50"></button>
+                                                <button type="submit"><img src="../icons/unlike.svg" width="50" height="50"></button>
                                             </form>
                                     <?php
                                 }
@@ -132,7 +132,7 @@ use model\RatingDAO;
 
                                 <a href="?target=user&action=loginPage" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
                                 <form action="?target=user&action=loginPage" method="post">
-                                    <button type="submit"><img src="icons/unlike.svg" width="50" height="50"></button>
+                                    <button type="submit"><img src="../icons/unlike.svg" width="50" height="50"></button>
                                 </form>
 
 

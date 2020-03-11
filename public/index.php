@@ -15,19 +15,21 @@ function handleExceptions(Exception $exception){
 }
 
 set_exception_handler("handleExceptions");
-
-$controllerName = isset($_GET["target"]) ? $_GET["target"] : "main";
-$methodName = isset($_GET["action"]) ? $_GET["action"] : "render";
-
-$controllerClassName = "\\controller\\" . ucfirst($controllerName) . "Controller";
+//
+//$controllerName = isset($_GET["target"]) ? $_GET["target"] : "main";
+//$methodName = isset($_GET["action"]) ? $_GET["action"] : "render";
+//
+//$controllerClassName = "\\controller\\" . ucfirst($controllerName) . "Controller";
 
 
 spl_autoload_register(function ($class){
     require_once str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
 });
 
-if(!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'))
-{
+
+
+if(!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){ // AJAX HEADER REQUEST
+
 ?>
 
 <html lang="en">
@@ -48,28 +50,29 @@ if(!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_RE
 ob_start();
 include_once "view/header.php";
 
-?>
-<?php
+
+
+
 }
-
-if (class_exists($controllerClassName)){
-    $controller = new $controllerClassName();
-
-    if(method_exists($controller, $methodName)){
-
-            $controller->$methodName();
-
-    }else{
-        echo "error: method not found: $controllerClassName -> $methodName\n";
-        die();
-    }
-
-    exit();
-}else{
-    echo "error: controller not found $controllerClassName\n";
-    die();
-}
-ob_end_clean();
+require "routes/routes.php"; // Routing
+//
+//if (class_exists($controllerClassName)){
+//    $controller = new $controllerClassName();
+//
+//    if(method_exists($controller, $methodName)){
+//
+//            $controller->$methodName();
+//
+//    }else{
+//        echo "error: method not found: $controllerClassName -> $methodName\n";
+//        die();
+//    }
+//
+//    exit();
+//}else{
+//    echo "error: controller not found $controllerClassName\n";
+//    die();
+//}
 ?>
 
 

@@ -43,9 +43,9 @@ class UserController{
             }
 
 
-
+            header();
             if($msg==""){
-                header("Location:?target=product&action=main");
+                header("Location: /home");
             }else{
                 include_once "view/login.php";
                 throw new BadRequestException ("$msg");
@@ -205,7 +205,7 @@ class UserController{
             unset($_SESSION);
             session_destroy();
 
-            header("Location: ?target=product&action=main");
+            header("Location: /home");
         }
     }
 
@@ -218,16 +218,15 @@ class UserController{
         include_once "view/register.php";
     }
     public function account(){
-        if (isset($_SESSION["logged_user_id"])){
+        $validateSession = new UserController();
+        $validateSession->validateForLoggedUser();
             $userDAO=new UserDAO();
             $user=$userDAO->getUserByid($_SESSION["logged_user_id"]);
             $addressDAO=new AddressDAO();
             $addresses=$addressDAO->getAll($_SESSION["logged_user_id"]);
             include_once "view/account.php";
-        }
-        else{
-           include_once "view/login.php";
-        }
+
+
 
     }
 
@@ -298,7 +297,7 @@ class UserController{
 
     public static function validateForLoggedUser(){
         if(!isset($_SESSION["logged_user_id"])){
-            header("Location:?target=user&action=loginPage");
+            header("Location:/loginPage");
         }
     }
 

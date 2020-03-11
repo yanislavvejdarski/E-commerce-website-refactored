@@ -9,20 +9,20 @@ use model\ProductDAO;
 use PDOException;
 use PDO;
 class CartController{
-    public function add(){
+    public function add($params){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 
-            if (isset($_GET["id"]) && is_numeric($_GET["id"])){
+            if (isset($params["addToCart"]) && is_numeric($params["addToCart"])){
 
                 $cartDAO=new CartDAO();
                 $productDAO = new ProductDAO();
-                $quantity = $productDAO->checkQuantity($_GET["id"]);
-                    $check = $cartDAO->checkIfInCart($_GET["id"] , $_SESSION["logged_user_id"]);
+                $quantity = $productDAO->checkQuantity($params["addToCart"]);
+                    $check = $cartDAO->checkIfInCart($params["addToCart"] , $_SESSION["logged_user_id"]);
                     if ($check){
                         if ($check["quantity"] < $quantity["quantity"] && $quantity["quantity"] > 0) {
 
-                            $cartDAO->updateQuantityOfProductInCart($_GET["id"] , $_SESSION["logged_user_id"]);
+                            $cartDAO->updateQuantityOfProductInCart($params["addToCart"] , $_SESSION["logged_user_id"]);
                             $this->show();
                         }
                         else{
@@ -32,7 +32,7 @@ class CartController{
                         }
                     }
                     elseif($quantity["quantity"] > 0){
-                        $cartDAO->putInCart($_GET["id"] , $_SESSION["logged_user_id"]);
+                        $cartDAO->putInCart($params["addToCart"] , $_SESSION["logged_user_id"]);
                         $this->show();
 
 
@@ -49,14 +49,13 @@ class CartController{
     }
 
     public function show(){
-        if(!isset($_SESSION["logged_user_id"])){
-            include_once "view/login.php";
-        }else{
+        $validateSession = new UserController();
+        $validateSession->validateForLoggedUser();
             $cartDAO = new CartDAO();
             $productsInCart = $cartDAO->showCart($_SESSION["logged_user_id"]);
             $totalprice = 0;
             include_once "view/cart.php";
-        }
+
     }
     public function update(){
         $validateSession = new UserController();
@@ -82,12 +81,12 @@ class CartController{
         }
 
     }
-    public function delete(){
+    public function delete($params){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 
             $cartDAO=new CartDAO();
-            $cartDAO->deleteProductFromCart($_GET["productId"] , $_SESSION["logged_user_id"]);
+            $cartDAO->deleteProductFromCart($params["removeFromCart"] , $_SESSION["logged_user_id"]);
             $this->show();
 
     }

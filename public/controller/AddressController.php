@@ -26,7 +26,7 @@ class AddressController{
 
                 $addressDAO->add($address);
 
-                header("Location: ?target=user&action=account");
+                header("Location: /myaccount");
             }else{
 
                 include_once "view/newAddress.php";
@@ -56,7 +56,7 @@ class AddressController{
                         throw new NotAuthorizedException("Not Authorized for this operation!");
                     }
 
-                header("Location: ?target=user&action=account");
+                header("Location: /myaccount");
             }else{
 
                 throw new BadRequestException("$msg");
@@ -77,7 +77,7 @@ class AddressController{
             }else{
                 throw new NotAuthorizedException("Not Authorized for this operation!");
             }
-            header("Location: ?target=user&action=account");
+            header("Location: /myaccount");
         }
     }
 

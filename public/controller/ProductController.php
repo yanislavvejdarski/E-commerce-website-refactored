@@ -17,20 +17,17 @@ error_reporting(E_ALL);
 
 class ProductController
 {
-    public function show()
+    public function show($params)
     {
-        if (isset($_GET["prdId"])) {
-
+        if (isset($params["product"])) {
                 $productDAO = new ProductDAO();
-                $product = $productDAO->findProduct($_GET["prdId"]);
+                $product = $productDAO->findProduct($params["product"]);
                 $product->show();
-
         }
-        if (isset($_GET["ctgId"])) {
-
+        if (isset($params["ctgId"])) {
 
                 $typeDAO = new TypeDAO();
-                $types = $typeDAO->getTypesFromCategorieId($_GET["ctgId"]);
+                $types = $typeDAO->getTypesFromCategorieId($params["ctgId"]);
 
 
             foreach ($types as $type) {
@@ -38,23 +35,16 @@ class ProductController
                 $typeObject->show();
             }
         }
-         if (isset($_GET["typId"])) {
-             $checkType = TypeDAO::existsType($_GET["typId"]);
+         if (isset($params["typeId"])) {
+             $checkType = TypeDAO::existsType($params["typeId"]);
              if ($checkType["count"] > 0) {
 
                      $productDAO = new ProductDAO();
-                     $products = $productDAO->getProductsFromTypeId($_GET["typId"]);
+                     $products = $productDAO->getProductsFromTypeId($params["typeId"]);
                      $typeDAO = new TypeDAO();
-                     $type = $typeDAO->getTypeInformation($_GET["typId"]);
+                     $type = $typeDAO->getTypeInformation($params["typeId"]);
                      include_once "view/showProductsFromType.php";
 
-                     foreach ($products as $product) {
-
-                         $productDAO = new ProductDAO();
-                         $productList = $productDAO->findProduct($product["id"]);
-
-
-                     }
 
                  $rrp=99;
                  if(isset($_GET["page"])){
@@ -73,11 +63,11 @@ class ProductController
 
 
                      $typeDAO=new TypeDAO();
-                     $resultSet=$typeDAO->getNumberOfProductsForType($_GET["typId"]);
+                     $resultSet=$typeDAO->getNumberOfProductsForType($params["typeId"]);
                      $numRows=$resultSet->count;
                      $typeDAO=new TypeDAO();
-                     $products=$typeDAO->getAllByType($_GET["typId"],$start,$rrp);
-                     $filters=$this->getFilters($_GET["typId"]);
+                     $products=$typeDAO->getAllByType($params["typeId"],$start,$rrp);
+                     $filters=$this->getFilters($params["typeId"]);
                      $totalPages=$numRows/$rrp;
 
              }
@@ -106,7 +96,7 @@ class ProductController
 
     }
 
-    public function add()
+    public function addProduct()
     {
         UserController::validateForAdmin();
 
@@ -161,7 +151,7 @@ class ProductController
         return $err;
     }
 
-    public function edit(){
+    public function editProduct(){
 
         if (isset($_POST["saveChanges"])) {
             $msg = "";
@@ -314,7 +304,7 @@ class ProductController
 
     }
 
-    public function addProduct()
+    public function addProductPage()
     {
         UserController::validateForAdmin();
         include_once "view/addProduct.php";
@@ -335,7 +325,7 @@ class ProductController
     }
 
 
-    public function editProduct()
+    public function editProductPage()
     {
         UserController::validateForAdmin();
         if (isset($_POST["editProduct"])) {
@@ -457,7 +447,7 @@ class ProductController
             $mail->isHTML(true);                                  // Set email format to HTML
 
             $mail->Subject = 'Your Product is on Sale !!!';
-            $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents/?target=product&action=show&prdId=$productId>Open Here</a>";
+            $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents//product/$productId>Open Here</a>";
             $mail->AltBody = 'Click For Register';
 
 
