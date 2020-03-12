@@ -111,7 +111,7 @@ use model\ProductDAO;
                     } else { ?>
                         <div>
                             <h4>You can't finish order without Address!</h4>
-                            <a href="?target=address&action=newAddress">
+                            <a href="/addAddress">
                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add Address
                                 </button>
                             </a>

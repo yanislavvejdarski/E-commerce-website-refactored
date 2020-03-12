@@ -40,7 +40,7 @@ namespace view;
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <a href="/addAddress" style="width: 100%">
+                        <a href="/address/new" style="width: 100%">
                             <button type="button"  class="btn btn-outline-primary" style="width: 100%">Add Address</button>
                         </a>
                     </div>
@@ -69,7 +69,7 @@ namespace view;
                     <p class="card-text"> Email: <?php echo $user->email; ?></p>
                     <p class="card-text">  Age: <?php echo $user->age ?></p>
                     <p class="card-text">  Phone Number: <?php echo "+359". $user->phone_number ?></p>
-                    <a href="/editProfilePage" class="btn btn-primary">Edit Profile</a>
+                    <a href="/myAccount/editPage" class="btn btn-primary">Edit Profile</a>
                 </div>
             </div>
 
@@ -88,10 +88,10 @@ namespace view;
                                 <div class="row">
                                     <form action='/editAddressPage' method="post" style="margin-left: 15px;">
                                         <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
-                                        <input type="submit" class="btn btn-primary" name="editAddress" value="Edit" >
+                                        <input type="submit" class="btn btn-primary" name="address/edit" value="Edit" >
                                     </form>
 
-                                    <form action='/deleteAddress' method="post" style="margin-left: 15px;">
+                                    <form action='/address/delete' method="post" style="margin-left: 15px;">
                                         <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
                                         <input type="submit" class="btn btn-primary" name="deleteAddress" value="Delete">
                                     </form>

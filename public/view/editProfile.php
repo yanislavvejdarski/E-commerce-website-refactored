@@ -38,7 +38,7 @@ $user=$userController->getUserById();
         </div>
         <?php
     }?>
-    <form action="/editProfile" method="post">
+    <form action="/myAccount/edit" method="post">
 
 
         <div class="form-group">

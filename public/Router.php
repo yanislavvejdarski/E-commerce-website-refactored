@@ -5,9 +5,9 @@ class Router
     public $uri;
 
 
-    public function __construct($serverURI)
+    public function __construct()
     {
-        $this->uri = $serverURI;
+        $this->uri = $_SERVER["REQUEST_URI"];
     }
 
     /*
@@ -80,7 +80,6 @@ class Router
 
             if (empty($params)) {
                 if (class_exists($controller) && method_exists($object,$action)){
-//                    var_dump(123);
                     return $object->$action();
                 }
                 else{
@@ -97,6 +96,6 @@ class Router
         }
     }
     public function error404(){
-        include_once "view/404.php";
+
     }
 }

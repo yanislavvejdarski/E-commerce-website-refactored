@@ -24,7 +24,7 @@ $types=$typeDAO->getTypes();
 
                 <?php foreach ($categories as $category) {
                     ?>
-                    <li class='dropdown-submenu'><a class='dropdown-item dropdown-toggle' data-toggle='dropdown' href='?target=product&action=show&ctgId=<?=$category->id?>'><?=$category->name?></a>
+                    <li class='dropdown-submenu'><a class='dropdown-item dropdown-toggle' data-toggle='dropdown' href='/ctgId/<?=$category->id?>'><?=$category->name?></a>
                         <ul class='dropdown-menu'>
                             <?php
                             foreach ($types as $type) {
@@ -64,7 +64,7 @@ $types=$typeDAO->getTypes();
                     <p>Hello,<?= $_SESSION["logged_user_first_name"] . " " . $_SESSION["logged_user_last_name"]  ?> </p>
                     <a class="dropdown-item" href="/myAccount">My Account</a>
                     <a class="dropdown-item" href="/orders">My Orders</a>
-                    <a class="dropdown-item" href="/addAddress">Add Address</a>
+                    <a class="dropdown-item" href="/address/new">Add Address</a>
                     <a class="dropdown-item" href="/ratedProducts">My Rated Products</a>
                     <hr>
                     <a class="dropdown-item" href="/logout">Log Out</a>

@@ -72,7 +72,7 @@ class ProductController
 
              }
              else{
-                 header("Location: ?target=main&action=render");
+                 header("Location: /home");
              }
 
 
@@ -229,7 +229,7 @@ class ProductController
             $productId = $_POST["product_id"];
             include_once "view/editProduct.php";
         }else{
-            header("Location:?target=product&action=main");
+            header("Location:/home");
         }
 
     }

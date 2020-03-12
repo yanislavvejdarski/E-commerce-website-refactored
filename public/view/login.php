@@ -23,6 +23,6 @@ namespace view;
     </form>
     Don't have an account? Register here: <br>
     <a href="/registerPage"><button name="register" type="submit" class="btn btn-primary">Register</button></a><br><br>
-    <a href="/forgottenPassword"><button type="submit" class="btn btn-primary">Forgot your password ?</button></a>
+    <a href="/password/forgot"><button type="submit" class="btn btn-primary">Forgot your password ?</button></a>
 </div>
 </body>

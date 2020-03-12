@@ -29,7 +29,7 @@ $cities=$addressController->getCities();
         <?php
     }
     ?>
-    <form action="/editAddress" method="post" class="form-group">
+    <form action="/address/edit" method="post" class="form-group">
         <input class="form-group" type="hidden" name="address_id" value="<?php echo $address->id ?>">
         <table>
             <tr>

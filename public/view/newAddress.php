@@ -22,7 +22,7 @@ $cities=$addressController->getCities();
         <?php
     }
     ?>
-    <form action="/addNewAddress" method="post">
+    <form action="/address/add" method="post">
         <div class="form-group">
             <tr>
                 <td>City</td>

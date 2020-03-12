@@ -45,7 +45,7 @@ $(function(){
             });
             console.log(checked);
             vueInstance.show();
-            $.post('/filterProducts', {checked})
+            $.post('/filter/products', {checked})
                 .then((filtered) => {
                     console.log(filtered)
                     console.log("The type is: " + typeof(filtered));

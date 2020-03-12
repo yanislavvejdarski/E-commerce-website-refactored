@@ -101,7 +101,7 @@ use model\RatingDAO;
 
                                 ?>
 
-                                <a href="/rateProduct/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
+                                <a href="/rate/product/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
 
                                 <?php
 
@@ -128,10 +128,10 @@ use model\RatingDAO;
                             else {
                                 ?>
 
-                                    <a href="?target=user&action=loginPage" class="btn btn-primary btn-lg btn-block">Add To Cart</a>
+                                    <a href="/loginPage" class="btn btn-primary btn-lg btn-block">Add To Cart</a>
 
-                                <a href="?target=user&action=loginPage" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
-                                <form action="?target=user&action=loginPage" method="post">
+                                <a href="/loginPage" class="btn btn-primary btn-lg btn-block">Rate This Product</a>
+                                <form action="/loginPage" method="post">
                                     <button type="submit"><img src="../icons/unlike.svg" width="50" height="50"></button>
                                 </form>
 
