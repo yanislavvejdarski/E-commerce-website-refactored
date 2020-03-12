@@ -13,7 +13,7 @@ class SearchDAO
 
        $pdo = DBManager::getInstance()->getPDO();
 
-       $sql = "SELECT id , name FROM products WHERE name LIKE ? LIMIT 4;";
+       $sql = "SELECT id , name FROM products WHERE name LIKE ? LIMIT 5;";
             $statement = $pdo->prepare($sql);
             $statement->execute($params);
             $rows = $statement->fetchAll(PDO::FETCH_ASSOC);

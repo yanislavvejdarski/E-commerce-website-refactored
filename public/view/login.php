@@ -8,7 +8,7 @@ namespace view;
 
     <h1>Login here:</h1>
     <br>
-    <form action="?target=User&action=login" method="post">
+    <form action="/login" method="post">
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -22,7 +22,7 @@ namespace view;
         <button name="login" type="submit" class="btn btn-primary">Login</button>
     </form>
     Don't have an account? Register here: <br>
-    <a href="?target=User&action=registerPage"><button name="register" type="submit" class="btn btn-primary">Register</button></a><br><br>
-    <a href="?target=User&action=forgottenPassword"><button type="submit" class="btn btn-primary">Forgot your password ?</button></a>
+    <a href="/registerPage"><button name="register" type="submit" class="btn btn-primary">Register</button></a><br><br>
+    <a href="/password/forgot"><button type="submit" class="btn btn-primary">Forgot your password ?</button></a>
 </div>
 </body>

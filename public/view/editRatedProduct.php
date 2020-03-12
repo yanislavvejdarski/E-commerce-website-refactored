@@ -14,7 +14,7 @@ namespace view;
     <title>Document</title>
 </head>
 <body>
-<form action="?target=rating&action=editRate" method="post">
+<form action="/rate/edit" method="post">
     <table>
         <tr> <td><?= $_POST['product_name'];?></td></tr>
         <tr><td><img src="<?= $_POST['image_url'] ?>"width="150"></td></tr>

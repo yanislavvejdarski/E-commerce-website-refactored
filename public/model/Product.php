@@ -22,7 +22,7 @@ function __construct($id , $name , $producerId , $price , $typeId , $quantity ,$
         $this->price=$price;
         $this->typeId=$typeId;
         $this->quantity=$quantity;
-        $this->imageUrl=$imageUrl;
+        $this->imageUrl='../' . $imageUrl;
     }
 
     public function setId($id)

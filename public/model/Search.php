@@ -45,7 +45,7 @@ class Search{
         foreach ($this->products as $product)
             {
                 ?>
-                <h3><a href="?target=product&action=show&prdId=<?=$product["id"]?>"> <?= $product["name"] ?></a></h3>
+                <h3><a href="/product/<?=$product["id"]?>"> <?= $product["name"] ?></a></h3>
                 <?php
             }
     }
@@ -56,7 +56,7 @@ class Search{
             echo "<h1>Categories</h1>";
             foreach ($this->categories as $category) {
                 ?>
-                <h3><a href="?target=product&action=show&ctgId=<?=$category["id"]?>"> <?= $category["name"] ?></a></h3>
+                <h3><a href="/ctgId/<?=$category["id"]?>"> <?= $category["name"] ?></a></h3>
                 <?php
             }
         }
@@ -68,7 +68,7 @@ class Search{
             echo "<h1>Type</h1>";
             foreach ($this->types as $type) {
                 ?>
-                <h3><a href="?target=product&action=show&typId=<?= $type["id"] ?>" ><?= $type["name"] ?></a></h3>
+                <h3><a href="/typeId/<?= $type["id"] ?>" ><?= $type["name"] ?></a></h3>
                 <?php
             }
         }

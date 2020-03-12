@@ -6,7 +6,7 @@ use model\ProductDAO;
 
 try{
     ?>
-    <script src="view/filter.js"></script>
+    <script src="../view/filter.js"></script>
 
 
     <?php

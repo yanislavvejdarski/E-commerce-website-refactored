@@ -21,13 +21,13 @@ use model\ProductDAO;
                     <div class="col-3">
 
                         <div class="card">
-                           <a href="?&target=product&action=show&prdId=<?=$product->id?>"> <img class="card-img-top" src="<?= $product->imageUrl ?>" alt="Card image cap" height="200" width="30"></a>
+                           <a href="/product/<?=$product->id?>"> <img class="card-img-top" src="../../<?= $product->imageUrl ?>" alt="Card image cap" height="200" width="30"></a>
                             <div class="card-body">
                                 <h5 class="card-title"><?= $product->name ?></h5>
                                 <p class="card-text"><?= $product->price ?> EURO</p>
-                                <a href="?target=cart&action=add&id=<?= $product->id ?>"
+                                <a href="/cart/add/product/<?= $product->id ?>"
                                    class="btn btn-primary">Add to cart</a>
-                                <a href="?target=favourite&action=delete&id=<?= $product->id ?>"
+                                <a href="/favourites/remove/product/<?= $product->id ?>"
                                    class="btn btn-primary">Remove From Favourite</a>
                             </div>
                         </div>

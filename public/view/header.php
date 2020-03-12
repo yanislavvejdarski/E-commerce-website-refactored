@@ -5,13 +5,15 @@ use model\TypeDAO;
 
 $typeDAO=new TypeDAO();
 $categories=$typeDAO->getCategories();
+
 $types=$typeDAO->getTypes();
+
 ?>
 
 
 <div class="bg-light" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light container" >
-    <a href="?target=main&action=render"><img src="icons/emagLogo.svg" height="100" width="150"></a>
+    <a href="/home"><img src="../../../icons/emagLogo.svg" height="100" width="150"></a>
 
     <ul class="navbar-nav mr-auto " style="margin-right: 0px !important;">
         <li class="nav-item dropdown">
@@ -22,13 +24,13 @@ $types=$typeDAO->getTypes();
 
                 <?php foreach ($categories as $category) {
                     ?>
-                    <li class='dropdown-submenu'><a class='dropdown-item dropdown-toggle' data-toggle='dropdown' href='?target=product&action=show&ctgId=<?=$category->id?>'><?=$category->name?></a>
+                    <li class='dropdown-submenu'><a class='dropdown-item dropdown-toggle' data-toggle='dropdown' href='/ctgId/<?=$category->id?>'><?=$category->name?></a>
                         <ul class='dropdown-menu'>
                             <?php
-                            foreach ( $types as $type) {
+                            foreach ($types as $type) {
                                 if($type->categorie_id==$category->id){
                                     ?>
-                                    <a class='dropdown-item' href='?target=product&action=show&typId=<?=$type->id?>'><?=$type->name?></a>
+                                    <a class='dropdown-item' href='/typeId/<?=$type->id?>'><?=$type->name?></a>
                                     <?php
                                 }
                             }
@@ -50,7 +52,7 @@ $types=$typeDAO->getTypes();
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
-        <a href="?target=user&action=account">	<img src="icons/user.svg" href="" height="60" width="60"></a>
+        <a href="/myAccount">	<img src="../../../icons/user.svg" href="" height="60" width="60"></a>
         <div class="dropdown">
             <a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 My Account
@@ -60,19 +62,19 @@ $types=$typeDAO->getTypes();
                 <?php if(isset( $_SESSION["logged_user_id"])){
                     ?>
                     <p>Hello,<?= $_SESSION["logged_user_first_name"] . " " . $_SESSION["logged_user_last_name"]  ?> </p>
-                    <a class="dropdown-item" href="?target=user&action=account">My Account</a>
-                    <a class="dropdown-item" href="?target=order&action=show">My Orders</a>
-                    <a class="dropdown-item" href="?target=address&action=newAddress">Add Address</a>
-                    <a class="dropdown-item" href="?target=rating&action=myRated">My Rated Products</a>
+                    <a class="dropdown-item" href="/myAccount">My Account</a>
+                    <a class="dropdown-item" href="/orders">My Orders</a>
+                    <a class="dropdown-item" href="/address/new">Add Address</a>
+                    <a class="dropdown-item" href="/ratedProducts">My Rated Products</a>
                     <hr>
-                    <a class="dropdown-item" href="?target=user&action=logout">Log Out</a>
+                    <a class="dropdown-item" href="/logout">Log Out</a>
                     <?php
                 }else{
                     ?>
 
-                <a class="dropdown-item" href="?target=user&action=loginPage">Login</a>
+                <a class="dropdown-item" href="/loginPage">Login</a>
                     <hr>
-                <a class="dropdown-item" href="?target=user&action=registerPage">Register</a>
+                <a class="dropdown-item" href="/registerPage">Register</a>
 
                 <?php
                 }
@@ -83,12 +85,12 @@ $types=$typeDAO->getTypes();
 
     if(isset($_SESSION["logged_user_role"]) && $_SESSION["logged_user_role"]=="admin"){
         ?>
-        <a href="?target=product&action=addProduct"><button>Add New Product</button></a>
+        <a href="/admin/addProductPage"><button>Add New Product</button></a>
         <?php
     }else{
         ?>
-        <a  href="?target=favourite&action=show"><img src="icons/like.svg" height="60" width="60">Favourites</a>
-        <a href="?target=cart&action=show"><img src="icons/cart.svg" height="60" width="60">Мy Cart</a>
+        <a  href="/favourites"><img src="../../../icons/like.svg" height="60" width="60">Favourites</a>
+        <a href="/cart"><img src="../../../icons/cart.svg" height="60" width="60">Мy Cart</a>
         <?php
     }
     ?>
@@ -99,7 +101,7 @@ $types=$typeDAO->getTypes();
     </div>
 </nav>
 </div>
-<link rel="stylesheet" href="view/css.css">
+<link rel="stylesheet" href="../../../view/css.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 

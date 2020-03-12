@@ -11,6 +11,6 @@ class Type{
         $this->categorie = $categorie;
     }
     public function show(){
-        ?><h3><a href="?target=product&action=show&typId=<?= $this->id ?>" ><?= $this->name?></a></h3> <?php
+        ?><h3><a href="/typeId/<?= $this->id ?>" ><?= $this->name?></a></h3> <?php
     }
 }
