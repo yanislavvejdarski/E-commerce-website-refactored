@@ -3,7 +3,7 @@
 class Router
 {
     public $uri;
-
+    public $flag = false;
 
     public function __construct()
     {
@@ -65,7 +65,7 @@ class Router
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
             $params = [];
-
+            $this->flag= true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
                     $params[$explodedUrl[$i - 1]] = $uriParams[$i];
@@ -96,6 +96,8 @@ class Router
         }
     }
     public function error404(){
-
+        if (!$this->flag){
+            include_once "view/404.php";
+        }
     }
 }

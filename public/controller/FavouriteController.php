@@ -36,20 +36,20 @@ class FavouriteController{
     public function add($params){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        if (isset($params["add"])){
+        if (isset($params["product"])){
             if (isset($_POST["like"])) {
                 $prdId = $_POST["like"];
                 $favoriteDAO=new FavouriteDAO();
-                $check = $favoriteDAO->checkIfInFavourites($params["add"] , $_SESSION["logged_user_id"]);
+                $check = $favoriteDAO->checkIfInFavourites($params["product"] , $_SESSION["logged_user_id"]);
 
                 if ($check){
                     echo "Already added in Favourites";
                 }
                 else{
                     $productDAO = new ProductDAO();
-                    $cheker = $productDAO->findProduct($params["add"]);
+                    $cheker = $productDAO->findProduct($params["product"]);
                     if ($cheker->id != ""){
-                        $favoriteDAO->addToFavourites($params["add"],$_SESSION["logged_user_id"]);
+                        $favoriteDAO->addToFavourites($params["product"],$_SESSION["logged_user_id"]);
                         header("Location:/product/$prdId");
                     }
                     else{
@@ -61,16 +61,16 @@ class FavouriteController{
             }
             else{
                 $favoriteDAO=new FavouriteDAO();
-                $check = $favoriteDAO->checkIfInFavourites($params["add"] , $_SESSION["logged_user_id"]);
+                $check = $favoriteDAO->checkIfInFavourites($params["product"] , $_SESSION["logged_user_id"]);
 
                 if ($check){
                     echo "Already added in Favourites";
                 }
                 else{
                     $productDAO = new ProductDAO();
-                    $cheker = $productDAO->findProduct($params["add"]);
+                    $cheker = $productDAO->findProduct($params["product"]);
                     if ($cheker->id != ""){
-                        $favoriteDAO->addToFavourites($params["add"],$_SESSION["logged_user_id"]);
+                        $favoriteDAO->addToFavourites($params["product"],$_SESSION["logged_user_id"]);
                         $this->show();
                         include_once "view/favourites.php";
                     }
@@ -93,9 +93,9 @@ class FavouriteController{
         $validateSession->validateForLoggedUser();
         if (isset($_POST["like"])){
             $prdId = $_POST["like"];
-            if (isset($params["remove"]) && is_numeric($params["remove"])){
+            if (isset($params["product"]) && is_numeric($params["product"])){
                 $favoriteDAO=new FavouriteDAO();
-                $favoriteDAO->deleteFromFavourites($params["remove"] , $_SESSION["logged_user_id"]);
+                $favoriteDAO->deleteFromFavourites($params["product"] , $_SESSION["logged_user_id"]);
                 header("Location: /product/".$prdId);
             }else{
                 $this->show();
@@ -103,11 +103,11 @@ class FavouriteController{
             }
         }
         else{
-            if (isset($params["remove"]) && is_numeric($params["remove"])){
+            if (isset($params["product"]) && is_numeric($params["product"])){
 
 
                 $favoriteDAO=new FavouriteDAO();
-                $favoriteDAO->deleteFromFavourites($params["remove"] , $_SESSION["logged_user_id"]);
+                $favoriteDAO->deleteFromFavourites($params["product"] , $_SESSION["logged_user_id"]);
                 $this->show();
 
             }else{

@@ -13,7 +13,7 @@ $types=$typeDAO->getTypes();
 
 <div class="bg-light" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light container" >
-    <a href="/home"><img src="../../icons/emagLogo.svg" height="100" width="150"></a>
+    <a href="/home"><img src="../../../icons/emagLogo.svg" height="100" width="150"></a>
 
     <ul class="navbar-nav mr-auto " style="margin-right: 0px !important;">
         <li class="nav-item dropdown">
@@ -52,7 +52,7 @@ $types=$typeDAO->getTypes();
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
-        <a href="/myAccount">	<img src="../../icons/user.svg" href="" height="60" width="60"></a>
+        <a href="/myAccount">	<img src="../../../icons/user.svg" href="" height="60" width="60"></a>
         <div class="dropdown">
             <a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 My Account
@@ -89,8 +89,8 @@ $types=$typeDAO->getTypes();
         <?php
     }else{
         ?>
-        <a  href="/favourites"><img src="../../icons/like.svg" height="60" width="60">Favourites</a>
-        <a href="/cart"><img src="../../icons/cart.svg" height="60" width="60">Мy Cart</a>
+        <a  href="/favourites"><img src="../../../icons/like.svg" height="60" width="60">Favourites</a>
+        <a href="/cart"><img src="../../../icons/cart.svg" height="60" width="60">Мy Cart</a>
         <?php
     }
     ?>
@@ -101,7 +101,7 @@ $types=$typeDAO->getTypes();
     </div>
 </nav>
 </div>
-<link rel="stylesheet" href="../../view/css.css">
+<link rel="stylesheet" href="../../../view/css.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 

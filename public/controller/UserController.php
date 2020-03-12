@@ -41,9 +41,7 @@ class UserController{
                     }
                 }
             }
-
-
-            header();
+            
             if($msg==""){
                 header("Location: /home");
             }else{

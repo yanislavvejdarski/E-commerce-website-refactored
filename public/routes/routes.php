@@ -12,13 +12,13 @@ $routes->route("/cart/update", "CartController@update");
 // Favourites Page
 $routes->route("/favourites", "FavouriteController@show");
 // Add To Favourites
-$routes->route("/favourites/add/{:id}", "FavouriteController@add");
+$routes->route("/favourites/add/product/{:id}", "FavouriteController@add");
 // Remove From Favourites
-$routes->route("/favourites/remove/{:id}", "FavouriteController@delete");
+$routes->route("/favourites/remove/product/{:id}", "FavouriteController@delete");
 // Add Product To Cart
-$routes->route("/cart/add/{:id}", "CartController@add");
+$routes->route("/cart/add/product/{:id}", "CartController@add");
 // Remove Product From Cart
-$routes->route("/cart/remove/{:id}", "CartController@delete");
+$routes->route("/cart/remove/product/{:id}", "CartController@delete");
 // Customer Rate Product
 $routes->route("/rate/product/{:id}", "RatingController@rateProduct");
 // Customer Submit Rating Product

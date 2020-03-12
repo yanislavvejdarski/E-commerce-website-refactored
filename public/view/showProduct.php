@@ -93,7 +93,7 @@ use model\RatingDAO;
                             <?php if (isset($_SESSION["logged_user_role"])){
                                 ?>
 
-                                    <a href="/cart/add/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Add To Cart </a>
+                                    <a href="/cart/add/product/<?=$this->id?>" class="btn btn-primary btn-lg btn-block">Add To Cart </a>
 
                                 <?php
                                 $favouriteDAO=new FavouriteDAO;
@@ -108,7 +108,7 @@ use model\RatingDAO;
                                 if ($checker)
                                 {
                                     ?>
-                                        <form action="/favourites/remove/<?=$this->id?>" method="post">
+                                        <form action="/favourites/remove/product/<?=$this->id?>" method="post">
                                             <input type="hidden" value="<?=$this->id?>" name="like">
                                             <button type="submit"><img src="../icons/like.svg" width="50" height="50"></button>
                                         </form>
@@ -117,7 +117,7 @@ use model\RatingDAO;
                                 else{
 
                                     ?>
-                                            <form action="/favourites/add/<?=$this->id?>" method="post">
+                                            <form action="/favourites/add/product/<?=$this->id?>" method="post">
                                                 <input type="hidden" value="<?=$this->id?>" name="like">
                                                 <button type="submit"><img src="../icons/unlike.svg" width="50" height="50"></button>
                                             </form>

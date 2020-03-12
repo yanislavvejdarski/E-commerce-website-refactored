@@ -27,13 +27,13 @@ use model\ProductDAO;
 
                         <div class="col-md-4">
                             <a href="/product/<?= $productInfo->id ?>"> <img
-                                        src="<?="../". $productInfo->imageUrl ?>" class="card-img" alt="..."></a>
+                                        src="<?="../../../". $productInfo->imageUrl ?>" class="card-img" alt="..."></a>
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title"><?= $productInfo->name ?></h5>
                                 <div class="row">
-                                    <form action="/cart/update" method="post">
+                                    <form action="/cart/update/" method="post">
                                         <input type="hidden" value="<?= $product["product_id"] ?>" name="productId">
                                         <input type="number" value="<?= $product["quantity"] ?>" name="quantity" min="1"
                                                class="form-control" placeholder="Quantity:"
@@ -44,18 +44,18 @@ use model\ProductDAO;
                                 </div>
                                 <h5 class="card-title"><?= $productInfo->price ?> Euro</h5>
                                 <div class="row">
-                                    <a class="btn btn-primary" href="/cart/remove/<?= $product["product_id"] ?>"
+                                    <a class="btn btn-primary" href="/cart/remove/product/<?= $product["product_id"] ?>"
                                        role="button" style="margin-left: 5px;">Remove From Cart</a>
                                     <?php
                                     $favoriteDAO = new FavouriteDAO();
                                     if ($favoriteDAO->checkIfInFavourites($productInfo->id, $_SESSION["logged_user_id"])) { ?>
                                         <a class="btn btn-primary"
-                                           href=/favourites/remove/<?= $productInfo->id ?>
+                                           href=/favourites/remove/product/<?= $productInfo->id ?>
                                            role="button" style="margin-left: 5px;">Remove From Favourite</a>
                                     <?php } else {
                                         ?>
                                         <a class="btn btn-primary"
-                                           href="/favourites/add/<?= $productInfo->id ?>" role="button"
+                                           href="/favourites/add/product/<?= $productInfo->id ?>" role="button"
                                            style="margin-left: 5px;">Add To Favourite</a>
                                         <?php
                                     } ?>
