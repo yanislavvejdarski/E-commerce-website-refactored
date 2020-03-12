@@ -4,6 +4,7 @@ use exception\BadRequestException;
 use exception\NotAuthorizedException;
 use model\ProductDAO;
 use model\RatingDAO;
+use Request;
 
 
 class ratingController
@@ -121,8 +122,10 @@ class ratingController
         include_once "view/myRated.php";
     }
 
-    public function rateProduct($params)
+    public function rateProduct()
     {
+        $param = Request::getInstance();
+        $params = $param->getParams();
         UserController::validateForLoggedUser();
 
         include_once "view/rateProduct.php";

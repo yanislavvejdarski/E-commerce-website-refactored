@@ -7,6 +7,7 @@ use model\ProductDAO;
 use model\Type;
 use model\TypeDAO;
 use PHPMailer;
+use Request;
 
 
 include_once "credentials.php";
@@ -17,8 +18,10 @@ error_reporting(E_ALL);
 
 class ProductController
 {
-    public function show($params)
+    public function show()
     {
+        $param = Request::getInstance();
+        $params = $param->getParams();
         if (isset($params["product"])) {
                 $productDAO = new ProductDAO();
                 $product = $productDAO->findProduct($params["product"]);

@@ -8,8 +8,13 @@ use model\CartDAO;
 use model\ProductDAO;
 use PDOException;
 use PDO;
+use Request;
+
+
 class CartController{
-    public function add($params){
+    public function add(){
+        $param = Request::getInstance();
+        $params = $param->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 
@@ -81,7 +86,9 @@ class CartController{
         }
 
     }
-    public function delete($params){
+    public function delete(){
+        $param = Request::getInstance();
+        $params = $param->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 

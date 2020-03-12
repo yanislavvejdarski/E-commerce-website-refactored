@@ -16,11 +16,7 @@ function handleExceptions(Exception $exception)
 }
 
 set_exception_handler("handleExceptions");
-//
-//$controllerName = isset($_GET["target"]) ? $_GET["target"] : "main";
-//$methodName = isset($_GET["action"]) ? $_GET["action"] : "render";
-//
-//$controllerClassName = "\\controller\\" . ucfirst($controllerName) . "Controller";
+
 
 spl_autoload_register(function ($class) {
 

@@ -9,6 +9,7 @@ use model\FavouriteDAO;
 use model\ProductDAO;
 use PDOException;
 use controller\UserController;
+use Request;
 
 class FavouriteController{
     public function show(){
@@ -33,9 +34,12 @@ class FavouriteController{
  * Annotations
  *
  */
-    public function add($params){
+    public function add(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
+        $param = Request::getInstance();
+        $params = $param->getParams();
+
         if (isset($params["product"])){
             if (isset($_POST["like"])) {
                 $prdId = $_POST["like"];
@@ -88,9 +92,12 @@ class FavouriteController{
     }
 
 
-    public function delete($params){
+    public function delete(){
+        $param = Request::getInstance();
+        $params = $param->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
+
         if (isset($_POST["like"])){
             $prdId = $_POST["like"];
             if (isset($params["product"]) && is_numeric($params["product"])){
