@@ -131,7 +131,7 @@ if ($product["old_price"]!=NULL) {
     </table>
 </form>
 
-<form action="admin/removeDiscount" method="post">
+<form action="/admin/removeDiscount" method="post">
     <input type="hidden" name="product_id" value="<?= $productId?>">
     <input type="hidden" name="product_old_price" value="<?=$product["old_price"]?>">
     <input type="submit" name="remove" value="Remove Promotion">

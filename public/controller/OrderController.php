@@ -5,6 +5,7 @@ use Model\AddressDAO;
 use model\CartDAO;
 use model\OrderDAO;
 use PDOException;
+use Request;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -14,12 +15,14 @@ class OrderController{
     public function order()
     {
         UserController::validateForLoggedUser();
+        $request = Request::getInstance();
+        $post = $request->postParams();
         $orderedProducts = new CartDAO();
-            if (isset($_POST["order"])){
+            if (isset($post["order"])){
 
 
               $orderedProductsa =  $orderedProducts->showCart($_SESSION["logged_user_id"]);
-                OrderDAO::finishOrder($orderedProductsa , $_POST["totalPrice"] , $_SESSION["logged_user_id"]);
+                OrderDAO::finishOrder($orderedProductsa , $post["totalPrice"] , $_SESSION["logged_user_id"]);
                 $cart = new CartController;
                 $cart->show();
 

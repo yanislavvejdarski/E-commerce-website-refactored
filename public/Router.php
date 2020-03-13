@@ -11,7 +11,7 @@ class Router
         $this->uri = $_SERVER["REQUEST_URI"];
     }
 
-    /*
+    /**
      * This is route functioning
      *
      * @param string $url
@@ -28,7 +28,7 @@ class Router
         return $this->matchRoute($helperUrl, $url, $uriParams, $pattern,$request);
     }
 
-    /*
+    /**
      * generating Dynamic Route
      *
      * @param string $uriParams
@@ -54,36 +54,35 @@ class Router
         return $helperUrl;
     }
 
-    /*
-    * Match Route
-    *
-    * @param string $helperUrl
-    * @param string $url
-    * @param array $uriParams
-    * @param string $pattern
-    * @return NULL
-    */
-    public function matchRoute($helperUrl, $url, $uriParams, $pattern,$request)
-    {
+    /**
+     * Match Route
+     *
+     * @param string $helperUrl
+     * @param string $url
+     * @param array $uriParams
+     * @param string $pattern
+     * @param $request
+     * @return NULL
+     */
+    public function matchRoute($helperUrl,
+                               $url,
+                               $uriParams,
+                               $pattern,
+                               $request
+    ){
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
-
-//            $params = [];
             $this->flag= true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
 
                     $request->setGetParam($explodedUrl[$i-1], $uriParams[$i]);
-
-
-
                 }
             }
             $command = explode("@", $pattern);
             $controller = "controller\\" . $command[0];
 
             $action = $command[1];
-
             $object = new $controller;
 
             if (empty($request->getParams())) {
@@ -103,6 +102,7 @@ class Router
             }
         }
     }
+
     public function error404(){
         if (!$this->flag){
             include_once "view/404.php";

@@ -7,6 +7,7 @@ class Request
     private $get;
     private static $instance;
 
+
     public function __construct()
     {
         $this->requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -16,6 +17,18 @@ class Request
 
     }
 
+    /**
+     * @param $param
+     */
+    public function sanitize ($param){
+        $param = trim($param);
+        $param = htmlentities($param);
+        return $param;
+    }
+
+    /**
+     * @return mixed
+     */
     public static function getInstance()
     {
         if (Request::$instance == null) {
@@ -24,15 +37,22 @@ class Request
         return Request::$instance;
     }
 
+    /**
+     * @return mixed
+     */
     public function postParams()
     {
+        foreach ($this->post as $item){
+            $this->sanitize($item);
+        }
         return $this->post;
     }
-    public function postParam($key)
-    {
-        if(!empty($this->post[$key])){
-            return $this->post[$key];
-        }
+    public function postParam(
+        $key,
+        $defaultReturn = null
+    ){
+        $post = $this->post[$key];
+        return isset($this->post[$key]) ? $post : $defaultReturn;
     }
 
     public function getParams()
@@ -44,15 +64,13 @@ class Request
      *
      * @param $key
      * @param null $defaultReturn
-     * @return |null
+     * @return void|null
      */
-    public function getParam($key , $defaultReturn = null)
-    {
-        if(!empty($this->get[$key])){
-            return $this->get[$key];
-        }
-
-        return $defaultReturn;
+    public function getParam(
+        $key,
+        $defaultReturn = null
+    ) {
+        return isset($this->get[$key]) ? $this->sanitize($this->get[$key]) : $defaultReturn;
     }
 
     /**

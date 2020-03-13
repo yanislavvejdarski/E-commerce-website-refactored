@@ -13,8 +13,8 @@ use Request;
 
 class CartController{
     public function add(){
-        $param = Request::getInstance();
-        $params = $param->getParams();
+        $request = Request::getInstance();
+        $params = $request->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 
@@ -65,14 +65,16 @@ class CartController{
     public function update(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        if (isset($_POST["updateQuantity"]) && $_POST["quantity"] > 0 && $_POST["quantity"] < 50
-            && is_numeric($_POST["quantity"]) && (round($_POST["quantity"]) == $_POST["quantity"]) ){
+        $request = Request::getInstance();
+        $post = $request->postParams();
+        if (isset($post["updateQuantity"]) && $post["quantity"] > 0 && $post["quantity"] < 50
+            && is_numeric($post["quantity"]) && (round($post["quantity"]) == $post["quantity"]) ){
 
                 $productDAO=new ProductDAO();
-                $productQuantity = $productDAO->checkQuantity($_POST["productId"]);
-                if ($productQuantity["quantity"] >= $_POST["quantity"]) {
+                $productQuantity = $productDAO->checkQuantity($post["productId"]);
+                if ($productQuantity["quantity"] >= $post["quantity"]) {
                     $cartDAO=new CartDAO();
-                    $cartDAO->updateCartQuantity($_POST["productId"], $_POST["quantity"] , $_SESSION["logged_user_id"]);
+                    $cartDAO->updateCartQuantity($post["productId"], $post["quantity"] , $_SESSION["logged_user_id"]);
                     $this->show();
                 } else {
                     $this->show();

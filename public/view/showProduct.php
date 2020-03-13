@@ -82,7 +82,7 @@ use model\RatingDAO;
                         <div class="row">
  <?php if(isset($_SESSION["logged_user_role"]) && $_SESSION["logged_user_role"]=="admin"){?>
 
-                <form action="admin/editProductPage" method="post">
+                <form action="/admin/editProductPage" method="post">
                     <input type="hidden" name="product_id" value="<?= $this->id ?>">
                     <input type="submit" name="editProduct" value="Edit this product">
                 </form>

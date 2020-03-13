@@ -37,12 +37,13 @@ class FavouriteController{
     public function add(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        $param = Request::getInstance();
-        $params = $param->getParams();
+        $request = Request::getInstance();
+        $params = $request->getParams();
+        $post = $request->postParams();
 
         if (isset($params["product"])){
-            if (isset($_POST["like"])) {
-                $prdId = $_POST["like"];
+            if (isset($post["like"])) {
+                $prdId = $post["like"];
                 $favoriteDAO=new FavouriteDAO();
                 $check = $favoriteDAO->checkIfInFavourites($params["product"] , $_SESSION["logged_user_id"]);
 
@@ -93,13 +94,14 @@ class FavouriteController{
 
 
     public function delete(){
-        $param = Request::getInstance();
-        $params = $param->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
+        $request = Request::getInstance();
+        $params = $request->getParams();
+        $post = $request->postParams();
 
-        if (isset($_POST["like"])){
-            $prdId = $_POST["like"];
+        if (isset($post["like"])){
+            $prdId = $post["like"];
             if (isset($params["product"]) && is_numeric($params["product"])){
                 $favoriteDAO=new FavouriteDAO();
                 $favoriteDAO->deleteFromFavourites($params["product"] , $_SESSION["logged_user_id"]);

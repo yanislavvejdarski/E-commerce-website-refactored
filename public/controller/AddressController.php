@@ -5,22 +5,25 @@ use exception\BadRequestException;
 use exception\NotAuthorizedException;
 use model\Address;
 use model\AddressDAO;
+use Request;
 
 
 class AddressController{
     public function add(){
         UserController::validateForLoggedUser();
+        $request = Request::getInstance();
+        $post = $request->postParams();
         $err=false;
         $msg='';
-        if(isset($_POST["add"])){
-            if(empty($_POST["city"]) || empty($_POST["street"])) {
+        if(isset($post["add"])){
+            if(empty($post["city"]) || empty($post["street"])) {
                 $msg = 'All fields are required!';
-            }elseif(!$this->validateCity($_POST["city"])){
+            }elseif(!$this->validateCity($post["city"])){
                 $msg="Invalid city!";
             }
             if($msg==""){
 
-                $address=new Address($_SESSION["logged_user_id"],$_POST["city"],$_POST["street"]);
+                $address=new Address($_SESSION["logged_user_id"],$post["city"],$post["street"]);
                 $addressDAO=new AddressDAO();
 
 
@@ -39,17 +42,17 @@ class AddressController{
         UserController::validateForLoggedUser();
         $err=false;
         $msg='';
-        if(isset($_POST["save"])){
-            if(empty($_POST["city"]) || empty($_POST["street"])) {
+        if(isset($post["save"])){
+            if(empty($post["city"]) || empty($post["street"])) {
                 $msg = 'All fields are required!';
-            }elseif(!$this->validateCity($_POST["city"])){
+            }elseif(!$this->validateCity($post["city"])){
                 $msg="Invalid city!";
             }
             if($msg==""){
-                $address=new Address($_SESSION["logged_user_id"],$_POST["city"],$_POST["street"]);
-                $address->setId($_POST["address_id"]);
+                $address=new Address($_SESSION["logged_user_id"],$post["city"],$post["street"]);
+                $address->setId($post["address_id"]);
                 $addressDAO=new AddressDAO();
-                $addressDetails=$addressDAO->getById($_POST["address_id"]);
+                $addressDetails=$addressDAO->getById($post["address_id"]);
                     if($addressDetails->user_id === $_SESSION["logged_user_id"]){
                         $addressDAO->edit($address);
                     }else{
@@ -68,12 +71,12 @@ class AddressController{
 
     public function delete(){
         UserController::validateForLoggedUser();
-        if(isset($_POST["deleteAddress"])){
+        if(isset($post["deleteAddress"])){
 
             $addressDAO=new AddressDAO();
-            $addressDetails=$addressDAO->getById($_POST["address_id"]);
+            $addressDetails=$addressDAO->getById($post["address_id"]);
             if($addressDetails->user_id == $_SESSION["logged_user_id"]){
-                $addressDAO->delete($_POST["address_id"]);
+                $addressDAO->delete($post["address_id"]);
             }else{
                 throw new NotAuthorizedException("Not Authorized for this operation!");
             }
@@ -98,7 +101,7 @@ class AddressController{
     public function editAddress(){
         UserController::validateForLoggedUser();
         $addressDAO=new AddressDAO;
-        $address=$addressDAO->getById($_POST["address_id"]);
+        $address=$addressDAO->getById($post["address_id"]);
         include_once "view/editAddress.php";
 
     }

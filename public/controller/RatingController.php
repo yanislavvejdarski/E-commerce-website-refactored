@@ -13,24 +13,26 @@ class ratingController
 
     public function rate(){
         UserController::validateForLoggedUser();
-        $msg="";
-        if (isset($_POST["save"])) {
+        $request = Request::getInstance();
 
-            if (empty($_POST["comment"]) || empty($_POST["rating"])) {
+        $msg="";
+        if (!empty($request->postParam("save"))) {
+
+            if (empty($request->postParam("comment")) || empty($request->postParam("rating"))) {
                 $msg = "All fields are required!";
-            }elseif($this->commentValidation($_POST["comment"])){
+            }elseif($this->commentValidation($request->postParam("comment"))){
                 $msg = "Invalid comment!";
-            }elseif($this->ratingValidation($_POST["rating"])){
+            }elseif($this->ratingValidation($request->postParam("rating"))){
                 $msg = "Invalid rating!";
             }
 
             $productDAO=new ProductDAO();
-            if($productDAO->findProduct([$_POST["product_id"]])){
+            if($productDAO->findProduct($request->postParam("product_id"))){
                 if ($msg == "") {
 
                     $ratingDAO=new RatingDAO();
-                    $ratingDAO->addRating($_SESSION["logged_user_id"], $_POST["product_id"], $_POST["rating"], $_POST["comment"]);
-                    header("Location: product/".$_POST["product_id"]);
+                    $ratingDAO->addRating($_SESSION["logged_user_id"], $request->postParam("product_id"), $request->postParam("rating"), $request->postParam("comment"));
+                    header("Location: product/".$request->postParam("product_id"));
 
                 }else{
                     throw new BadRequestException("$msg");
@@ -45,25 +47,28 @@ class ratingController
 
     public function editRate(){
         $msg="";
-        UserController::validateForLoggedUser();
-        if (isset($_POST["saveChanges"])) {
 
-            if (empty($_POST["comment"]) || empty($_POST["rating"])) {
+        UserController::validateForLoggedUser();
+        $request = Request::getInstance();
+        $post = $request->postParams();
+        if (!empty($post["saveChanges"])) {
+
+            if (empty($post["comment"]) || empty($post["comment"])) {
                 $msg = "All fields are required!";
-            }elseif($this->commentValidation($_POST["comment"])){
+            }elseif($this->commentValidation($post["comment"])){
                 $msg = "Invalid comment!";
-            }elseif($this->ratingValidation($_POST["rating"])){
+            }elseif($this->ratingValidation($post["rating"])){
                 $msg = "Invalid rating!";
             }
 
               $ratingDAO=new RatingDAO();
-            $rating=$ratingDAO->getRatingById($_POST["rating_id"]);
+            $rating=$ratingDAO->getRatingById($post["rating_id"]);
             if($rating->user_id!==$_SESSION["logged_user_id"]){
 
                 throw new NotAuthorizedException("Not authorized for this operation!");
             }elseif($msg == "") {
                $ratingDAO=new RatingDAO();
-                $ratingDAO->editRating($_POST["rating_id"], $_POST["rating"], $_POST["comment"]);
+                $ratingDAO->editRating($post["rating_id"], $post["rating"], $post["comment"]);
                 header("Location: /ratedProducts");
 
             }
