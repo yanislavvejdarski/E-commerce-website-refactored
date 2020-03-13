@@ -19,6 +19,7 @@ class Request
 
     /**
      * @param $param
+     * @return string
      */
     public function sanitize ($param){
         $param = trim($param);
@@ -47,6 +48,12 @@ class Request
         }
         return $this->post;
     }
+
+    /**
+     * @param $key
+     * @param null $defaultReturn
+     * @return string|null
+     */
     public function postParam(
         $key,
         $defaultReturn = null
@@ -55,6 +62,9 @@ class Request
         return isset($this->post[$key]) ? $post : $defaultReturn;
     }
 
+    /**
+     * @return array
+     */
     public function getParams()
     {
         return $this->get;
@@ -64,7 +74,7 @@ class Request
      *
      * @param $key
      * @param null $defaultReturn
-     * @return void|null
+     * @return string
      */
     public function getParam(
         $key,
