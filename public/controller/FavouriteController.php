@@ -98,10 +98,10 @@ class FavouriteController{
         $validateSession->validateForLoggedUser();
         $request = Request::getInstance();
         $params = $request->getParams();
-        $post = $request->postParams();
+        $like = $request->postParam("like");
 
-        if (isset($post["like"])){
-            $prdId = $post["like"];
+        if (isset($like)){
+            $prdId = $like;
             if (isset($params["product"]) && is_numeric($params["product"])){
                 $favoriteDAO=new FavouriteDAO();
                 $favoriteDAO->deleteFromFavourites($params["product"] , $_SESSION["logged_user_id"]);

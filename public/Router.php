@@ -1,14 +1,15 @@
 <?php
 
 
-class Router
+class Router extends Request
 {
-    public $uri;
+
     public $flag = false;
+    public $request;
 
     public function __construct()
     {
-        $this->uri = $_SERVER["REQUEST_URI"];
+        $this->request = Request::getInstance();
     }
 
     /**
@@ -20,9 +21,9 @@ class Router
      */
     public function route($url, $pattern)
     {
-        $request = Request::getInstance();
+        $request = $this->request;
 
-        $uriParams = explode("/", $this->uri);
+        $uriParams = explode("/", $request->getUri());
 
         $helperUrl = $this->generateDynamicRoute($uriParams);
         return $this->matchRoute($helperUrl, $url, $uriParams, $pattern,$request);
@@ -61,22 +62,21 @@ class Router
      * @param string $url
      * @param array $uriParams
      * @param string $pattern
-     * @param $request
      * @return NULL
      */
-    public function matchRoute($helperUrl,
-                               $url,
-                               $uriParams,
-                               $pattern,
-                               $request
-    ){
+    public function matchRoute(
+        $helperUrl,
+        $url,
+        $uriParams,
+        $pattern
+    ) {
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
             $this->flag= true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
 
-                    $request->setGetParam($explodedUrl[$i-1], $uriParams[$i]);
+                    $this->request->setGetParam($explodedUrl[$i-1], $uriParams[$i]);
                 }
             }
             $command = explode("@", $pattern);
@@ -85,7 +85,7 @@ class Router
             $action = $command[1];
             $object = new $controller;
 
-            if (empty($request->getParams())) {
+            if (empty($this->request->getParams())) {
                 if (class_exists($controller) && method_exists($object,$action)){
                     return $object->$action();
                 }
@@ -94,7 +94,7 @@ class Router
                 }
             } else {
                 if (class_exists($controller) && method_exists($object,$action)){
-                    return $object->$action($request->getParams());
+                    return $object->$action($this->request->getParams());
                 }
                 else{
                     header("Location:/http");
