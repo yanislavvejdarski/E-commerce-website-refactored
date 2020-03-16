@@ -87,7 +87,7 @@ use model\ProductDAO;
                     $addressDAO = new AddressDAO();
                     $myAddresses = $addressDAO->getAll($_SESSION["logged_user_id"]);
 
-                    $addressController = new AddressController();
+                    $addressController = new AddressController(\Request::getInstance());
                     if ($addressController->checkUserAddress()) {
                         ?>
                         <form action="/order" method="post">
@@ -111,7 +111,7 @@ use model\ProductDAO;
                     } else { ?>
                         <div>
                             <h4>You can't finish order without Address!</h4>
-                            <a href="/addAddress">
+                            <a href="/address/new">
                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add Address
                                 </button>
                             </a>

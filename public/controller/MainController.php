@@ -1,7 +1,7 @@
 <?php
 
 namespace controller;
-class MainController
+class MainController extends AbstractController
 {
     public function render()
     {

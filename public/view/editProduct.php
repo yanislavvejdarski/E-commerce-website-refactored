@@ -13,7 +13,7 @@ if (isset($msg) && $msg!="") {
 
 <?php
 
-$productController=new ProductController();
+$productController=new ProductController(\Request::getInstance());
 $producers=$productController->getProducers();
 $product=$productController->getProductById($productId);
 $types= $productController->getTypes();

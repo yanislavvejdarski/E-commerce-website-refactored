@@ -7,32 +7,28 @@ use model\RatingDAO;
 use Request;
 
 
-class ratingController
+class ratingController extends AbstractController
 {
-
-
     public function rate(){
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-
         $msg="";
-        if (!empty($request->postParam("save"))) {
+        if (!empty($this->request->postParam("save"))) {
 
-            if (empty($request->postParam("comment")) || empty($request->postParam("rating"))) {
+            if (empty($this->request->postParam("comment")) || empty($this->request->postParam("rating"))) {
                 $msg = "All fields are required!";
-            }elseif($this->commentValidation($request->postParam("comment"))){
+            }elseif($this->commentValidation($this->request->postParam("comment"))){
                 $msg = "Invalid comment!";
-            }elseif($this->ratingValidation($request->postParam("rating"))){
+            }elseif($this->ratingValidation($this->request->postParam("rating"))){
                 $msg = "Invalid rating!";
             }
 
             $productDAO=new ProductDAO();
-            if($productDAO->findProduct($request->postParam("product_id"))){
+            if($productDAO->findProduct($this->request->postParam("product_id"))){
                 if ($msg == "") {
 
                     $ratingDAO=new RatingDAO();
-                    $ratingDAO->addRating($_SESSION["logged_user_id"], $request->postParam("product_id"), $request->postParam("rating"), $request->postParam("comment"));
-                    header("Location: product/".$request->postParam("product_id"));
+                    $ratingDAO->addRating($_SESSION["logged_user_id"], $this->request->postParam("product_id"), $this->request->postParam("rating"), $this->request->postParam("comment"));
+                    header("Location: product/".$this->request->postParam("product_id"));
 
                 }else{
                     throw new BadRequestException("$msg");
@@ -40,17 +36,13 @@ class ratingController
             }else{
                 throw new NotAuthorizedException("Not authorized for this operation!");
             }
-
         }
-
     }
 
     public function editRate(){
         $msg="";
-
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (!empty($post["saveChanges"])) {
 
             if (empty($post["comment"]) || empty($post["comment"])) {
@@ -64,27 +56,21 @@ class ratingController
               $ratingDAO=new RatingDAO();
             $rating=$ratingDAO->getRatingById($post["rating_id"]);
             if($rating->user_id!==$_SESSION["logged_user_id"]){
-
                 throw new NotAuthorizedException("Not authorized for this operation!");
             }elseif($msg == "") {
                $ratingDAO=new RatingDAO();
                 $ratingDAO->editRating($post["rating_id"], $post["rating"], $post["comment"]);
                 header("Location: /ratedProducts");
-
             }
         }else{
             throw new BadRequestException("$msg");
-
         }
     }
 
     public function showStars($product_id){
 
-
         $ratingDAO=new RatingDAO();
         $product_stars=$ratingDAO->getStarsCount($product_id);
-
-
         $starsCountArr = [];
         for ($i = 1; $i <= 5; $i++) {
             $isZero = true;
@@ -98,11 +84,8 @@ class ratingController
                 $starsCountArr[$i] = 0;
             }
         }
-
         return $starsCountArr;
     }
-
-
 
     public function commentValidation($comment){
         $err=false;
@@ -129,17 +112,14 @@ class ratingController
 
     public function rateProduct()
     {
-        $param = Request::getInstance();
-        $params = $param->getParams();
+        $params = $this->request->getParams();
         UserController::validateForLoggedUser();
-
         include_once "view/rateProduct.php";
     }
 
     public function editRatedPage()
     {
         UserController::validateForLoggedUser();
-
         include_once "view/editRatedProduct.php";
     }
 }

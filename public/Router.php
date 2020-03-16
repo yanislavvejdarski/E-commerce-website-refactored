@@ -1,7 +1,7 @@
 <?php
 
 
-class Router extends Request
+class Router
 {
 
     public $flag = false;
@@ -9,6 +9,7 @@ class Router extends Request
 
     public function __construct()
     {
+
         $this->request = Request::getInstance();
     }
 
@@ -83,7 +84,7 @@ class Router extends Request
             $controller = "controller\\" . $command[0];
 
             $action = $command[1];
-            $object = new $controller;
+            $object = new $controller();
 
             if (empty($this->request->getParams())) {
                 if (class_exists($controller) && method_exists($object,$action)){

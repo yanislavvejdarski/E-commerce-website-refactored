@@ -17,12 +17,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-class ProductController
+class ProductController extends AbstractController
 {
     public function show()
     {
-        $param = Request::getInstance();
-        $params = $param->getParams();
+
+        $params = $this->request->getParams();
         if (isset($params["product"])) {
             $productDAO = new ProductDAO();
             $product = $productDAO->findProduct($params["product"]);
@@ -102,8 +102,8 @@ class ProductController
     public function addProduct()
     {
         UserController::validateForAdmin();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+
+        $post = $this->request->postParams();
         $msg = '';
         if (isset($post["save"])) {
 
@@ -159,8 +159,7 @@ class ProductController
 
     public function editProduct()
     {
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (isset($post["saveChanges"])) {
             $msg = "";
             if (empty($post["name"]) || empty($post["producer_id"])
@@ -297,8 +296,7 @@ class ProductController
     public function removeDiscount()
     {
         UserController::validateForAdmin();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (isset($post["remove"])) {
             if (isset($post["product_id"]) && isset($post["product_old_price"])) {
                 if ($post["product_old_price"] != NULL) {
@@ -342,8 +340,7 @@ class ProductController
     public function editProductPage()
     {
         UserController::validateForAdmin();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (isset($post["editProduct"])) {
             if (isset($post["product_id"])) {
                 $productId = $post["product_id"];
@@ -367,16 +364,15 @@ class ProductController
 
     public function filterProducts()
     {
-        $request = Request::getInstance();
 
         $counter = 0;
-        $filters = $request->postParam("checked");
+        $filters = $this->request->postParam("checked");
         $msg = "";
         $args = [];
-        error_log(json_encode($request->postParam("checked")));
-        if (!empty($request->postParam("checked"))) {
+        error_log(json_encode($this->request->postParam("checked")));
+        if (!empty($this->request->postParam("checked"))) {
 
-            foreach ($request->postParam("checked") as $filter) {
+            foreach ($this->request->postParam("checked") as $filter) {
                 $name = $filter["name"];
                 $checked = $filter["checkedValues"];
                 $params = array_map(function ($el) {

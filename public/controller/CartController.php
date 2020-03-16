@@ -6,17 +6,16 @@ error_reporting(E_ALL);
 
 use model\CartDAO;
 use model\ProductDAO;
-use PDOException;
-use PDO;
 use Request;
 
 
-class CartController{
+
+class CartController extends AbstractController{
     public function add(){
-        $request = Request::getInstance();
-        $params = $request->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
+        $params = $this->request->getParams();
+
 
             if (isset($params["product"]) && is_numeric($params["product"])){
 
@@ -65,8 +64,7 @@ class CartController{
     public function update(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (isset($post["updateQuantity"]) && $post["quantity"] > 0 && $post["quantity"] < 50
             && is_numeric($post["quantity"]) && (round($post["quantity"]) == $post["quantity"]) ){
 
@@ -89,8 +87,8 @@ class CartController{
 
     }
     public function delete(){
-        $param = Request::getInstance();
-        $params = $param->getParams();
+
+        $params = $this->request->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 

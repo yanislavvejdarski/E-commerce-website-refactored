@@ -1,5 +1,7 @@
 <?php
+
 namespace controller;
+
 use exception\BadRequestException;
 use exception\NotAuthorizedException;
 
@@ -9,34 +11,34 @@ use model\UserDAO;
 use PHPMailer;
 use Request;
 
-class UserController{
+class UserController extends AbstractController
+{
+    const MIN_LENGTH = 8;
 
-    const MIN_LENGTH=8;
-
-    public function login(){
-        $request = Request::getInstance();
-        $post = $request->postParams();
-        $msg='';
-        if(isset($post["login"])) {
+    public function login()
+    {
+        $post = $this->request->postParams();
+        $msg = '';
+        if (isset($post["login"])) {
             if (empty($post["email"]) || empty($post["password"])) {
-                $msg='All fields are required!';
-            }elseif($this->validateEmail($post["email"])){
-                $msg="Invalid email format!";
+                $msg = 'All fields are required!';
+            } elseif ($this->validateEmail($post["email"])) {
+                $msg = "Invalid email format!";
 
-            }elseif($this->validatePassword($post["password"])){
+            } elseif ($this->validatePassword($post["password"])) {
                 $msg = "Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!";
             }
-            if($msg==""){
+            if ($msg == "") {
 
-                $userDAO=new UserDAO();
+                $userDAO = new UserDAO();
                 $user = $userDAO->getUserByEmail($post["email"]);
 
                 if ($user) {
                     if (password_verify($post["password"], $user->password)) {
                         $_SESSION["logged_user_id"] = $user->id;
-                        $_SESSION["logged_user_role"]=$user->role;
-                        $_SESSION["logged_user_first_name"]=$user->first_name;
-                        $_SESSION["logged_user_last_name"]=$user->last_name;
+                        $_SESSION["logged_user_role"] = $user->role;
+                        $_SESSION["logged_user_first_name"] = $user->first_name;
+                        $_SESSION["logged_user_last_name"] = $user->last_name;
                     } else {
                         include_once "view/login.php";
                         throw new NotAuthorizedException('Invalid username or password!');
@@ -44,10 +46,10 @@ class UserController{
                     }
                 }
             }
-            
-            if($msg==""){
+
+            if ($msg == "") {
                 header("Location: /home");
-            }else{
+            } else {
                 include_once "view/login.php";
                 throw new BadRequestException ("$msg");
             }
@@ -56,8 +58,7 @@ class UserController{
 
     public function register()
     {
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (isset($post["register"])) {
             $msg = "";
             if (empty($post["email"]) || empty($post["password"]) || empty($post["confirmPassword"])
@@ -92,7 +93,6 @@ class UserController{
             }
 
 
-
             $subscription = "no";
             if (isset($post["subscription"]) && $post["subscription"] == "on") {
                 $subscription = "yes";
@@ -107,31 +107,22 @@ class UserController{
                 $userDAO = new UserDAO();
                 $userDAO->add($newUser);
 
-
                 $_SESSION["logged_user_id"] = $newUser->getId();
                 $_SESSION["logged_user_role"] = $newUser->getRole();
                 $_SESSION["logged_user_first_name"] = $newUser->getFirstName();
                 $_SESSION["logged_user_last_name"] = $newUser->getLastName();
                 header("Location: /home");
             } else {
-
                 throw new BadRequestException("$msg");
-
             }
         }
     }
 
-
-
-
-
     public function edit()
     {
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if (isset($post["edit"])) {
             $msg = '';
-
 
             if (empty($post["email"]) || empty($post["accountPassword"])
                 || empty($post["first_name"]) || empty($post["last_name"])
@@ -151,8 +142,7 @@ class UserController{
                 $msg = "Invalid age format!";
             }
 
-
-            if($msg==""){
+            if ($msg == "") {
 
                 $userDAO = new UserDAO();
                 $user = $userDAO->getUserById($_SESSION["logged_user_id"]);
@@ -160,7 +150,6 @@ class UserController{
 
                     throw new NotAuthorizedException("Incorrect account password!");
                 }
-
 
                 if (empty($post["newPassword"])) {
                     $password = $user->password;
@@ -171,10 +160,8 @@ class UserController{
                     } else {
                         $password = password_hash($post["newPassword"], PASSWORD_BCRYPT);
                     }
-
                 }
             }
-
 
             $subscription = null;
             if (isset($post["subscription"]) && $post["subscription"] == "on") {
@@ -185,7 +172,6 @@ class UserController{
                 } elseif ($post["subs"] == "no") {
                     $subscription = "no";
                 }
-
             }
             if ($msg == "") {
                 $role = "user";
@@ -197,15 +183,16 @@ class UserController{
                 $userDAO = new UserDAO();
                 $userDAO->update($user);
                 $msg = "success";
-
-            }else{
+            } else {
                 throw new BadRequestException("$msg");
             }
             include_once "view/editProfile.php";
         }
     }
-    public function logout(){
-        if(isset($_SESSION["logged_user_id"])){
+
+    public function logout()
+    {
+        if (isset($_SESSION["logged_user_id"])) {
             unset($_SESSION);
             session_destroy();
 
@@ -213,125 +200,129 @@ class UserController{
         }
     }
 
-
-    public function loginPage(){
+    public function loginPage()
+    {
         include_once "view/login.php";
     }
 
-    public function registerPage(){
+    public function registerPage()
+    {
         include_once "view/register.php";
     }
-    public function account(){
+
+    public function account()
+    {
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-            $userDAO=new UserDAO();
-            $user=$userDAO->getUserByid($_SESSION["logged_user_id"]);
-            $addressDAO=new AddressDAO();
-            $addresses=$addressDAO->getAll($_SESSION["logged_user_id"]);
-            include_once "view/account.php";
-
-
+        $userDAO = new UserDAO();
+        $user = $userDAO->getUserByid($_SESSION["logged_user_id"]);
+        $addressDAO = new AddressDAO();
+        $addresses = $addressDAO->getAll($_SESSION["logged_user_id"]);
+        include_once "view/account.php";
 
     }
 
-    public function editPage(){
+    public function editPage()
+    {
         $this->validateForLoggedUser();
-        $userDAO=new UserDAO();
-        $user=$userDAO->getUserByid($_SESSION["logged_user_id"]);
+        $userDAO = new UserDAO();
+        $user = $userDAO->getUserByid($_SESSION["logged_user_id"]);
         include_once "view/editProfile.php";
     }
 
-    public function getUserById(){
+    public function getUserById()
+    {
 
-        $userDAO=new UserDAO();
-        $user=$userDAO->getUserByid($_SESSION["logged_user_id"]);
+        $userDAO = new UserDAO();
+        $user = $userDAO->getUserByid($_SESSION["logged_user_id"]);
         unset($user->password);
         return $user;
     }
 
-    public function validateEmail($email){
-        $err=false;
-
-        if(!preg_match("#[a-zA-Z0-9-_.+]+@[a-zA-Z0-9-]+.[a-zA-Z]+#", $email)){
-            $err=true;
+    public function validateEmail($email)
+    {
+        $err = false;
+        if (!preg_match("#[a-zA-Z0-9-_.+]+@[a-zA-Z0-9-]+.[a-zA-Z]+#", $email)) {
+            $err = true;
         }
         return $err;
     }
 
-    public function validatePassword($password){
-        $err=false;
+    public function validatePassword($password)
+    {
+        $err = false;
         if (strlen($password) < self::MIN_LENGTH) {
-            $err=true;
+            $err = true;
+        } elseif (!preg_match("#[0-9]+#", $password)) {
+            $err = true;
+        } elseif (!preg_match("#[A-Z]+#", $password) && !preg_match("#[a-z]+#", $password)) {
+            $err = true;
         }
-        elseif(!preg_match("#[0-9]+#",$password)) {
-            $err=true;
-        }
-        elseif(!preg_match("#[A-Z]+#",$password) && !preg_match("#[a-z]+#",$password)) {
-            $err=true;
-        }
-        return  $err;;
+        return $err;;
     }
 
-    public function nameValidation($name){
-        $err=false;
-        if(!ctype_alpha($name) || strlen($name) < 2){
-            $err=true;
+    public function nameValidation($name)
+    {
+        $err = false;
+        if (!ctype_alpha($name) || strlen($name) < 2) {
+            $err = true;
         }
         return $err;
     }
 
-    public function phoneNumberValidation($phone_number){
-        $err=false;
-        if(!preg_match('/^[8][0-9]{8}$/', $phone_number) || !is_numeric($phone_number) || $phone_number != round($phone_number)) {
-            $err=true;
+    public function phoneNumberValidation($phone_number)
+    {
+        $err = false;
+        if (!preg_match('/^[8][0-9]{8}$/', $phone_number) || !is_numeric($phone_number) || $phone_number != round($phone_number)) {
+            $err = true;
         }
         return $err;
     }
 
-    public function ageValidation($age){
-        $err=false;
-        if (!is_numeric($age) || $age <18 || $age >100 || $age != round($age)) {
-            $err=true;
+    public function ageValidation($age)
+    {
+        $err = false;
+        if (!is_numeric($age) || $age < 18 || $age > 100 || $age != round($age)) {
+            $err = true;
         }
         return $err;
     }
 
-
-
-
-    public static function validateForLoggedUser(){
-        if(!isset($_SESSION["logged_user_id"])){
+    public static function validateForLoggedUser()
+    {
+        if (!isset($_SESSION["logged_user_id"])) {
             header("Location:/loginPage");
         }
     }
 
-    public static function validateForAdmin(){
-        if(!isset($_SESSION["logged_user_id"]) || $_SESSION["logged_user_role"]!="admin"){
+    public static function validateForAdmin()
+    {
+        if (!isset($_SESSION["logged_user_id"]) || $_SESSION["logged_user_role"] != "admin") {
             header("Location: /home");
         }
     }
 
-
-
-    public function forgottenPassword (){
+    public function forgottenPassword()
+    {
         include_once "view/forgottenPassword.php";
     }
 
-    public function sendNewPassword(){
-        $request = Request::getInstance();
-        $post = $request->postParams();
-        if (isset($post["forgotPassword"])){
-            if (isset($post["email"])){
+    public function sendNewPassword()
+    {
+        $post = $this->request->postParams();
+        if (isset($post["forgotPassword"])) {
+            if (isset($post["email"])) {
                 $emailCheck = new UserDAO();
                 $newPassword = substr(md5(uniqid(mt_rand(), true)), 0, 8);
-                if ($emailCheck->checkEmailExist($post["email"],password_hash($newPassword,PASSWORD_BCRYPT))){
+                if ($emailCheck->checkEmailExist($post["email"], password_hash($newPassword, PASSWORD_BCRYPT))) {
                     $email = new UserController();
-                    $email->sendEmailPassword($post["email"],$newPassword);
+                    $email->sendEmailPassword($post["email"], $newPassword);
                     include_once "view/login.php";
                 }
             }
         }
     }
+
     public function sendEmailPassword($email, $newPassword)
     {
         require_once "controller/credentials.php";
@@ -352,7 +343,7 @@ class UserController{
         $mail->isHTML(true);                                  // Set email format to HTML
 
         $mail->Subject = 'Forgotten Password!!!';
-        $mail->Body = "$newPassword is your new password , You can change it in your profile ! Login " . "<a href='http://localhost:8888/It-talents/loginPage'>here</a>" ;
+        $mail->Body = "$newPassword is your new password , You can change it in your profile ! Login " . "<a href='http://localhost:8888/It-talents/loginPage'>here</a>";
         $mail->AltBody = '';
 
         if (!$mail->send()) {

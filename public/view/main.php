@@ -3,7 +3,7 @@ namespace view;
 
 use controller\ProductController;
 
-$productController=new ProductController();
+$productController=new ProductController(\Request::getInstance());
 $products=$productController->getMostCelledProducts();
 ?>
 

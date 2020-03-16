@@ -1,22 +1,18 @@
 <?php
 namespace controller;
-use Model\Address;
-use Model\AddressDAO;
 use model\CartDAO;
 use model\OrderDAO;
-use PDOException;
 use Request;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-class OrderController{
+class OrderController extends AbstractController {
     public function order()
     {
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         $orderedProducts = new CartDAO();
             if (isset($post["order"])){
 

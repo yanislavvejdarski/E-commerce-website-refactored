@@ -5,7 +5,7 @@ use controller\ProductController;
 
 
 
-$productController=new ProductController();
+$productController=new ProductController(\Request::getInstance());
 $producers=$productController->getProducers();
 $types=$productController->getTypes();
 

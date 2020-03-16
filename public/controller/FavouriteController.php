@@ -7,11 +7,9 @@ error_reporting(E_ALL);
 use exception\NotFoundException;
 use model\FavouriteDAO;
 use model\ProductDAO;
-use PDOException;
-use controller\UserController;
 use Request;
 
-class FavouriteController{
+class FavouriteController extends AbstractController {
     public function show(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
@@ -37,9 +35,8 @@ class FavouriteController{
     public function add(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        $request = Request::getInstance();
-        $params = $request->getParams();
-        $post = $request->postParams();
+        $params = $this->request->getParams();
+        $post = $this->request->postParams();
 
         if (isset($params["product"])){
             if (isset($post["like"])) {
@@ -96,9 +93,8 @@ class FavouriteController{
     public function delete(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        $request = Request::getInstance();
-        $params = $request->getParams();
-        $like = $request->postParam("like");
+        $params = $this->request->getParams();
+        $like = $this->request->postParam("like");
 
         if (isset($like)){
             $prdId = $like;

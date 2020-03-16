@@ -3,7 +3,7 @@ namespace view;
 use controller\AddressController;
 
 
-$addressController=new AddressController();
+$addressController=new AddressController(\Request::getInstance());
 $cities=$addressController->getCities();
 
 

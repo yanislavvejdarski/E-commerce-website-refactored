@@ -8,11 +8,10 @@ use model\AddressDAO;
 use Request;
 
 
-class AddressController{
+class AddressController extends AbstractController {
     public function add(){
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         $err=false;
         $msg='';
         if(isset($post["add"])){
@@ -40,8 +39,7 @@ class AddressController{
     }
     public function edit(){
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         $err=false;
         $msg='';
         if(isset($post["save"])){
@@ -73,8 +71,7 @@ class AddressController{
 
     public function delete(){
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         if(isset($post["deleteAddress"])){
 
             $addressDAO=new AddressDAO();
@@ -104,8 +101,7 @@ class AddressController{
     }
     public function editAddress(){
         UserController::validateForLoggedUser();
-        $request = Request::getInstance();
-        $post = $request->postParams();
+        $post = $this->request->postParams();
         $addressDAO=new AddressDAO;
         $address=$addressDAO->getById($post["address_id"]);
         include_once "view/editAddress.php";

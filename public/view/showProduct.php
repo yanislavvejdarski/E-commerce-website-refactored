@@ -11,10 +11,10 @@ use model\RatingDAO;
     $review=$ratingDAO->getReviewsNumber($this->id);
     $comments=$ratingDAO->getComments($this->id);
 
-    $ratingController=new RatingController();
+    $ratingController=new RatingController(\Request::getInstance());
     $countOfStars=$ratingController->showStars($this->id);
 
-    $productController=new ProductController();
+    $productController=new ProductController(\Request::getInstance());
     $status=$productController->checkIfIsInPromotion($this->id);
     $productAttributes=$productController->getAttributes($this->id);
 

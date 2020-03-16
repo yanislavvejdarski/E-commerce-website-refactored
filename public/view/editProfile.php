@@ -3,7 +3,7 @@ namespace view;
 use controller\UserController;
 
 
-$userController=new UserController();
+$userController=new UserController(\Request::getInstance());
 $user=$userController->getUserById();
 
 
