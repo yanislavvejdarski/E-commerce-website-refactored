@@ -7,7 +7,6 @@ use model\Address;
 use model\AddressDAO;
 use helpers\Request;
 
-
 class AddressController extends AbstractController {
     public function add(){
         UserController::validateForLoggedUser();

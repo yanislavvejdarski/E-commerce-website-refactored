@@ -4,8 +4,6 @@ namespace controller;
 
 use helpers\Request;
 
-
-
 abstract class AbstractController
 {
     /**

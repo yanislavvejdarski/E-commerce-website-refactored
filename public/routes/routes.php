@@ -1,7 +1,6 @@
 <?php
-use helpers\Request;
 
-$routes = new Router($_SERVER["REQUEST_URI"]);
+$routes = new Router();
 
 // Home Page
 $routes->route("/home", "MainController@render");

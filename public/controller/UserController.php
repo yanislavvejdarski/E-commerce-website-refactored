@@ -11,7 +11,6 @@ use model\UserDAO;
 use PHPMailer;
 use helpers\Request;
 
-
 class UserController extends AbstractController
 {
     const MIN_LENGTH = 8;
