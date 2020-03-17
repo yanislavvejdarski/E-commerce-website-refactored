@@ -195,7 +195,6 @@ class ProductDAO{
     }
 
     public  static function filterProducts ($filters,$args){
-        // echo $filters . "\n\n";
         $pdo = DBManager::getInstance()->getPDO();
         $sql = $filters;
         $statement = $pdo->prepare($sql);

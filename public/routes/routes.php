@@ -1,8 +1,11 @@
 <?php
-$routes = new Router($_SERVER["REQUEST_URI"]);
+
+$routes = new Router();
 
 // Home Page
 $routes->route("/home", "MainController@render");
+// Home Page
+$routes->route("", "MainController@render");
 // Single Product Page
 $routes->route("/product/{:id}", "ProductController@show");
 // Cart Page

@@ -1,16 +1,30 @@
 <?php
 
+
+use helpers\Request;
+
 class Router
 {
-    public $uri;
+    /**
+     * @var bool
+     */
     public $flag = false;
 
+    /**
+     * @var instance
+     */
+    public $request;
+
+    /**
+     * Router constructor.
+     */
     public function __construct()
     {
-        $this->uri = $_SERVER["REQUEST_URI"];
+
+        $this->request = Request::getInstance();
     }
 
-    /*
+    /**
      * This is route functioning
      *
      * @param string $url
@@ -19,13 +33,15 @@ class Router
      */
     public function route($url, $pattern)
     {
-        $uriParams = explode("/", $this->uri);
+        $request = $this->request;
+
+        $uriParams = explode("/", $request->getUri());
 
         $helperUrl = $this->generateDynamicRoute($uriParams);
-        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern);
+        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern, $request);
     }
 
-    /*
+    /**
      * generating Dynamic Route
      *
      * @param string $uriParams
@@ -51,52 +67,59 @@ class Router
         return $helperUrl;
     }
 
-    /*
-    * Match Route
-    *
-    * @param string $helperUrl
-    * @param string $url
-    * @param array $uriParams
-    * @param string $pattern
-    * @return NULL
-    */
-    public function matchRoute($helperUrl, $url, $uriParams, $pattern)
+    /**
+     * Match Route
+     *
+     * @param string $helperUrl
+     * @param string $url
+     * @param array $uriParams
+     * @param string $pattern
+     * @return NULL
+     */
+    public function matchRoute(
+        $helperUrl,
+        $url,
+        $uriParams,
+        $pattern
+    )
     {
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
-            $params = [];
-            $this->flag= true;
+            $this->flag = true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
-                    $params[$explodedUrl[$i - 1]] = $uriParams[$i];
+
+                    $this->request->setGetParam($explodedUrl[$i - 1], $uriParams[$i]);
                 }
             }
             $command = explode("@", $pattern);
             $controller = "controller\\" . $command[0];
 
             $action = $command[1];
+            $object = new $controller();
 
-            $object = new $controller;
-
-            if (empty($params)) {
-                if (class_exists($controller) && method_exists($object,$action)){
+            if (empty($this->request->getParams())) {
+                if (class_exists($controller) && method_exists($object, $action)) {
                     return $object->$action();
-                }
-                else{
+                } else {
                     header("Location:/http");
                 }
             } else {
-                if (class_exists($controller) && method_exists($object,$action)){
-                    return $object->$action($params);
-                }
-                else{
+                if (class_exists($controller) && method_exists($object, $action)) {
+                    return $object->$action($this->request->getParams());
+                } else {
                     header("Location:/http");
                 }
             }
         }
     }
-    public function error404(){
-        if (!$this->flag){
+
+    /**
+     *  Render error page
+     */
+    public function error404()
+    {
+        if (!$this->flag) {
             include_once "view/404.php";
         }
     }

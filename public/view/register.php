@@ -2,15 +2,13 @@
 namespace view;
 ?>
 
-
-
 <body>
 
 <?php
-if (isset($msg) && $msg!=""){
+if (isset($msg) && $msg != "") {
     ?>
     <div class="alert alert-danger" role="alert">
-        <?php echo $msg;?>
+        <?php echo $msg; ?>
     </div>
     <?php
 } ?>
@@ -21,7 +19,8 @@ if (isset($msg) && $msg!=""){
     <form action="/register" method="post">
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+            <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                   required>
 
         </div>
         <div class="form-group">
@@ -38,22 +37,22 @@ if (isset($msg) && $msg!=""){
 
         </div>
         <div class="form-group">
-            <label >Last Name</label>
+            <label>Last Name</label>
             <input type="text" name="last_name" class="form-control" required>
 
         </div>
         <div class="form-group">
-            <label >Age</label>
+            <label>Age</label>
             <input type="number" name="age" class="form-control" min="0" max="100" required>
 
         </div>
         <div class="form-group">
-            <label >Phone number</label>
+            <label>Phone number</label>
             +359<input type="number" name="phone_number" class="form-control" placeholder="8## ### ###" required>
 
         </div>
         <div class="form-group">
-            <label >Subscribe for notification about latest promotions:</label>
+            <label>Subscribe for notification about latest promotions:</label>
             <input type="checkbox" name="subscription">
 
         </div>
@@ -61,7 +60,9 @@ if (isset($msg) && $msg!=""){
         <button name="register" type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-    <a href="/loginPage"><button name="register" type="submit" class="btn btn-primary"><-- Back to login page</button></a>
+    <a href="/loginPage">
+        <button name="register" type="submit" class="btn btn-primary"><-- Back to login page</button>
+    </a>
 </div>
 </body>
 

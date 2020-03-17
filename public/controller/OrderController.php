@@ -1,41 +1,39 @@
 <?php
+
 namespace controller;
-use Model\Address;
-use Model\AddressDAO;
+
 use model\CartDAO;
 use model\OrderDAO;
-use PDOException;
+use helpers\Request;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-class OrderController{
+class OrderController extends AbstractController
+{
     public function order()
     {
         UserController::validateForLoggedUser();
+        $postParams = $this->request->postParams();
         $orderedProducts = new CartDAO();
-            if (isset($_POST["order"])){
+        if (isset($postParams["order"])) {
+            $orderedProductsa = $orderedProducts->showCart($_SESSION["logged_user_id"]);
+            OrderDAO::finishOrder($orderedProductsa, $postParams["totalPrice"], $_SESSION["logged_user_id"]);
+            $cart = new CartController;
+            $cart->show();
+        }
 
-
-              $orderedProductsa =  $orderedProducts->showCart($_SESSION["logged_user_id"]);
-                OrderDAO::finishOrder($orderedProductsa , $_POST["totalPrice"] , $_SESSION["logged_user_id"]);
-                $cart = new CartController;
-                $cart->show();
-
-
-            }
-
-        $msg="Order received!";
+        $msg = "Order received!";
 
     }
-    public function show(){
+
+    public function show()
+    {
         UserController::validateForLoggedUser();
-        
-            $products= new OrderDAO();
-            $products=$products->showOrders($_SESSION["logged_user_id"]);
-            include_once "view/orders.php";
 
-
+        $products = new OrderDAO();
+        $products = $products->showOrders($_SESSION["logged_user_id"]);
+        include_once "view/orders.php";
     }
 }

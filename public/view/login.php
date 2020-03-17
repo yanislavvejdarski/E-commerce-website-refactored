@@ -16,13 +16,17 @@ namespace view;
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input name="password" type="password" class="form-control" id="exampleInputPassword1" >
+            <input name="password" type="password" class="form-control" id="exampleInputPassword1">
         </div>
 
         <button name="login" type="submit" class="btn btn-primary">Login</button>
     </form>
     Don't have an account? Register here: <br>
-    <a href="/registerPage"><button name="register" type="submit" class="btn btn-primary">Register</button></a><br><br>
-    <a href="/password/forgot"><button type="submit" class="btn btn-primary">Forgot your password ?</button></a>
+    <a href="/registerPage">
+        <button name="register" type="submit" class="btn btn-primary">Register</button>
+    </a><br><br>
+    <a href="/password/forgot">
+        <button type="submit" class="btn btn-primary">Forgot your password ?</button>
+    </a>
 </div>
 </body>

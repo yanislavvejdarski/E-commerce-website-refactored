@@ -1,18 +1,24 @@
 <?php
+
 namespace controller;
+
 use model\Search;
+use helpers\Request;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-class SearchController
+
+class SearchController extends AbstractController
 {
-public function render (){
-    if (isset($_POST["searchProducts"])) {
-        $controller = new Search($_POST["search"]);
-        $controller->render();
-        exit();
+    public function render()
+    {
+        $postParams = $this->request->postParams();
+        if (isset($post["searchProducts"])) {
+            $controller = new Search($postParams["search"]);
+            $controller->render();
+            exit();
+        }
     }
-}
 }
 

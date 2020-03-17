@@ -9,7 +9,7 @@ namespace view;
     <h1>Enter your email :</h1>
     <br>
     <?php
-    if (isset($msg) && $msg!=""){
+    if (isset($msg) && $msg != "") {
         ?>
         <div class="alert alert-danger" role="alert">
             <?php echo $msg; ?>

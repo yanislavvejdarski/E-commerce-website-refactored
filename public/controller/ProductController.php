@@ -1,4 +1,5 @@
 <?php
+
 namespace controller;
 
 use exception\BadRequestException;
@@ -7,27 +8,28 @@ use model\ProductDAO;
 use model\Type;
 use model\TypeDAO;
 use PHPMailer;
-
+use helpers\Request;
 
 include_once "credentials.php";
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-class ProductController
+class ProductController extends AbstractController
 {
-    public function show($params)
+    public function show()
     {
-        if (isset($params["product"])) {
-                $productDAO = new ProductDAO();
-                $product = $productDAO->findProduct($params["product"]);
-                $product->show();
-        }
-        if (isset($params["ctgId"])) {
 
-                $typeDAO = new TypeDAO();
-                $types = $typeDAO->getTypesFromCategorieId($params["ctgId"]);
+        $getParams = $this->request->getParams();
+        if (isset($getParams["product"])) {
+            $productDAO = new ProductDAO();
+            $product = $productDAO->findProduct($getParams["product"]);
+            $product->show();
+        }
+        if (isset($getParams["ctgId"])) {
+
+            $typeDAO = new TypeDAO();
+            $types = $typeDAO->getTypesFromCategorieId($getParams["ctgId"]);
 
 
             foreach ($types as $type) {
@@ -35,63 +37,62 @@ class ProductController
                 $typeObject->show();
             }
         }
-         if (isset($params["typeId"])) {
-             $checkType = TypeDAO::existsType($params["typeId"]);
-             if ($checkType["count"] > 0) {
+        if (isset($getParams["typeId"])) {
+            $checkType = TypeDAO::existsType($getParams["typeId"]);
+            if ($checkType["count"] > 0) {
 
-                     $productDAO = new ProductDAO();
-                     $products = $productDAO->getProductsFromTypeId($params["typeId"]);
-                     $typeDAO = new TypeDAO();
-                     $type = $typeDAO->getTypeInformation($params["typeId"]);
-                     include_once "view/showProductsFromType.php";
-
-
-                 $rrp=99;
-                 if(isset($_GET["page"])){
-                     $page=$_GET["page"];
-
-                 }else{
-                     $page=0;
-                 }
-
-                 if($page>1){
-                     $start=($page*$rrp)-$rrp;
-
-                 }else{
-                     $start=0;
-                 }
+                $productDAO = new ProductDAO();
+                $products = $productDAO->getProductsFromTypeId($getParams["typeId"]);
+                $typeDAO = new TypeDAO();
+                $type = $typeDAO->getTypeInformation($getParams["typeId"]);
+                include_once "view/showProductsFromType.php";
 
 
-                     $typeDAO=new TypeDAO();
-                     $resultSet=$typeDAO->getNumberOfProductsForType($params["typeId"]);
-                     $numRows=$resultSet->count;
-                     $typeDAO=new TypeDAO();
-                     $products=$typeDAO->getAllByType($params["typeId"],$start,$rrp);
-                     $filters=$this->getFilters($params["typeId"]);
-                     $totalPages=$numRows/$rrp;
+                $rrp = 99;
+                if (isset($_GET["page"])) {
+                    $page = $_GET["page"];
 
-             }
-             else{
-                 header("Location: /home");
-             }
+                } else {
+                    $page = 0;
+                }
+
+                if ($page > 1) {
+                    $start = ($page * $rrp) - $rrp;
+
+                } else {
+                    $start = 0;
+                }
+
+
+                $typeDAO = new TypeDAO();
+                $resultSet = $typeDAO->getNumberOfProductsForType($getParams["typeId"]);
+                $numRows = $resultSet->count;
+                $typeDAO = new TypeDAO();
+                $products = $typeDAO->getAllByType($getParams["typeId"], $start, $rrp);
+                $filters = $this->getFilters($getParams["typeId"]);
+                $totalPages = $numRows / $rrp;
+
+            } else {
+                header("Location: /home");
+            }
 
 
             include_once "view/showProductByType.php";
         }
     }
 
-    public function getFilters($id){
+    public function getFilters($id)
+    {
 
 
+        $typeDAO = new TypeDAO();
+        $typeNames = $typeDAO->getAttributesByType($id);
 
-            $typeDAO=new TypeDAO();
-            $typeNames=$typeDAO->getAttributesByType($id);
+        $filter = new Filter();
+        $filter->setFilterNames($typeNames);
+        $filter->setFilterValues($typeNames);
 
-            $filter=new Filter();
-            $filter->setFilterNames($typeNames);
-            $filter->setFilterValues($typeNames);
-
-            return $filter;
+        return $filter;
 
 
     }
@@ -100,21 +101,22 @@ class ProductController
     {
         UserController::validateForAdmin();
 
+        $postParams = $this->request->postParams();
         $msg = '';
-        if (isset($_POST["save"])) {
+        if (isset($postParams["save"])) {
 
-            if (empty($_POST["name"]) || empty($_POST["producer_id"])
-                || empty($_POST["price"]) || empty($_POST["type_id"])
-                || empty($_POST["quantity"])) {
+            if (empty($postParams["name"]) || empty($postParams["producer_id"])
+                || empty($postParams["price"]) || empty($postParams["type_id"])
+                || empty($postParams["quantity"])) {
 
                 $msg = "All fields are required!";
-            } else{
-                if (!is_numeric($_POST["quantity"]) || $_POST["quantity"]  <=0 || $_POST["quantity"] != round($_POST["quantity"])) {
+            } else {
+                if (!is_numeric($postParams["quantity"]) || $postParams["quantity"] <= 0 || $postParams["quantity"] != round($postParams["quantity"])) {
                     $msg = "Invalid quantity format!";
                 }
 
                 if ($msg == "") {
-                    $msg = $this->validatePrice($_POST["price"]);
+                    $msg = $this->validatePrice($postParams["price"]);
                 }
 
                 if (!is_uploaded_file($_FILES["file"]["tmp_name"])) {
@@ -133,9 +135,9 @@ class ProductController
                 if ($msg == "") {
 
                     $productDAO = new ProductDAO();
-                    $productDAO->add($_POST["name"], $_POST["producer_id"], $_POST["price"], $_POST["type_id"], $_POST["quantity"], $img_url);
+                    $productDAO->add($postParams["name"], $postParams["producer_id"], $postParams["price"], $postParams["type_id"], $postParams["quantity"], $img_url);
                     $msg = "Product added successfully!";
-                }else{
+                } else {
                     throw new BadRequestException("$msg");
                 }
 
@@ -143,81 +145,84 @@ class ProductController
         }
         include_once "view/addProduct.php";
     }
-    public function productNameValidation($name){
-        $err=false;
-        if(!ctype_alpha($name) || strlen($name) < 2){
-            $err=true;
+
+    public function productNameValidation($name)
+    {
+        $err = false;
+        if (!ctype_alpha($name) || strlen($name) < 2) {
+            $err = true;
         }
         return $err;
     }
 
-    public function editProduct(){
-
-        if (isset($_POST["saveChanges"])) {
+    public function editProduct()
+    {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["saveChanges"])) {
             $msg = "";
-            if (empty($_POST["name"]) || empty($_POST["producer_id"])
-                || empty($_POST["price"]) || empty($_POST["type_id"])
-                || empty($_POST["quantity"])) {
+            if (empty($postParams["name"]) || empty($postParams["producer_id"])
+                || empty($postParams["price"]) || empty($postParams["type_id"])
+                || empty($postParams["quantity"])) {
                 $msg = "All fields are required!";
-            } elseif($this->validateQuantity($_POST["quantity"])) {
+            } elseif ($this->validateQuantity($postParams["quantity"])) {
                 $msg = "Invalid quantity format!";
-            }else{
+            } else {
 
                 if ($msg == "") {
-                    $price = $_POST["price"];
+                    $price = $postParams["price"];
                     $old_price = NULL;
-                    if (isset($_POST["newPrice"]) && !$this->validatePrice($_POST["newPrice"])) {
-                        if ($_POST["newPrice"] >= $_POST["price"]) {
+                    if (isset($postParams["newPrice"]) && !$this->validatePrice($postParams["newPrice"])) {
+                        if ($postParams["newPrice"] >= $postParams["price"]) {
                             $msg = "New price of product must be lower than price !";
-                        }else{
-                            $price = $_POST["newPrice"];
-                            $old_price = $_POST["price"];
+                        } else {
+                            $price = $postParams["newPrice"];
+                            $old_price = $postParams["price"];
                         }
 
 
                     }
-                }else{
+                } else {
                     throw new BadRequestException("$msg");
                 }
 
-                if ($this->validatePrice($_POST["price"])) {
+                if ($this->validatePrice($postParams["price"])) {
                     throw new BadRequestException("Invalid price!");
                 }
 
 
                 if (!is_uploaded_file($_FILES["file"]["tmp_name"])) {
-                    $img_url = $_POST["old_image"];
+                    $img_url = $postParams["old_image"];
                 } else {
                     $file_name_parts = explode(".", $_FILES["file"]["name"]);
                     $extension = $file_name_parts[count($file_name_parts) - 1];
                     $filename = time() . "." . $extension;
                     $img_url = "images" . DIRECTORY_SEPARATOR . $filename;
                     if (move_uploaded_file($_FILES["file"]["tmp_name"], $img_url)) {
-                        unlink($_POST["old_image"]);
+                        unlink($postParams["old_image"]);
                     } else {
                         $msg = "Image error!";
                     }
                 }
                 if ($msg == "") {
                     $product = [];
-                    $product["product_id"] = $_POST["product_id"];
-                    $product["name"] = $_POST["name"];
-                    $product["producer_id"] = $_POST["producer_id"];
+                    $product["product_id"] = $postParams["product_id"];
+                    $product["name"] = $postParams["name"];
+                    $product["producer_id"] = $postParams["producer_id"];
                     $product["price"] = $price;
                     $product["old_price"] = $old_price;
-                    $product["type_id"] = $_POST["type_id"];
-                    $product["quantity"] = $_POST["quantity"];
+                    $product["type_id"] = $postParams["type_id"];
+                    $product["quantity"] = $postParams["quantity"];
                     $product["image_url"] = $img_url;
 
 
                     $productDAO = new ProductDAO();
                     $productDAO->edit($product);
-                    if (!empty($_POST["newPrice"])){
+                    if (!empty($postParams["newPrice"])) {
                         $this->sendPromotionEmail($product["product_id"], $product["name"]);
                     }
 
 
-                }else{
+                } else {
                     throw new BadRequestException("$msg");
                 }
 
@@ -225,29 +230,29 @@ class ProductController
 
         }
 
-        if(isset($_POST["product_id"])){
-            $productId = $_POST["product_id"];
+        if (isset($postParams["product_id"])) {
+            $productId = $postParams["product_id"];
             include_once "view/editProduct.php";
-        }else{
+        } else {
             header("Location:/home");
         }
 
     }
 
     public function validatePrice($price)
-{
-    $err=false;
-    if (!preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $price) || !is_numeric($price)) {
-        $err = true;
+    {
+        $err = false;
+        if (!preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $price) || !is_numeric($price)) {
+            $err = true;
+        }
+        return $err;
     }
-    return $err;
-}
 
     public function validateQuantity($quantity)
     {
-        $err=false;
-        if (!is_numeric($quantity) || $quantity  <=0 || $quantity != round($quantity)) {
-            $err=true;
+        $err = false;
+        if (!is_numeric($quantity) || $quantity <= 0 || $quantity != round($quantity)) {
+            $err = true;
         }
 
         return $err;
@@ -289,14 +294,15 @@ class ProductController
     public function removeDiscount()
     {
         UserController::validateForAdmin();
-        if (isset($_POST["remove"])) {
-            if (isset($_POST["product_id"]) && isset($_POST["product_old_price"])) {
-                if ($_POST["product_old_price"] != NULL) {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["remove"])) {
+            if (isset($postParams["product_id"]) && isset($postParams["product_old_price"])) {
+                if ($postParams["product_old_price"] != NULL) {
                     $productDAO = new ProductDAO();
-                    $productDAO->removePromotion($_POST["product_id"], $_POST["product_old_price"]);
+                    $productDAO->removePromotion($postParams["product_id"], $postParams["product_old_price"]);
                 }
 
-                $productId = $_POST["product_id"];
+                $productId = $postParams["product_id"];
                 include_once "view/editProduct.php";
             }
         }
@@ -310,17 +316,21 @@ class ProductController
         include_once "view/addProduct.php";
     }
 
-    public function getProducers(){
-        $productDAO=new ProductDAO();
+    public function getProducers()
+    {
+        $productDAO = new ProductDAO();
         return $productDAO->getProducers();
     }
 
-    public function getTypes(){
-        $productDAO=new ProductDAO();
+    public function getTypes()
+    {
+        $productDAO = new ProductDAO();
         return $productDAO->getTypes();
     }
-    public function getProductById($productId){
-        $productDAO=new ProductDAO();
+
+    public function getProductById($productId)
+    {
+        $productDAO = new ProductDAO();
         return $productDAO->getById($productId);
     }
 
@@ -328,9 +338,10 @@ class ProductController
     public function editProductPage()
     {
         UserController::validateForAdmin();
-        if (isset($_POST["editProduct"])) {
-            if (isset($_POST["product_id"])) {
-                $productId = $_POST["product_id"];
+        $postParams = $this->request->postParams();
+        if (isset($postParams["editProduct"])) {
+            if (isset($postParams["product_id"])) {
+                $productId = $postParams["product_id"];
                 include_once "view/editProduct.php";
             } else {
                 include_once "view/main.php";
@@ -351,22 +362,24 @@ class ProductController
 
     public function filterProducts()
     {
-                $counter = 0;
-                $filters = $_POST["checked"];
-                $msg = "";
-                $args = [];
-                error_log(json_encode($_POST["checked"]));
-            if (isset($_POST["checked"])){
+        $counter = 0;
+        $filters = $this->request->postParam("checked");
+        $msg = "";
+        $args = [];
+        error_log(json_encode($this->request->postParams()));
+        if (!empty($this->request->postParam("checked"))) {
 
-                foreach ($_POST["checked"] as $filter){
-                    $name = $filter["name"];
-                    $checked = $filter["checkedValues"];
-                    $params = array_map(function ($el){return "?";}, $checked);
-                    $stringParams = implode(',',$params);
+            foreach ($this->request->postParam("checked") as $filter) {
+                $name = $filter["name"];
+                $checked = $filter["checkedValues"];
+                $paramas = array_map(function ($el) {
+                    return "?";
+                }, $checked);
+                $stringParams = implode(',', $paramas);
 
-                    $alias = "attr$counter";
-                    if ($counter == 0){
-                        $msg.= "SELECT * FROM (
+                $alias = "attr$counter";
+                if ($counter == 0) {
+                    $msg .= "SELECT * FROM (
                                 SELECT distinct  p.name , p.id , p.price , p.quantity , p.image_url 
                                 FROM products as p 
                                 JOIN product_attributes as pha ON (p.id = pha.product_id)
@@ -374,12 +387,12 @@ class ProductController
                                 WHERE p.type_id = 1
                                 AND  a.name=? AND pha.value in($stringParams)) as $alias";
 
-                        $args[].= $name;
-                        $args = array_merge($args, $checked);
-                    }else {
-                        $prevIndex = $counter - 1;
-                        $prevAlias = "attr$prevIndex";
-                        $msg.=" join (
+                    $args[] .= $name;
+                    $args = array_merge($args, $checked);
+                } else {
+                    $prevIndex = $counter - 1;
+                    $prevAlias = "attr$prevIndex";
+                    $msg .= " join (
                             SELECT distinct p.id 
                             FROM products as p
                             JOIN product_attributes as pha ON (p.id = pha.product_id)
@@ -388,17 +401,16 @@ class ProductController
                             AND  a.name=? AND pha.value in($stringParams)
                             ) as $alias on $prevAlias.id = $alias.id";
 
-                        $args[].= $name;
-                        $args = array_merge($args, $checked);
-                    }
-
-                    ++$counter;
+                    $args[] .= $name;
+                    $args = array_merge($args, $checked);
                 }
-                $msg.= ";";
-                $filter = new ProductDAO();
-                $filter->filterProducts($msg , $args);
 
+                ++$counter;
             }
+            $msg .= ";";
+            $filter = new ProductDAO();
+            $filter->filterProducts($msg, $args);
+        }
     }
 
     public function sendPromotionEmail($productId, $productName)
@@ -406,57 +418,62 @@ class ProductController
         $productDAO = new ProductDAO();
         $emails = $productDAO->getUserEmailsByLikedProduct($productId);
         foreach ($emails as $email) {
-            $this->sendemail($email["email"], $productName , $productId);
+            $this->sendemail($email["email"], $productName, $productId);
         }
 
     }
 
-    public function getMostCelledProducts(){
+    public function getMostCelledProducts()
+    {
         $productDAO = new ProductDAO();
-        return $products=$productDAO->getMostSold();
+        return $products = $productDAO->getMostSold();
 
     }
- public function main(){
+
+    public function main()
+    {
 
         include_once "view/main.php";
 
     }
-    public function getAttributes($product_id){
+
+    public function getAttributes($product_id)
+    {
         $productDAO = new ProductDAO();
-        return $attributes=$productDAO->getProductAttributesById($product_id);
+        return $attributes = $productDAO->getProductAttributesById($product_id);
 
     }
 
-    function sendemail($email, $productName , $productId)
-        {
+    function sendemail($email, $productName, $productId)
+    {
 
-            require_once "PHPMailer-5.2-stable/PHPMailerAutoload.php";
-            $mail = new PHPMailer;
+        require_once "PHPMailer-5.2-stable/PHPMailerAutoload.php";
+        $mail = new PHPMailer;
 //$mail->SMTPDebug = 3;                               // Enable verbose debug output
-            $mail->isSMTP();
-            $mail->SMTPDebug = 0;// Set mailer to use SMTP
-            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Host = 'smtp.sendgrid.net';  // Specify main and backup SMTP servers
-            $mail->Username = EMAIL_USERNAME;                 // SMTP username
-            $mail->Password = EMAIL_PASSWORD;                           // SMTP password
-            $mail->SMTPSecure = 'tsl';                            // Enable TLS encryption, `ssl` also accepted
-            $mail->Port = 587;                                    // TCP port to connect to
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;// Set mailer to use SMTP
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Host = 'smtp.sendgrid.net';  // Specify main and backup SMTP servers
+        $mail->Username = EMAIL_USERNAME;                 // SMTP username
+        $mail->Password = EMAIL_PASSWORD;                           // SMTP password
+        $mail->SMTPSecure = 'tsl';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 587;                                    // TCP port to connect to
 
-            $mail->setFrom('emag9648@gmail.com');
-            $mail->addAddress($email);     // Add a recipient
-            $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->setFrom('emag9648@gmail.com');
+        $mail->addAddress($email);     // Add a recipient
+        $mail->isHTML(true);                                  // Set email format to HTML
 
-            $mail->Subject = 'Your Product is on Sale !!!';
-            $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents//product/$productId>Open Here</a>";
-            $mail->AltBody = 'Click For Register';
+        $mail->Subject = 'Your Product is on Sale !!!';
+        $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents//product/$productId>Open Here</a>";
+        $mail->AltBody = 'Click For Register';
 
 
-            if (!$mail->send()) {
-                echo 'Message could not be sent.';
-                echo 'Mailer Error: ' . $mail->ErrorInfo;
-            } else {
-                echo 'Message has been sent';
-            }
+        if (!$mail->send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        } else {
+            echo 'Message has been sent';
         }
+    }
 }
 
