@@ -3,10 +3,19 @@
 
 class Router
 {
-
+    /**
+     * @var bool
+     */
     public $flag = false;
+
+    /**
+     * @var instance
+     */
     public $request;
 
+    /**
+     * Router constructor.
+     */
     public function __construct()
     {
 
@@ -103,6 +112,7 @@ class Router
             }
         }
     }
+
 
     public function error404(){
         if (!$this->flag){
