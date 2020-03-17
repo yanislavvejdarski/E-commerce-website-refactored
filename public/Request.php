@@ -54,9 +54,15 @@ class Request
      */
     private function sanitize ($param)
     {
-        $param = trim($param);
-        $param = htmlentities($param);
-        return $param;
+        if (is_array($param)){
+            return $param;
+        }
+        else{
+            $param = trim($param);
+            $param = htmlentities($param);
+            return $param;
+        }
+
     }
 
     /**

@@ -364,12 +364,11 @@ class ProductController extends AbstractController
 
     public function filterProducts()
     {
-
         $counter = 0;
         $filters = $this->request->postParam("checked");
         $msg = "";
         $args = [];
-        error_log(json_encode($this->request->postParam("checked")));
+        error_log(json_encode($this->request->postParams()));
         if (!empty($this->request->postParam("checked"))) {
 
             foreach ($this->request->postParam("checked") as $filter) {
@@ -413,7 +412,6 @@ class ProductController extends AbstractController
             $msg .= ";";
             $filter = new ProductDAO();
             $filter->filterProducts($msg, $args);
-
         }
     }
 
