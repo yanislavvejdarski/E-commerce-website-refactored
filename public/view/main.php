@@ -3,11 +3,11 @@ namespace view;
 
 use controller\ProductController;
 
-$productController=new ProductController(\Request::getInstance());
-$products=$productController->getMostCelledProducts();
+$productController = new ProductController();
+$products = $productController->getMostCelledProducts();
 ?>
 
-    <html lang="en">
+<html lang="en">
 <head>
     <link rel="icon" href="icons/favicon.png">
 </head>
@@ -29,15 +29,19 @@ $products=$productController->getMostCelledProducts();
                     ?>
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card">
-                            <a href="/product/<?= $product->id ?>"><img class="card-img-top" src="<?= $product->image_url ?>" height="300" alt="Card image cap"></a>
+                            <a href="/product/<?= $product->id ?>"><img class="card-img-top"
+                                                                        src="<?= $product->image_url ?>" height="300"
+                                                                        alt="Card image cap"></a>
                             <div class="card-body">
-                                <h4 class="card-title"><a href="/product/<?= $product->id ?>"><?= $product->name ?></a></h4>
+                                <h4 class="card-title"><a href="/product/<?= $product->id ?>"><?= $product->name ?></a>
+                                </h4>
                                 <div class="row">
                                     <div class="col">
                                         <p class="btn btn-danger btn-block"><?= $product->price ?> Euro</p>
                                     </div>
                                     <div class="col">
-                                        <a href="/cart/add/product/<?= $product->id ?>" class="btn btn-success btn-block">Add to cart</a>
+                                        <a href="/cart/add/product/<?= $product->id ?>"
+                                           class="btn btn-success btn-block">Add to cart</a>
                                     </div>
                                 </div>
                             </div>

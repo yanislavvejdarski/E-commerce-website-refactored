@@ -18,7 +18,8 @@ namespace view;
 </head>
 <body>
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <div class="container">
     <div class="row">
@@ -26,27 +27,30 @@ namespace view;
             <div class="card">
                 <div class="card-body">
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <h3> <?= $_SESSION["logged_user_first_name"] . " " .  $_SESSION["logged_user_last_name"]?></h3>
+                        <h3> <?= $_SESSION["logged_user_first_name"] . " " . $_SESSION["logged_user_last_name"] ?></h3>
                     </div>
                     <hr>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
                         <a href="/orders" style="width: 100%">
-                            <button type="button"  class="btn btn-outline-primary" style="width: 100%">My orders</button>
+                            <button type="button" class="btn btn-outline-primary" style="width: 100%">My orders</button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
                         <a href="/ratedProducts" style="width: 100%">
-                            <button type="button"  class="btn btn-outline-primary" style="width: 100%">My rated products</button>
+                            <button type="button" class="btn btn-outline-primary" style="width: 100%">My rated
+                                products
+                            </button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
                         <a href="/address/new" style="width: 100%">
-                            <button type="button"  class="btn btn-outline-primary" style="width: 100%">Add Address</button>
+                            <button type="button" class="btn btn-outline-primary" style="width: 100%">Add Address
+                            </button>
                         </a>
                     </div>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
                         <a href="/logout" style="width: 100%">
-                            <button type="button"  class="btn btn-outline-primary" style="width: 100%">Log Out</button>
+                            <button type="button" class="btn btn-outline-primary" style="width: 100%">Log Out</button>
                         </a>
                     </div>
 
@@ -67,12 +71,11 @@ namespace view;
                     <p class="card-text"> First Name: <?php echo $user->first_name ?> </p>
                     <p class="card-text"> Last Name: <?php echo $user->last_name ?></p>
                     <p class="card-text"> Email: <?php echo $user->email; ?></p>
-                    <p class="card-text">  Age: <?php echo $user->age ?></p>
-                    <p class="card-text">  Phone Number: <?php echo "+359". $user->phone_number ?></p>
+                    <p class="card-text"> Age: <?php echo $user->age ?></p>
+                    <p class="card-text"> Phone Number: <?php echo "+359" . $user->phone_number ?></p>
                     <a href="/myAccount/editPage" class="btn btn-primary">Edit Profile</a>
                 </div>
             </div>
-
 
 
             <div class="card" style="margin-top: 10px;">
@@ -88,18 +91,19 @@ namespace view;
                                 <div class="row">
                                     <form action='/editAddressPage' method="post" style="margin-left: 15px;">
                                         <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
-                                        <input type="submit" class="btn btn-primary" name="address/edit" value="Edit" >
+                                        <input type="submit" class="btn btn-primary" name="address/edit" value="Edit">
                                     </form>
 
                                     <form action='/address/delete' method="post" style="margin-left: 15px;">
                                         <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
-                                        <input type="submit" class="btn btn-primary" name="deleteAddress" value="Delete">
+                                        <input type="submit" class="btn btn-primary" name="deleteAddress"
+                                               value="Delete">
                                     </form>
 
                                 </div>
                             </div>
                         </div>
-                    <?php }?>
+                    <?php } ?>
                 </div>
             </div>
         </div>

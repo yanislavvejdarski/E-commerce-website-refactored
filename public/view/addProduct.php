@@ -1,13 +1,12 @@
 <?php
 namespace view;
+
 use controller\ProductController;
 
 
-
-
-$productController=new ProductController(\Request::getInstance());
-$producers=$productController->getProducers();
-$types=$productController->getTypes();
+$productController = new ProductController();
+$producers = $productController->getProducers();
+$types = $productController->getTypes();
 
 ?>
 <!doctype html>
@@ -24,9 +23,9 @@ $types=$productController->getTypes();
 <div class="container">
 
     <?php
-    if (isset($msg) && $msg!="") {
+    if (isset($msg) && $msg != "") {
         echo $msg;
-    }?> <br>
+    } ?> <br>
     <form action="admin/addProduct" method="post" enctype="multipart/form-data">
         <table>
             <tr>

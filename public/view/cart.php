@@ -27,7 +27,8 @@ use model\ProductDAO;
 
                         <div class="col-md-4">
                             <a href="/product/<?= $productInfo->id ?>"> <img
-                                        src="<?="../../../". $productInfo->imageUrl ?>" class="card-img" alt="..."></a>
+                                        src="<?= "../../../" . $productInfo->imageUrl ?>" class="card-img"
+                                        alt="..."></a>
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -51,7 +52,7 @@ use model\ProductDAO;
                                     if ($favoriteDAO->checkIfInFavourites($productInfo->id, $_SESSION["logged_user_id"])) { ?>
                                         <a class="btn btn-primary"
                                            href=/favourites/remove/product/<?= $productInfo->id ?>
-                                           role="button" style="margin-left: 5px;">Remove From Favourite</a>
+ role="button" style="margin-left: 5px;">Remove From Favourite</a>
                                     <?php } else {
                                         ?>
                                         <a class="btn btn-primary"
@@ -87,7 +88,7 @@ use model\ProductDAO;
                     $addressDAO = new AddressDAO();
                     $myAddresses = $addressDAO->getAll($_SESSION["logged_user_id"]);
 
-                    $addressController = new AddressController(\Request::getInstance());
+                    $addressController = new AddressController();
                     if ($addressController->checkUserAddress()) {
                         ?>
                         <form action="/order" method="post">

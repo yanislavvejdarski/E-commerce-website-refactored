@@ -16,9 +16,9 @@ namespace view;
 <body>
 <div class="container">
     <?php
-    if(empty($myRatings)){
+    if (empty($myRatings)) {
         echo " <h2>You have no rated product!</h2>";
-    }else {
+    } else {
 
 
         foreach ($myRatings as $myRating) {
@@ -58,7 +58,7 @@ namespace view;
             <hr>
             <?php
         }
-    }?>
+    } ?>
 </div>
 </body>
 </html>

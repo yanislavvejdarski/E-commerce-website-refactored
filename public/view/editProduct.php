@@ -1,40 +1,40 @@
 <?php
 namespace view;
+
 use controller\ProductController;
 
 
-if (isset($msg) && $msg!="") {
+if (isset($msg) && $msg != "") {
     echo $msg;
 }
-
 
 
 ?> <br>
 
 <?php
 
-$productController=new ProductController(\Request::getInstance());
-$producers=$productController->getProducers();
-$product=$productController->getProductById($productId);
-$types= $productController->getTypes();
+$productController = new ProductController();
+$producers = $productController->getProducers();
+$product = $productController->getProductById($productId);
+$types = $productController->getTypes();
 
-$isInPromotion=false;
-if ($product["old_price"]!=NULL) {
-    $isInPromotion=true;
+$isInPromotion = false;
+if ($product["old_price"] != NULL) {
+    $isInPromotion = true;
     echo "In Promotion!";
-}?> <br>
+} ?> <br>
 
 
 <table>
     <tr>
-        <td><?= $product["name"]?></td>
+        <td><?= $product["name"] ?></td>
     </tr>
     <tr>
-        <td><img src="<?=$product["image_url"] ?>" width="150"></td>
+        <td><img src="<?= $product["image_url"] ?>" width="150"></td>
     </tr>
     <tr>
         <td>Producer:</td>
-        <td><?=$product["producer_name"] ?></td>
+        <td><?= $product["producer_name"] ?></td>
     </tr>
     <tr>
         <td>Type:</td>
@@ -45,26 +45,26 @@ if ($product["old_price"]!=NULL) {
         <td><?= $product["quantity"] ?></td>
     </tr>
 
-    <?php if($isInPromotion){
+    <?php if ($isInPromotion) {
         ?>
         <tr>
             <td>Old Price:</td>
-            <td><?= $product["old_price"]?> EURO</td>
+            <td><?= $product["old_price"] ?> EURO</td>
         </tr>
         <tr>
             <td>New Price:</td>
-            <td><?=  $product["price"]?> EURO</td>
+            <td><?= $product["price"] ?> EURO</td>
         </tr>
 
         <?php
-    }else{
+    } else {
         ?>
         <tr>
             <td>Price:</td>
             <td><?= $product["price"] ?> EURO</td>
         </tr>
         <?php
-    }?>
+    } ?>
 
 </table>
 <hr>
@@ -74,8 +74,8 @@ if ($product["old_price"]!=NULL) {
     <table>
         <tr>
             <td>Name</td>
-            <td><input type="text" name="name" value="<?= $product["name"]?>" required></td>
-            <td><input type="hidden" name="product_id" value="<?= $productId?>"></td>
+            <td><input type="text" name="name" value="<?= $product["name"] ?>" required></td>
+            <td><input type="hidden" name="product_id" value="<?= $productId ?>"></td>
 
 
         </tr>
@@ -83,7 +83,7 @@ if ($product["old_price"]!=NULL) {
             <td>Producer</td>
             <td>
                 <select name="producer_id" required>
-                    <option  value="<?= $product["producer_id"]?>"><?= $product["producer_name"]?></option>
+                    <option value="<?= $product["producer_id"] ?>"><?= $product["producer_name"] ?></option>
                     <?php foreach ($producers as $producer) {
                         echo "<option value='$producer->id'>$producer->name</option>";
                     } ?>
@@ -94,7 +94,7 @@ if ($product["old_price"]!=NULL) {
             <td>Type</td>
             <td>
                 <select name="type_id" required>
-                    <option value="<?= $product["type_id"]?>"><?= $product["type_name"]?></option>
+                    <option value="<?= $product["type_id"] ?>"><?= $product["type_name"] ?></option>
                     <?php foreach ($types as $type) {
                         echo "<option value='$type->id'>$type->name</option>";
 
@@ -104,12 +104,12 @@ if ($product["old_price"]!=NULL) {
         </tr>
         <tr>
             <td>Quantity</td>
-            <td><input type="number" name="quantity" min="0" value="<?= $product["quantity"]?>" required></td>
+            <td><input type="number" name="quantity" min="0" value="<?= $product["quantity"] ?>" required></td>
 
         </tr>
         <tr>
             <td>Price</td>
-            <td><input type="number" step="0.01" name="price" min="0.01" value="<?= $product["price"]?>" required></td>
+            <td><input type="number" step="0.01" name="price" min="0.01" value="<?= $product["price"] ?>" required></td>
         </tr>
 
         <tr>
@@ -121,7 +121,7 @@ if ($product["old_price"]!=NULL) {
         <tr>
             <td>Upload image</td>
             <td><input type="file" name="file"></td>
-        <tr><input type="hidden" name="old_image" value="<?= $product["image_url"]?>"></tr>
+        <tr><input type="hidden" name="old_image" value="<?= $product["image_url"] ?>"></tr>
         </tr>
 
 
@@ -132,7 +132,7 @@ if ($product["old_price"]!=NULL) {
 </form>
 
 <form action="/admin/removeDiscount" method="post">
-    <input type="hidden" name="product_id" value="<?= $productId?>">
-    <input type="hidden" name="product_old_price" value="<?=$product["old_price"]?>">
+    <input type="hidden" name="product_id" value="<?= $productId ?>">
+    <input type="hidden" name="product_old_price" value="<?= $product["old_price"] ?>">
     <input type="submit" name="remove" value="Remove Promotion">
 </form>

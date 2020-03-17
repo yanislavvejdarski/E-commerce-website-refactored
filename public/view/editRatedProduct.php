@@ -16,8 +16,12 @@ namespace view;
 <body>
 <form action="/rate/edit" method="post">
     <table>
-        <tr> <td><?= $_POST['product_name'];?></td></tr>
-        <tr><td><img src="<?= $_POST['image_url'] ?>"width="150"></td></tr>
+        <tr>
+            <td><?= $_POST['product_name']; ?></td>
+        </tr>
+        <tr>
+            <td><img src="<?= $_POST['image_url'] ?>" width="150"></td>
+        </tr>
         <tr><input type="hidden" name="rating_id" value="<?= $_POST['rating_id'] ?>"></tr>
         <tr>
             <td>Give your vote from 1 to 5 for this product</td>
@@ -25,7 +29,7 @@ namespace view;
         </tr>
         <tr>
             <td>Write comments for this product</td>
-            <td><textarea name="comment" id="" cols="30" rows="10" minlength="4" ><?= $_POST['text'] ?></textarea></td>
+            <td><textarea name="comment" id="" cols="30" rows="10" minlength="4"><?= $_POST['text'] ?></textarea></td>
         </tr>
 
         <tr>

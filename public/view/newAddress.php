@@ -1,50 +1,53 @@
 <?php
 namespace View;
+
 use controller\AddressController;
 
-$addressController=new AddressController(\Request::getInstance());
-$cities=$addressController->getCities();
-
+$addressController = new AddressController();
+$cities = $addressController->getCities();
 
 ?>
-
 
 <body>
 <div class="container">
     <?php
 
-    if (isset($msg) && $msg!=""){
+    if (isset($msg) && $msg != "") {
 
         ?>
         <div class="alert alert-danger" role="alert">
-            <?php echo $msg;?>
+            <?php echo $msg; ?>
         </div>
-        <?php
-    }
-    ?>
+
+    <?php } ?>
+
     <form action="/address/add" method="post">
         <div class="form-group">
             <tr>
                 <td>City</td>
                 <td><select class="form-control" name="city" required>
                         <option value="">Select City</option>
-                        <?php foreach ($cities as $city) {
+                        <?php foreach ($cities as $city) { ?>
+                            <option value=<?= $city["id"] ?>><?= $city["name"] ?></option>";
 
-                            ?>
-                            <option value=<?=$city["id"]?>><?=$city["name"]?></option>";
-                            <?php
-                        } ?>
+                        <?php } ?>
+
                     </select></td>
             </tr>
             <tr>
                 <td>Street name</td>
-                <td><input type="text" class="form-control" name="street" placeholder="Enter street name" min="5" required ></td>
+                <td><input type="text" class="form-control" name="street" placeholder="Enter street name" min="5"
+                           required></td>
             </tr>
             <div class="group-control">
-            <tr><td colspan="2"><input type="submit" name="add"class="btn btn-primary mb-2" value="Add new address"></td></tr>
+                <tr>
+                    <td colspan="2"><input type="submit" name="add" class="btn btn-primary mb-2"
+                                           value="Add new address"></td>
+                </tr>
             </div>
         </div>
-
     </form>
-    <a href="/myAccount"><button class="btn btn-primary mb-2">Go Back</button></a>
+    <a href="/myAccount">
+        <button class="btn btn-primary mb-2">Go Back</button>
+    </a>
 </div>

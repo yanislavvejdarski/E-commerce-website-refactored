@@ -1,10 +1,11 @@
 <?php
 namespace view;
+
 use controller\AddressController;
 
 
-$addressController=new AddressController(\Request::getInstance());
-$cities=$addressController->getCities();
+$addressController = new AddressController();
+$cities = $addressController->getCities();
 
 
 ?>
@@ -21,10 +22,10 @@ $cities=$addressController->getCities();
 <body>
 <div class="container">
     <?php
-    if (isset($msg) && $msg!=""){
+    if (isset($msg) && $msg != "") {
         ?>
         <div class="alert alert-danger" role="alert">
-            <?php echo $msg;?>
+            <?php echo $msg; ?>
         </div>
         <?php
     }
@@ -39,19 +40,24 @@ $cities=$addressController->getCities();
                         <?php foreach ($cities as $city) {
 
                             ?>
-                            <option value=<?=$city["id"]?>><?=$city["name"]?></option>";
+                            <option value=<?= $city["id"] ?>><?= $city["name"] ?></option>";
                             <?php
                         } ?>
                     </select></td>
             </tr>
             <tr>
                 <td>Street name</td>
-                <td><input type="text" name="street" value="<?php echo $address->street_name?>" placeholder="Enter street name" min="5" required ></td>
+                <td><input type="text" name="street" value="<?php echo $address->street_name ?>"
+                           placeholder="Enter street name" min="5" required></td>
             </tr>
-            <tr><td colspan="2"><input type="submit" class="btn btn-primary mb-2" name="save" value="Save changes"></td></tr>
+            <tr>
+                <td colspan="2"><input type="submit" class="btn btn-primary mb-2" name="save" value="Save changes"></td>
+            </tr>
         </table>
     </form>
-    <a href="/myAccount"><button class="btn btn-primary mb-2">Back</button></a>
+    <a href="/myAccount">
+        <button class="btn btn-primary mb-2">Back</button>
+    </a>
 </div>
 </body>
 </html>
