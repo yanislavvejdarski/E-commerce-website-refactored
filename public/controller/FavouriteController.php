@@ -7,7 +7,8 @@ error_reporting(E_ALL);
 use exception\NotFoundException;
 use model\FavouriteDAO;
 use model\ProductDAO;
-use Request;
+use helpers\Request;
+
 
 class FavouriteController extends AbstractController {
     public function show(){

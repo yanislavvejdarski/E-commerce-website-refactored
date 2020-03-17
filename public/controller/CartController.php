@@ -6,8 +6,7 @@ error_reporting(E_ALL);
 
 use model\CartDAO;
 use model\ProductDAO;
-use Request;
-
+use helpers\Request;
 
 
 class CartController extends AbstractController{

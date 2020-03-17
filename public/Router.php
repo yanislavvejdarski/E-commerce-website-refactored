@@ -1,6 +1,8 @@
 <?php
 
 
+use helpers\Request;
+
 class Router
 {
     /**
@@ -36,7 +38,7 @@ class Router
         $uriParams = explode("/", $request->getUri());
 
         $helperUrl = $this->generateDynamicRoute($uriParams);
-        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern,$request);
+        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern, $request);
     }
 
     /**
@@ -79,14 +81,15 @@ class Router
         $url,
         $uriParams,
         $pattern
-    ) {
+    )
+    {
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
-            $this->flag= true;
+            $this->flag = true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
 
-                    $this->request->setGetParam($explodedUrl[$i-1], $uriParams[$i]);
+                    $this->request->setGetParam($explodedUrl[$i - 1], $uriParams[$i]);
                 }
             }
             $command = explode("@", $pattern);
@@ -96,26 +99,27 @@ class Router
             $object = new $controller();
 
             if (empty($this->request->getParams())) {
-                if (class_exists($controller) && method_exists($object,$action)){
+                if (class_exists($controller) && method_exists($object, $action)) {
                     return $object->$action();
-                }
-                else{
+                } else {
                     header("Location:/http");
                 }
             } else {
-                if (class_exists($controller) && method_exists($object,$action)){
+                if (class_exists($controller) && method_exists($object, $action)) {
                     return $object->$action($this->request->getParams());
-                }
-                else{
+                } else {
                     header("Location:/http");
                 }
             }
         }
     }
 
-
-    public function error404(){
-        if (!$this->flag){
+    /**
+     *  Render error page
+     */
+    public function error404()
+    {
+        if (!$this->flag) {
             include_once "view/404.php";
         }
     }

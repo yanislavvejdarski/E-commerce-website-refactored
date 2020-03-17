@@ -8,7 +8,8 @@ use model\ProductDAO;
 use model\Type;
 use model\TypeDAO;
 use PHPMailer;
-use Request;
+use helpers\Request;
+
 
 
 include_once "credentials.php";

@@ -5,7 +5,7 @@ use exception\BadRequestException;
 use exception\NotAuthorizedException;
 use model\Address;
 use model\AddressDAO;
-use Request;
+use helpers\Request;
 
 
 class AddressController extends AbstractController {

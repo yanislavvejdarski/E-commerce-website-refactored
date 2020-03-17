@@ -4,7 +4,8 @@ use exception\BadRequestException;
 use exception\NotAuthorizedException;
 use model\ProductDAO;
 use model\RatingDAO;
-use Request;
+use helpers\Request;
+
 
 
 class ratingController extends AbstractController

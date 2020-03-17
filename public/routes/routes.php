@@ -1,4 +1,6 @@
 <?php
+use helpers\Request;
+
 $routes = new Router($_SERVER["REQUEST_URI"]);
 
 // Home Page

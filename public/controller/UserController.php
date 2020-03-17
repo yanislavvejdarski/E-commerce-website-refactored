@@ -9,7 +9,8 @@ use model\AddressDAO;
 use model\User;
 use model\UserDAO;
 use PHPMailer;
-use Request;
+use helpers\Request;
+
 
 class UserController extends AbstractController
 {

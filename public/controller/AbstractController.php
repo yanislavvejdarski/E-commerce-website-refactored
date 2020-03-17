@@ -2,7 +2,8 @@
 
 namespace controller;
 
-use Request;
+use helpers\Request;
+
 
 
 abstract class AbstractController

@@ -1,5 +1,5 @@
 <?php
-
+namespace helpers;
 class Request
 {
     /**

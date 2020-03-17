@@ -2,7 +2,8 @@
 namespace controller;
 use model\CartDAO;
 use model\OrderDAO;
-use Request;
+use helpers\Request;
+
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
