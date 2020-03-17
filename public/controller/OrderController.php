@@ -12,13 +12,13 @@ class OrderController extends AbstractController {
     public function order()
     {
         UserController::validateForLoggedUser();
-        $post = $this->request->postParams();
+        $postParams = $this->request->postParams();
         $orderedProducts = new CartDAO();
-            if (isset($post["order"])){
+            if (isset($postParams["order"])){
 
 
               $orderedProductsa =  $orderedProducts->showCart($_SESSION["logged_user_id"]);
-                OrderDAO::finishOrder($orderedProductsa , $post["totalPrice"] , $_SESSION["logged_user_id"]);
+                OrderDAO::finishOrder($orderedProductsa , $postParams["totalPrice"] , $_SESSION["logged_user_id"]);
                 $cart = new CartController;
                 $cart->show();
 

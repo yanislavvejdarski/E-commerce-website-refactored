@@ -17,24 +17,24 @@ class UserController extends AbstractController
 
     public function login()
     {
-        $post = $this->request->postParams();
+        $postParams = $this->request->postParams();
         $msg = '';
-        if (isset($post["login"])) {
-            if (empty($post["email"]) || empty($post["password"])) {
+        if (isset($postParams["login"])) {
+            if (empty($postParams["email"]) || empty($postParams["password"])) {
                 $msg = 'All fields are required!';
-            } elseif ($this->validateEmail($post["email"])) {
+            } elseif ($this->validateEmail($postParams["email"])) {
                 $msg = "Invalid email format!";
 
-            } elseif ($this->validatePassword($post["password"])) {
+            } elseif ($this->validatePassword($postParams["password"])) {
                 $msg = "Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!";
             }
             if ($msg == "") {
 
                 $userDAO = new UserDAO();
-                $user = $userDAO->getUserByEmail($post["email"]);
+                $user = $userDAO->getUserByEmail($postParams["email"]);
 
                 if ($user) {
-                    if (password_verify($post["password"], $user->password)) {
+                    if (password_verify($postParams["password"], $user->password)) {
                         $_SESSION["logged_user_id"] = $user->id;
                         $_SESSION["logged_user_role"] = $user->role;
                         $_SESSION["logged_user_first_name"] = $user->first_name;
@@ -58,34 +58,34 @@ class UserController extends AbstractController
 
     public function register()
     {
-        $post = $this->request->postParams();
-        if (isset($post["register"])) {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["register"])) {
             $msg = "";
-            if (empty($post["email"]) || empty($post["password"]) || empty($post["confirmPassword"])
-                || empty($post["first_name"]) || empty($post["last_name"])
-                || empty($post["phone_number"]) || empty($post["age"])) {
+            if (empty($postParams["email"]) || empty($postParams["password"]) || empty($postParams["confirmPassword"])
+                || empty($postParams["first_name"]) || empty($postParams["last_name"])
+                || empty($postParams["phone_number"]) || empty($postParams["age"])) {
                 $msg = "All fields are required!";
-            } elseif ($this->validateEmail($post["email"])) {
+            } elseif ($this->validateEmail($postParams["email"])) {
                 $msg = "Invalid email format!";
-            } elseif ($this->validatePassword($post["password"])) {
+            } elseif ($this->validatePassword($postParams["password"])) {
                 $msg = "Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!";
-            } elseif ($this->validatePassword($post["confirmPassword"])) {
+            } elseif ($this->validatePassword($postParams["confirmPassword"])) {
                 $msg = "Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!";
-            } elseif ($this->nameValidation($post["first_name"])) {
+            } elseif ($this->nameValidation($postParams["first_name"])) {
                 $msg = "Invalid name format!";
-            } elseif ($this->nameValidation($post["last_name"])) {
+            } elseif ($this->nameValidation($postParams["last_name"])) {
                 $msg = "Invalid name format!";
-            } elseif ($this->phoneNumberValidation($post["phone_number"])) {
+            } elseif ($this->phoneNumberValidation($postParams["phone_number"])) {
                 $msg = "Invalid Number format!";
-            } elseif ($this->ageValidation($post["age"])) {
+            } elseif ($this->ageValidation($postParams["age"])) {
                 $msg = "Invalid age format!";
-            } elseif ($post["password"] !== $post["confirmPassword"]) {
+            } elseif ($postParams["password"] !== $postParams["confirmPassword"]) {
                 $msg = "Passwords are not the same!";
             }
 
             if ($msg == "") {
                 $userDAO = new UserDAO();
-                $user = $userDAO->getUserByEmail($post["email"]);
+                $user = $userDAO->getUserByEmail($postParams["email"]);
 
                 if ($user) {
                     $msg = "This email already exist!";
@@ -94,15 +94,15 @@ class UserController extends AbstractController
 
 
             $subscription = "no";
-            if (isset($post["subscription"]) && $post["subscription"] == "on") {
+            if (isset($postParams["subscription"]) && $postParams["subscription"] == "on") {
                 $subscription = "yes";
             }
             if ($msg == "") {
                 $role = "user";
-                $password = password_hash($post["password"], PASSWORD_BCRYPT);
-                $first_name = ucfirst($post["first_name"]);
-                $last_name = ucfirst($post["last_name"]);
-                $newUser = new User($post["email"], $password, $first_name, $last_name, $post["age"], $post["phone_number"], $role, $subscription);
+                $password = password_hash($postParams["password"], PASSWORD_BCRYPT);
+                $first_name = ucfirst($postParams["first_name"]);
+                $last_name = ucfirst($postParams["last_name"]);
+                $newUser = new User($postParams["email"], $password, $first_name, $last_name, $postParams["age"], $postParams["phone_number"], $role, $subscription);
 
                 $userDAO = new UserDAO();
                 $userDAO->add($newUser);
@@ -120,25 +120,25 @@ class UserController extends AbstractController
 
     public function edit()
     {
-        $post = $this->request->postParams();
-        if (isset($post["edit"])) {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["edit"])) {
             $msg = '';
 
-            if (empty($post["email"]) || empty($post["accountPassword"])
-                || empty($post["first_name"]) || empty($post["last_name"])
-                || empty($post["phone_number"]) || empty($post["age"])) {
+            if (empty($postParams["email"]) || empty($postParams["accountPassword"])
+                || empty($postParams["first_name"]) || empty($postParams["last_name"])
+                || empty($postParams["phone_number"]) || empty($postParams["age"])) {
                 $msg = "All fields are required!";
-            } elseif ($this->validateEmail($post["email"])) {
+            } elseif ($this->validateEmail($postParams["email"])) {
                 $msg = "Invalid email format!";
-            } elseif ($this->validatePassword($post["accountPassword"])) {
+            } elseif ($this->validatePassword($postParams["accountPassword"])) {
                 $msg = "Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!";
-            } elseif ($this->nameValidation($post["first_name"])) {
+            } elseif ($this->nameValidation($postParams["first_name"])) {
                 $msg = "Invalid name format!";
-            } elseif ($this->nameValidation($post["last_name"])) {
+            } elseif ($this->nameValidation($postParams["last_name"])) {
                 $msg = "Invalid name format!";
-            } elseif ($this->phoneNumberValidation($post["phone_number"])) {
+            } elseif ($this->phoneNumberValidation($postParams["phone_number"])) {
                 $msg = "Invalid Number format!";
-            } elseif ($this->ageValidation($post["age"])) {
+            } elseif ($this->ageValidation($postParams["age"])) {
                 $msg = "Invalid age format!";
             }
 
@@ -146,38 +146,38 @@ class UserController extends AbstractController
 
                 $userDAO = new UserDAO();
                 $user = $userDAO->getUserById($_SESSION["logged_user_id"]);
-                if (password_verify($post["accountPassword"], $user->password) == false) {
+                if (password_verify($postParams["accountPassword"], $user->password) == false) {
 
                     throw new NotAuthorizedException("Incorrect account password!");
                 }
 
-                if (empty($post["newPassword"])) {
+                if (empty($postParams["newPassword"])) {
                     $password = $user->password;
                 } else {
-                    if ($this->validatePassword($post["newPassword"])) {
+                    if ($this->validatePassword($postParams["newPassword"])) {
                         $msg = "Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!";
                         throw new BadRequestException ("$msg");
                     } else {
-                        $password = password_hash($post["newPassword"], PASSWORD_BCRYPT);
+                        $password = password_hash($postParams["newPassword"], PASSWORD_BCRYPT);
                     }
                 }
             }
 
             $subscription = null;
-            if (isset($post["subscription"]) && $post["subscription"] == "on") {
+            if (isset($postParams["subscription"]) && $postParams["subscription"] == "on") {
                 $subscription = "yes";
-            } elseif (isset($post["subs"])) {
-                if ($post["subs"] == "yes") {
+            } elseif (isset($postParams["subs"])) {
+                if ($postParams["subs"] == "yes") {
                     $subscription = "yes";
-                } elseif ($post["subs"] == "no") {
+                } elseif ($postParams["subs"] == "no") {
                     $subscription = "no";
                 }
             }
             if ($msg == "") {
                 $role = "user";
-                $first_name = ucfirst($post["first_name"]);
-                $last_name = ucfirst($post["last_name"]);
-                $user = new User($post["email"], $password, $first_name, $last_name, $post["age"], $post["phone_number"], $role, $subscription);
+                $first_name = ucfirst($postParams["first_name"]);
+                $last_name = ucfirst($postParams["last_name"]);
+                $user = new User($postParams["email"], $password, $first_name, $last_name, $postParams["age"], $postParams["phone_number"], $role, $subscription);
                 $user->setId($_SESSION["logged_user_id"]);
 
                 $userDAO = new UserDAO();
@@ -309,14 +309,14 @@ class UserController extends AbstractController
 
     public function sendNewPassword()
     {
-        $post = $this->request->postParams();
-        if (isset($post["forgotPassword"])) {
-            if (isset($post["email"])) {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["forgotPassword"])) {
+            if (isset($postParams["email"])) {
                 $emailCheck = new UserDAO();
                 $newPassword = substr(md5(uniqid(mt_rand(), true)), 0, 8);
-                if ($emailCheck->checkEmailExist($post["email"], password_hash($newPassword, PASSWORD_BCRYPT))) {
+                if ($emailCheck->checkEmailExist($postParams["email"], password_hash($newPassword, PASSWORD_BCRYPT))) {
                     $email = new UserController();
-                    $email->sendEmailPassword($post["email"], $newPassword);
+                    $email->sendEmailPassword($postParams["email"], $newPassword);
                     include_once "view/login.php";
                 }
             }

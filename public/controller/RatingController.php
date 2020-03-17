@@ -42,24 +42,24 @@ class ratingController extends AbstractController
     public function editRate(){
         $msg="";
         UserController::validateForLoggedUser();
-        $post = $this->request->postParams();
-        if (!empty($post["saveChanges"])) {
+        $postParams = $this->request->postParams();
+        if (!empty($postParams["saveChanges"])) {
 
-            if (empty($post["comment"]) || empty($post["comment"])) {
+            if (empty($postParams["comment"]) || empty($postParams["comment"])) {
                 $msg = "All fields are required!";
-            }elseif($this->commentValidation($post["comment"])){
+            }elseif($this->commentValidation($postParams["comment"])){
                 $msg = "Invalid comment!";
-            }elseif($this->ratingValidation($post["rating"])){
+            }elseif($this->ratingValidation($postParams["rating"])){
                 $msg = "Invalid rating!";
             }
 
               $ratingDAO=new RatingDAO();
-            $rating=$ratingDAO->getRatingById($post["rating_id"]);
+            $rating=$ratingDAO->getRatingById($postParams["rating_id"]);
             if($rating->user_id!==$_SESSION["logged_user_id"]){
                 throw new NotAuthorizedException("Not authorized for this operation!");
             }elseif($msg == "") {
                $ratingDAO=new RatingDAO();
-                $ratingDAO->editRating($post["rating_id"], $post["rating"], $post["comment"]);
+                $ratingDAO->editRating($postParams["rating_id"], $postParams["rating"], $postParams["comment"]);
                 header("Location: /ratedProducts");
             }
         }else{
@@ -112,7 +112,7 @@ class ratingController extends AbstractController
 
     public function rateProduct()
     {
-        $params = $this->request->getParams();
+        $getParams = $this->request->getParams();
         UserController::validateForLoggedUser();
         include_once "view/rateProduct.php";
     }

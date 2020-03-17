@@ -42,37 +42,16 @@ class Request
     {
         if (Request::$instance == null) {
             Request::$instance = new Request;
-
         }
         return Request::$instance;
     }
 
-    /**
-     * @param $param
-     *
-     * @return mixed
-     */
-    private function sanitize ($param)
-    {
-        if (is_array($param)){
-            return $param;
-        }
-        else{
-            $param = trim($param);
-            $param = htmlentities($param);
-            return $param;
-        }
-
-    }
 
     /**
      * @return mixed
      */
     public function postParams()
     {
-        foreach ($this->post as $key => $value){
-           $this->post[$key] = $this->sanitize($value);
-        }
         return $this->post;
     }
 
@@ -86,8 +65,7 @@ class Request
         $key,
         $defaultReturn = null
     ){
-
-        return isset($this->post[$key]) ? $this->sanitize($this->post[$key]) : $defaultReturn;
+        return isset($this->post[$key]) ? $this->post[$key] : $defaultReturn;
     }
 
     /**
@@ -95,9 +73,6 @@ class Request
      */
     public function getParams()
     {
-        foreach ($this->get as $key => $value){
-            $this->get[$key] = $this->sanitize($value);
-        }
         return $this->get;
     }
 
@@ -106,13 +81,13 @@ class Request
      * @param $key
      * @param null $defaultReturn
      *
-     * @return string
+     * @return mixed
      */
     public function getParam(
         $key,
         $defaultReturn = null
     ) {
-        return isset($this->get[$key]) ? $this->sanitize($this->get[$key]) : $defaultReturn;
+        return isset($this->get[$key]) ? $this->get[$key] : $defaultReturn;
     }
 
     /**

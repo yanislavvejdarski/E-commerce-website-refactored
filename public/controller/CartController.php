@@ -14,19 +14,19 @@ class CartController extends AbstractController{
     public function add(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        $params = $this->request->getParams();
+        $getParams = $this->request->getParams();
 
 
-            if (isset($params["product"]) && is_numeric($params["product"])){
+            if (isset($getParams["product"]) && is_numeric($getParams["product"])){
 
                 $cartDAO=new CartDAO();
                 $productDAO = new ProductDAO();
-                $quantity = $productDAO->checkQuantity($params["product"]);
-                    $check = $cartDAO->checkIfInCart($params["product"] , $_SESSION["logged_user_id"]);
+                $quantity = $productDAO->checkQuantity($getParams["product"]);
+                    $check = $cartDAO->checkIfInCart($getParams["product"] , $_SESSION["logged_user_id"]);
                     if ($check){
                         if ($check["quantity"] < $quantity["quantity"] && $quantity["quantity"] > 0) {
 
-                            $cartDAO->updateQuantityOfProductInCart($params["product"] , $_SESSION["logged_user_id"]);
+                            $cartDAO->updateQuantityOfProductInCart($getParams["product"] , $_SESSION["logged_user_id"]);
                             $this->show();
                         }
                         else{
@@ -36,7 +36,7 @@ class CartController extends AbstractController{
                         }
                     }
                     elseif($quantity["quantity"] > 0){
-                        $cartDAO->putInCart($params["product"] , $_SESSION["logged_user_id"]);
+                        $cartDAO->putInCart($getParams["product"] , $_SESSION["logged_user_id"]);
                         $this->show();
 
 
@@ -64,15 +64,15 @@ class CartController extends AbstractController{
     public function update(){
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-        $post = $this->request->postParams();
-        if (isset($post["updateQuantity"]) && $post["quantity"] > 0 && $post["quantity"] < 50
-            && is_numeric($post["quantity"]) && (round($post["quantity"]) == $post["quantity"]) ){
+        $postParams = $this->request->postParams();
+        if (isset($postParams["updateQuantity"]) && $postParams["quantity"] > 0 && $postParams["quantity"] < 50
+            && is_numeric($postParams["quantity"]) && (round($postParams["quantity"]) == $postParams["quantity"]) ){
 
                 $productDAO=new ProductDAO();
-                $productQuantity = $productDAO->checkQuantity($post["productId"]);
-                if ($productQuantity["quantity"] >= $post["quantity"]) {
+                $productQuantity = $productDAO->checkQuantity($postParams["productId"]);
+                if ($productQuantity["quantity"] >= $postParams["quantity"]) {
                     $cartDAO=new CartDAO();
-                    $cartDAO->updateCartQuantity($post["productId"], $post["quantity"] , $_SESSION["logged_user_id"]);
+                    $cartDAO->updateCartQuantity($postParams["productId"], $postParams["quantity"] , $_SESSION["logged_user_id"]);
                     $this->show();
                 } else {
                     $this->show();
@@ -88,12 +88,12 @@ class CartController extends AbstractController{
     }
     public function delete(){
 
-        $params = $this->request->getParams();
+        $getParams = $this->request->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
 
             $cartDAO=new CartDAO();
-            $cartDAO->deleteProductFromCart($params["product"] , $_SESSION["logged_user_id"]);
+            $cartDAO->deleteProductFromCart($getParams["product"] , $_SESSION["logged_user_id"]);
             $this->show();
 
     }

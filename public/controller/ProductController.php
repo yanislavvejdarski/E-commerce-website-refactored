@@ -22,16 +22,16 @@ class ProductController extends AbstractController
     public function show()
     {
 
-        $params = $this->request->getParams();
-        if (isset($params["product"])) {
+        $getParams = $this->request->getParams();
+        if (isset($getParams["product"])) {
             $productDAO = new ProductDAO();
-            $product = $productDAO->findProduct($params["product"]);
+            $product = $productDAO->findProduct($getParams["product"]);
             $product->show();
         }
-        if (isset($params["ctgId"])) {
+        if (isset($getParams["ctgId"])) {
 
             $typeDAO = new TypeDAO();
-            $types = $typeDAO->getTypesFromCategorieId($params["ctgId"]);
+            $types = $typeDAO->getTypesFromCategorieId($getParams["ctgId"]);
 
 
             foreach ($types as $type) {
@@ -39,14 +39,14 @@ class ProductController extends AbstractController
                 $typeObject->show();
             }
         }
-        if (isset($params["typeId"])) {
-            $checkType = TypeDAO::existsType($params["typeId"]);
+        if (isset($getParams["typeId"])) {
+            $checkType = TypeDAO::existsType($getParams["typeId"]);
             if ($checkType["count"] > 0) {
 
                 $productDAO = new ProductDAO();
-                $products = $productDAO->getProductsFromTypeId($params["typeId"]);
+                $products = $productDAO->getProductsFromTypeId($getParams["typeId"]);
                 $typeDAO = new TypeDAO();
-                $type = $typeDAO->getTypeInformation($params["typeId"]);
+                $type = $typeDAO->getTypeInformation($getParams["typeId"]);
                 include_once "view/showProductsFromType.php";
 
 
@@ -67,11 +67,11 @@ class ProductController extends AbstractController
 
 
                 $typeDAO = new TypeDAO();
-                $resultSet = $typeDAO->getNumberOfProductsForType($params["typeId"]);
+                $resultSet = $typeDAO->getNumberOfProductsForType($getParams["typeId"]);
                 $numRows = $resultSet->count;
                 $typeDAO = new TypeDAO();
-                $products = $typeDAO->getAllByType($params["typeId"], $start, $rrp);
-                $filters = $this->getFilters($params["typeId"]);
+                $products = $typeDAO->getAllByType($getParams["typeId"], $start, $rrp);
+                $filters = $this->getFilters($getParams["typeId"]);
                 $totalPages = $numRows / $rrp;
 
             } else {
@@ -103,22 +103,22 @@ class ProductController extends AbstractController
     {
         UserController::validateForAdmin();
 
-        $post = $this->request->postParams();
+        $postParams = $this->request->postParams();
         $msg = '';
-        if (isset($post["save"])) {
+        if (isset($postParams["save"])) {
 
-            if (empty($post["name"]) || empty($post["producer_id"])
-                || empty($post["price"]) || empty($post["type_id"])
-                || empty($post["quantity"])) {
+            if (empty($postParams["name"]) || empty($postParams["producer_id"])
+                || empty($postParams["price"]) || empty($postParams["type_id"])
+                || empty($postParams["quantity"])) {
 
                 $msg = "All fields are required!";
             } else {
-                if (!is_numeric($post["quantity"]) || $post["quantity"] <= 0 || $post["quantity"] != round($post["quantity"])) {
+                if (!is_numeric($postParams["quantity"]) || $postParams["quantity"] <= 0 || $postParams["quantity"] != round($postParams["quantity"])) {
                     $msg = "Invalid quantity format!";
                 }
 
                 if ($msg == "") {
-                    $msg = $this->validatePrice($post["price"]);
+                    $msg = $this->validatePrice($postParams["price"]);
                 }
 
                 if (!is_uploaded_file($_FILES["file"]["tmp_name"])) {
@@ -137,7 +137,7 @@ class ProductController extends AbstractController
                 if ($msg == "") {
 
                     $productDAO = new ProductDAO();
-                    $productDAO->add($post["name"], $post["producer_id"], $post["price"], $post["type_id"], $post["quantity"], $img_url);
+                    $productDAO->add($postParams["name"], $postParams["producer_id"], $postParams["price"], $postParams["type_id"], $postParams["quantity"], $img_url);
                     $msg = "Product added successfully!";
                 } else {
                     throw new BadRequestException("$msg");
@@ -159,26 +159,26 @@ class ProductController extends AbstractController
 
     public function editProduct()
     {
-        $post = $this->request->postParams();
-        if (isset($post["saveChanges"])) {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["saveChanges"])) {
             $msg = "";
-            if (empty($post["name"]) || empty($post["producer_id"])
-                || empty($post["price"]) || empty($post["type_id"])
-                || empty($post["quantity"])) {
+            if (empty($postParams["name"]) || empty($postParams["producer_id"])
+                || empty($postParams["price"]) || empty($postParams["type_id"])
+                || empty($postParams["quantity"])) {
                 $msg = "All fields are required!";
-            } elseif ($this->validateQuantity($post["quantity"])) {
+            } elseif ($this->validateQuantity($postParams["quantity"])) {
                 $msg = "Invalid quantity format!";
             } else {
 
                 if ($msg == "") {
-                    $price = $post["price"];
+                    $price = $postParams["price"];
                     $old_price = NULL;
-                    if (isset($post["newPrice"]) && !$this->validatePrice($post["newPrice"])) {
-                        if ($post["newPrice"] >= $post["price"]) {
+                    if (isset($postParams["newPrice"]) && !$this->validatePrice($postParams["newPrice"])) {
+                        if ($postParams["newPrice"] >= $postParams["price"]) {
                             $msg = "New price of product must be lower than price !";
                         } else {
-                            $price = $post["newPrice"];
-                            $old_price = $post["price"];
+                            $price = $postParams["newPrice"];
+                            $old_price = $postParams["price"];
                         }
 
 
@@ -187,39 +187,39 @@ class ProductController extends AbstractController
                     throw new BadRequestException("$msg");
                 }
 
-                if ($this->validatePrice($post["price"])) {
+                if ($this->validatePrice($postParams["price"])) {
                     throw new BadRequestException("Invalid price!");
                 }
 
 
                 if (!is_uploaded_file($_FILES["file"]["tmp_name"])) {
-                    $img_url = $post["old_image"];
+                    $img_url = $postParams["old_image"];
                 } else {
                     $file_name_parts = explode(".", $_FILES["file"]["name"]);
                     $extension = $file_name_parts[count($file_name_parts) - 1];
                     $filename = time() . "." . $extension;
                     $img_url = "images" . DIRECTORY_SEPARATOR . $filename;
                     if (move_uploaded_file($_FILES["file"]["tmp_name"], $img_url)) {
-                        unlink($post["old_image"]);
+                        unlink($postParams["old_image"]);
                     } else {
                         $msg = "Image error!";
                     }
                 }
                 if ($msg == "") {
                     $product = [];
-                    $product["product_id"] = $post["product_id"];
-                    $product["name"] = $post["name"];
-                    $product["producer_id"] = $post["producer_id"];
+                    $product["product_id"] = $postParams["product_id"];
+                    $product["name"] = $postParams["name"];
+                    $product["producer_id"] = $postParams["producer_id"];
                     $product["price"] = $price;
                     $product["old_price"] = $old_price;
-                    $product["type_id"] = $post["type_id"];
-                    $product["quantity"] = $post["quantity"];
+                    $product["type_id"] = $postParams["type_id"];
+                    $product["quantity"] = $postParams["quantity"];
                     $product["image_url"] = $img_url;
 
 
                     $productDAO = new ProductDAO();
                     $productDAO->edit($product);
-                    if (!empty($post["newPrice"])) {
+                    if (!empty($postParams["newPrice"])) {
                         $this->sendPromotionEmail($product["product_id"], $product["name"]);
                     }
 
@@ -232,8 +232,8 @@ class ProductController extends AbstractController
 
         }
 
-        if (isset($post["product_id"])) {
-            $productId = $post["product_id"];
+        if (isset($postParams["product_id"])) {
+            $productId = $postParams["product_id"];
             include_once "view/editProduct.php";
         } else {
             header("Location:/home");
@@ -296,15 +296,15 @@ class ProductController extends AbstractController
     public function removeDiscount()
     {
         UserController::validateForAdmin();
-        $post = $this->request->postParams();
-        if (isset($post["remove"])) {
-            if (isset($post["product_id"]) && isset($post["product_old_price"])) {
-                if ($post["product_old_price"] != NULL) {
+        $postParams = $this->request->postParams();
+        if (isset($postParams["remove"])) {
+            if (isset($postParams["product_id"]) && isset($postParams["product_old_price"])) {
+                if ($postParams["product_old_price"] != NULL) {
                     $productDAO = new ProductDAO();
-                    $productDAO->removePromotion($post["product_id"], $post["product_old_price"]);
+                    $productDAO->removePromotion($postParams["product_id"], $postParams["product_old_price"]);
                 }
 
-                $productId = $post["product_id"];
+                $productId = $postParams["product_id"];
                 include_once "view/editProduct.php";
             }
         }
@@ -340,10 +340,10 @@ class ProductController extends AbstractController
     public function editProductPage()
     {
         UserController::validateForAdmin();
-        $post = $this->request->postParams();
-        if (isset($post["editProduct"])) {
-            if (isset($post["product_id"])) {
-                $productId = $post["product_id"];
+        $postParams = $this->request->postParams();
+        if (isset($postParams["editProduct"])) {
+            if (isset($postParams["product_id"])) {
+                $productId = $postParams["product_id"];
                 include_once "view/editProduct.php";
             } else {
                 include_once "view/main.php";
@@ -374,10 +374,10 @@ class ProductController extends AbstractController
             foreach ($this->request->postParam("checked") as $filter) {
                 $name = $filter["name"];
                 $checked = $filter["checkedValues"];
-                $params = array_map(function ($el) {
+                $paramas = array_map(function ($el) {
                     return "?";
                 }, $checked);
-                $stringParams = implode(',', $params);
+                $stringParams = implode(',', $paramas);
 
                 $alias = "attr$counter";
                 if ($counter == 0) {
