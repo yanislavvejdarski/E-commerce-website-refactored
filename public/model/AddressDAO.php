@@ -14,7 +14,8 @@ class AddressDAO extends AbstractDAO {
         $params = [];
         $params[] = $id;
         $sql="SELECT a.id, a.city_id,a.user_id, c.name AS city_name,a.street_name 
-              FROM addresses AS a JOIN cities AS c ON(a.city_id=c.id)WHERE a.id=?;";
+              FROM addresses AS a JOIN cities AS c ON(a.city_id=c.id)
+              WHERE a.id=?;";
 
         return $this->fetchOneObject(
             $sql,
@@ -39,7 +40,8 @@ class AddressDAO extends AbstractDAO {
         $params[] = $address->getUserId();
         $params[] = $address->getCityId();
         $params[] = $address->getStreetName();
-        $sql = "INSERT INTO addresses (user_id, city_id, street_name,date_created) VALUES (?, ?, ?,now());";
+        $sql = "INSERT INTO addresses (user_id, city_id, street_name,date_created) 
+                VALUES (?, ?, ?,now());";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -56,7 +58,9 @@ class AddressDAO extends AbstractDAO {
         $params = [];
         $params[] = $user_id;
         $sql = "SELECT a.id, c.name AS city_name,a.street_name 
-                FROM addresses AS a JOIN cities AS c ON(a.city_id=c.id)WHERE user_id=?;";
+                FROM addresses AS a 
+                JOIN cities AS c ON(a.city_id=c.id)
+                WHERE user_id=?;";
 
         return $this->fetchAllObject(
             $sql,
@@ -72,7 +76,9 @@ class AddressDAO extends AbstractDAO {
         $params[] = $address->getCityId();
         $params[] = $address->getStreetName();
         $params[] = $address->getId();
-        $sql = "UPDATE addresses SET city_id=?, street_name=? WHERE id=? ;";
+        $sql = "UPDATE addresses 
+                SET city_id=?, street_name=? 
+                WHERE id=? ;";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -85,7 +91,8 @@ class AddressDAO extends AbstractDAO {
     public function delete($id) {
         $params = [];
         $params[] = $id;
-        $sql = "DELETE FROM addresses WHERE id=? ;";
+        $sql = "DELETE FROM addresses 
+                WHERE id=? ;";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -100,7 +107,8 @@ class AddressDAO extends AbstractDAO {
       public function userAddress($userId) {
         $params = [];
         $params[] = $userId;
-        $sql = "SELECT id FROM addresses WHERE user_id = ?";
+        $sql = "SELECT id FROM addresses 
+                WHERE user_id = ?";
 
         return $this->fetchAllObject(
             $sql,

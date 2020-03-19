@@ -23,7 +23,8 @@ class OrderDAO extends AbstractDAO
             $params[] = $product["product_id"];
             $params[] = $product["quantity"];
             $params[] = $product["price"];
-            $sql = "INSERT INTO orders_have_products (order_id , product_id , quantity,price) VALUES (?,? ,? ,?)";
+            $sql = "INSERT INTO orders_have_products (order_id , product_id , quantity,price) 
+                    VALUES (?,? ,? ,?)";
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -47,7 +48,8 @@ class OrderDAO extends AbstractDAO
         $params[] = $userId;
         $params[] = $addressId;
         $params[] = $totalPrice;
-        $sql = "INSERT INTO orders (user_id , address_id , price) VALUES (?,?,?)";
+        $sql = "INSERT INTO orders (user_id , address_id , price)
+                VALUES (?,?,?)";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -66,10 +68,11 @@ class OrderDAO extends AbstractDAO
         $params = [];
         $params[] = $userId;
         $sql = "SELECT o.id, o.address_id , op.product_id , op.quantity, o.price,op.price as productPrice, p.name ,p.image_url , o.date_created  FROM orders as o
-            JOIN orders_have_products as op
-            ON o.id = op.order_id 
-            JOIN products as p ON p.id = op.product_id
-            WHERE o.user_id = ? ORDER BY o.date_created DESC";
+                JOIN orders_have_products as op
+                ON o.id = op.order_id 
+                JOIN products as p ON p.id = op.product_id
+                WHERE o.user_id = ? 
+                ORDER BY o.date_created DESC";
 
         return $this->fetchAllAssoc(
             $sql,

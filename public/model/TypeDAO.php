@@ -15,12 +15,17 @@ class TypeDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT id , name , categorie_id FROM types WHERE id = ? ";
+        $sql = "SELECT id , name , categorie_id FROM types 
+                WHERE id = ? ";
         $rows = $this->fetchOneAssoc(
             $sql,
             $params
         );
-        $type = new Type($rows["id"], $rows["name"], $rows["categorie_id"]);
+        $type = new Type(
+            $rows["id"],
+            $rows["name"],
+            $rows["categorie_id"]
+        );
 
         return $type;
     }
@@ -34,7 +39,8 @@ class TypeDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT id , name , categorie_id FROM types WHERE categorie_id = ?";
+        $sql = "SELECT id , name , categorie_id FROM types 
+                WHERE categorie_id = ?";
 
         return $this->fetchAllAssoc(
             $sql,
@@ -56,7 +62,8 @@ class TypeDAO extends AbstractDAO
     ) {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT * FROM products where type_id=? LIMIT " . $start . "," . $productsPerPage . ";";
+        $sql = "SELECT * FROM products 
+                WHERE type_id=? LIMIT " . $start . "," . $productsPerPage . ";";
 
         return $this->fetchAllObject($sql,$params);
     }
@@ -89,7 +96,8 @@ class TypeDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT count(id) AS count FROM products where type_id=?;";
+        $sql = "SELECT count(id) AS count FROM products 
+                WHERE type_id=?;";
 
         return $this->fetchOneObject(
             $sql,
@@ -126,7 +134,8 @@ class TypeDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT COUNT(id) as count FROM types WHERE id = ?";
+        $sql = "SELECT COUNT(id) as count FROM types 
+                WHERE id = ?";
 
         return $this->fetchOneAssoc(
             $sql,

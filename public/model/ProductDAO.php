@@ -71,7 +71,8 @@ class ProductDAO extends AbstractDAO
         $params[] = $type_id;
         $params[] = $quantity;
         $params[] = $image_url;
-        $sql = "INSERT INTO products (name, producer_id, price,type_id,quantity,image_url,date_created) VALUES (?,?,?,?,?,?,now());";
+        $sql = "INSERT INTO products (name, producer_id, price,type_id,quantity,image_url,date_created) 
+                VALUES (?,?,?,?,?,?,now());";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -102,7 +103,8 @@ class ProductDAO extends AbstractDAO
         $params[] = $product["quantity"];
         $params[] = $product["image_url"];
         $params[] = $product["product_id"];
-        $sql = "UPDATE products SET name=?, producer_id=?,price=?,old_price=?, type_id=?, quantity=?, image_url=? WHERE id=? ;";
+        $sql = "UPDATE products SET name=?, producer_id=?,price=?,old_price=?, type_id=?, quantity=?, image_url=? 
+                WHERE id=? ;";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -118,7 +120,8 @@ class ProductDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT id , name FROM products WHERE type_id = ?";
+        $sql = "SELECT id , name FROM products 
+                WHERE type_id = ?";
 
         return $this->fetchAllAssoc(
             $sql,
@@ -135,7 +138,9 @@ class ProductDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT id , name FROM products WHERE type_id = ? ORDER BY price ASC";
+        $sql = "SELECT id , name FROM products 
+                WHERE type_id = ? 
+                ORDER BY price ASC";
 
         return $this->fetchAllAssoc(
             $sql,
@@ -152,7 +157,9 @@ class ProductDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT id , name FROM products WHERE type_id = ? ORDER BY price DESC";
+        $sql = "SELECT id , name FROM products 
+                WHERE type_id = ? 
+                ORDER BY price DESC";
 
         return $this->fetchAllAssoc(
             $sql,
@@ -169,7 +176,8 @@ class ProductDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT quantity FROM products WHERE id = ?";
+        $sql = "SELECT quantity FROM products 
+                WHERE id = ?";
 
         return $this->fetchOneAssoc(
             $sql,
@@ -186,13 +194,22 @@ class ProductDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT id , name , producer_id , price , type_id , quantity , image_url FROM products WHERE id = ?";
+        $sql = "SELECT id , name , producer_id , price , type_id , quantity , image_url 
+                FROM products 
+                WHERE id = ?";
         $rows = $this->fetchOneAssoc(
             $sql,
             $params
         );
-        $product = new Product($rows["id"], $rows["name"], $rows["producer_id"], $rows["price"], $rows["type_id"]
-            , $rows["quantity"], $rows["image_url"]);
+        $product = new Product(
+            $rows["id"],
+            $rows["name"],
+            $rows["producer_id"],
+            $rows["price"],
+            $rows["type_id"],
+            $rows["quantity"],
+            $rows["image_url"]
+        );
 
         return $product;
     }
@@ -206,7 +223,8 @@ class ProductDAO extends AbstractDAO
             $params = [];
             $params[] = $product["quantity"];
             $params[] = $product["product_id"];
-            $sql = "UPDATE products SET quantity = quantity - ? WHERE id = ?";
+            $sql = "UPDATE products SET quantity = quantity - ? 
+                    WHERE id = ?";
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -223,7 +241,8 @@ class ProductDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT name  FROM attributes WHERE type_id = ?";
+        $sql = "SELECT name  FROM attributes 
+                WHERE type_id = ?";
 
         return $this->fetchAllAssoc(
             $sql,
@@ -244,7 +263,9 @@ class ProductDAO extends AbstractDAO
         $params = [];
         $params [] = $typeId;
         $params [] = $attributeName;
-        $sql = " SELECT value FROM product_attributes JOIN attributes ON attribute_id = id WHERE type_id = ? AND name = ?";
+        $sql = " SELECT value FROM product_attributes 
+                 JOIN attributes ON attribute_id = id 
+                 WHERE type_id = ? AND name = ?";
 
         return $this->fetchAllAssoc(
             $sql,
@@ -263,7 +284,8 @@ class ProductDAO extends AbstractDAO
         $params = [];
         $params[] = $price;
         $params[] = $product_id;
-        $sql = "UPDATE products SET price=?, old_price=NULL WHERE id=? ;";
+        $sql = "UPDATE products SET price=?, old_price=NULL 
+                WHERE id=? ;";
         $this->prepareAndExecute(
             $sql,
             $params

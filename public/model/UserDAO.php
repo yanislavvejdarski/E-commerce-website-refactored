@@ -13,7 +13,8 @@ class UserDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $email;
-        $sql = "SELECT * FROM users WHERE email=?;";
+        $sql = "SELECT * FROM users 
+                WHERE email=?;";
 
         return $this->fetchOneObject(
             $sql,
@@ -30,7 +31,8 @@ class UserDAO extends AbstractDAO
     {
         $params = [];
         $params[] = $id;
-        $sql = "SELECT * FROM users WHERE id=?;";
+        $sql = "SELECT * FROM users 
+                WHERE id=?;";
 
         return $this->fetchOneObject(
             $sql,
@@ -52,7 +54,8 @@ class UserDAO extends AbstractDAO
         $params[] = $user->getPhoneNumber();
         $params[] = $user->getRole();
         $params[] = $user->getSubscription();
-        $sql = "INSERT INTO users (email, password, first_name,last_name,age,phone_number,role,subscription,date_created) VALUES (?, ?, ?,?,?,?,?,?,now());";
+        $sql = "INSERT INTO users (email, password, first_name,last_name,age,phone_number,role,subscription,date_created)
+                VALUES (?, ?, ?,?,?,?,?,?,now());";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -74,7 +77,9 @@ class UserDAO extends AbstractDAO
         $params[] = $user->getPhoneNumber();
         $params[] = $user->getSubscription();
         $params[] = $user->getId();
-        $sql = "UPDATE users SET email=?, password=?, first_name=?,last_name=?,age=?,phone_number=?,subscription=? WHERE id=? ;";
+        $sql = "UPDATE users 
+                SET email=?, password=?, first_name=?,last_name=?,age=?,phone_number=?,subscription=?
+                WHERE id=? ;";
         $this->prepareAndExecute(
             $sql,
             $params
@@ -94,7 +99,9 @@ class UserDAO extends AbstractDAO
         $params = [];
         $params[] = $newPassword;
         $params[] = $email;
-        $sql = "UPDATE users SET password = ?WHERE email = ?;";
+        $sql = "UPDATE users 
+                SET password = ?
+                WHERE email = ?;";
         if ($this->prepareAndExecute($sql, $params)) {
             return true;
         } else {

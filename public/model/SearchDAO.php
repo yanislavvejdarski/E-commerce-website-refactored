@@ -16,7 +16,8 @@ class SearchDAO extends AbstractDAO
     {
         $params = [];
         $params[] = "{$keywords}%";
-        $sql = "SELECT id , name FROM products WHERE name LIKE ? LIMIT 5;";
+        $sql = "SELECT id , name FROM products 
+                WHERE name LIKE ? LIMIT 5;";
 
         return $this->fetchAllAssoc(
             $sql,

@@ -19,7 +19,9 @@ class CartDAO extends AbstractDAO {
             $params = [];
             $params[] = $id;
             $params[] = $userId;
-            $sql = "SELECT user_id , product_id , quantity FROM cart WHERE product_id = ? AND user_id = ?";
+            $sql = "SELECT user_id , product_id , quantity 
+                    FROM cart 
+                    WHERE product_id = ? AND user_id = ?";
 
           return  $this->fetchOneAssoc(
               $sql,
@@ -38,7 +40,8 @@ class CartDAO extends AbstractDAO {
             $params[] = $userId;
             $params[] = $productId;
             $params[] = 1;
-            $sql = "INSERT INTO cart (user_id , product_id , quantity) VALUES (?,?,?)";
+            $sql = "INSERT INTO cart (user_id , product_id , quantity) 
+                    VALUES (?,?,?)";
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -55,7 +58,8 @@ class CartDAO extends AbstractDAO {
             $params = [];
             $params[] = $userId;
             $params[] = $id;
-            $sql = "UPDATE cart SET quantity = quantity + 1 WHERE user_id = ? AND product_id = ?";
+            $sql = "UPDATE cart SET quantity = quantity + 1 
+                    WHERE user_id = ? AND product_id = ?";
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -69,7 +73,9 @@ class CartDAO extends AbstractDAO {
             $params = [];
             $params[] = $id;
             $sql = "SELECT c.product_id , c.quantity , price*c.quantity as price 
-                    FROM cart as c JOIN products as p on c.product_id = p.id  WHERE user_id = ?";
+                    FROM cart as c 
+                    JOIN products as p on c.product_id = p.id  
+                    WHERE user_id = ?";
             $this->fetchAllAssoc(
                 $sql,
                 $params
@@ -90,7 +96,8 @@ class CartDAO extends AbstractDAO {
             $params[] = $quantity;
             $params[] = $userId;
             $params[] = $id;
-            $sql = "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
+            $sql = "UPDATE cart SET quantity = ? 
+                    WHERE user_id = ? AND product_id = ?";
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -108,7 +115,8 @@ class CartDAO extends AbstractDAO {
             $params = [];
             $params[] = $userId;
             $params[] = $id;
-            $sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ? ";
+            $sql = "DELETE FROM cart 
+                    WHERE user_id = ? AND product_id = ? ";
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -121,7 +129,8 @@ class CartDAO extends AbstractDAO {
     public  function deleteCart ($userId) {
             $params = [];
             $params[] = $userId;
-            $sql = "DELETE FROM cart WHERE user_id = ? ";
+            $sql = "DELETE FROM cart 
+                    WHERE user_id = ? ";
             $this->prepareAndExecute(
                 $sql,
                 $params
