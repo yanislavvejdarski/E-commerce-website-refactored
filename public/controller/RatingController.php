@@ -112,7 +112,7 @@ class ratingController extends AbstractController
     {
         UserController::validateForLoggedUser();
         $ratingDAO = new RatingDAO();
-        $myRatings = $ratingDAO::showMyRated($_SESSION["logged_user_id"]);
+        $myRatings = $ratingDAO->showMyRated($_SESSION["logged_user_id"]);
         include_once "view/myRated.php";
     }
 

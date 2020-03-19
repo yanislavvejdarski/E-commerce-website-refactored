@@ -1,54 +1,62 @@
 <?php
+
 namespace model;
+
 use PDO;
 use PDOException;
 
-
-class SearchDAO
+class SearchDAO extends AbstractDAO
 {
-   public function searchProduct ($keywords){
+    /**
+     * @param $keywords string
+     *
+     * @return array
+     */
+    public function searchProduct($keywords)
+    {
+        $params = [];
+        $params[] = "{$keywords}%";
+        $sql = "SELECT id , name FROM products WHERE name LIKE ? LIMIT 5;";
 
-            $params = [];
-            $params[] = "{$keywords}%";
-
-       $pdo = DBManager::getInstance()->getPDO();
-
-       $sql = "SELECT id , name FROM products WHERE name LIKE ? LIMIT 5;";
-            $statement = $pdo->prepare($sql);
-            $statement->execute($params);
-            $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-            return $rows;
-
+        return $this->fetchAllAssoc(
+            $sql,
+            $params
+        );
     }
 
-    public function searchCategorie ($keywords){
-
-            $params = [];
-            $params[] = "{$keywords}%";
-
-        $pdo = DBManager::getInstance()->getPDO();
-
-
-        $sql = "
-                SELECT c.id, c.name  FROM categories AS c  
+    /**
+     * @param $keywords string
+     *
+     * @return array
+     */
+    public function searchCategorie($keywords)
+    {
+        $params = [];
+        $params[] = "{$keywords}%";
+        $sql = "SELECT c.id, c.name  FROM categories AS c  
 			    WHERE name LIKE ?;";
-            $statement = $pdo->prepare($sql);
-            $statement->execute($params);
-            $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-            return $rows;
 
+        return $this->fetchAllAssoc(
+            $sql,
+            $params
+        );
     }
 
-    public  function searchType ($keywords){
+    /**
+     * @param $keywords string
+     *
+     * @return array
+     */
+    public function searchType($keywords)
+    {
+        $params = [];
+        $params[] = "{$keywords}%";
+        $sql = "SELECT id, name FROM types 
+                WHERE name LIKE ? LIMIT 4;";
 
-            $params = [];
-            $params[] = "{$keywords}%";
-            $pdo = DBManager::getInstance()->getPDO();
-            $sql = "SELECT id, name FROM types WHERE name LIKE ? LIMIT 4;";
-            $statement = $pdo->prepare($sql);
-            $statement->execute($params);
-            $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-            return $rows;
-
+        return $this->fetchAllAssoc(
+            $sql,
+            $params
+        );
     }
 }

@@ -19,7 +19,6 @@ class ProductController extends AbstractController
 {
     public function show()
     {
-
         $getParams = $this->request->getParams();
         if (isset($getParams["product"])) {
             $productDAO = new ProductDAO();
@@ -38,12 +37,13 @@ class ProductController extends AbstractController
             }
         }
         if (isset($getParams["typeId"])) {
-            $checkType = TypeDAO::existsType($getParams["typeId"]);
+            $typeDAO = new TypeDAO();
+            $checkType = $typeDAO->existsType($getParams["typeId"]);
             if ($checkType["count"] > 0) {
 
                 $productDAO = new ProductDAO();
                 $products = $productDAO->getProductsFromTypeId($getParams["typeId"]);
-                $typeDAO = new TypeDAO();
+
                 $type = $typeDAO->getTypeInformation($getParams["typeId"]);
                 include_once "view/showProductsFromType.php";
 
@@ -75,16 +75,12 @@ class ProductController extends AbstractController
             } else {
                 header("Location: /home");
             }
-
-
             include_once "view/showProductByType.php";
         }
     }
 
     public function getFilters($id)
     {
-
-
         $typeDAO = new TypeDAO();
         $typeNames = $typeDAO->getAttributesByType($id);
 
