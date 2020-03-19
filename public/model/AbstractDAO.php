@@ -1,22 +1,24 @@
 <?php
+
 namespace model;
 
 use model\DBManager;
 use PDO;
 
-class AbstractDAO{
+class AbstractDAO
+{
     /**
      * @var instance
      */
-   public $pdo;
+    public $pdo;
 
     /**
      * AbstractDAO constructor.
      */
-   public function __construct()
-   {
-       $this->pdo = DBManager::getInstance()->getPDO();
-   }
+    public function __construct()
+    {
+        $this->pdo = DBManager::getInstance()->getPDO();
+    }
 
     /**
      * @param $sql string
@@ -36,62 +38,82 @@ class AbstractDAO{
 
     /**
      * @param $sql string
-     * @param $fetchWay string
      * @param $params array
      *
      * @return array
      */
-   public function fetchAll(
-       $sql,
-       $fetchWay,
-       $params = []
-   ) {
-       $statement = $this->prepareAndExecute(
-           $sql,
-           $params
-       );
-       if ($fetchWay == "fetchAssoc") {
+    public function fetchAllObject(
+        $sql,
+        $params = []
+    ) {
+        $statement = $this->prepareAndExecute(
+            $sql,
+            $params
+        );
 
-           return $statement->fetchAll(PDO::FETCH_ASSOC);
-       }
-       elseif ($fetchWay == "fetchObject") {
-
-       return $statement->fetchAll(PDO::FETCH_OBJ);
-       }
-   }
+        return $statement->fetchAll(PDO::FETCH_OBJ);
+    }
 
     /**
      * @param $sql string
-     * @param $fetchWay string
+     * @param $params array
+     *
+     * @return array
+     */
+    public function fetchAllAssoc(
+        $sql,
+        $params = []
+    ) {
+        $statement = $this->prepareAndExecute(
+            $sql,
+            $params
+        );
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $sql string
      * @param $params array
      *
      * @return mixed
      */
-   public function fetchOne(
-       $sql,
-       $fetchWay,
-       $params = []
-   ) {
-       $statement = $this->prepareAndExecute(
-           $sql,
-           $params
-       );
-       if ($fetchWay == "fetchAssoc") {
+    public function fetchOneAssoc(
+        $sql,
+        $params = []
+    ) {
+        $statement = $this->prepareAndExecute(
+            $sql,
+            $params
+        );
 
-           return $statement->fetch(PDO::FETCH_ASSOC);
-       }
-       elseif ($fetchWay == "fetchObject") {
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
 
-           return $statement->fetch(PDO::FETCH_OBJ);
-       }
-   }
+    /**
+     * @param $sql string
+     * @param $params array
+     *
+     * @return mixed
+     */
+    public function fetchOneObject(
+        $sql,
+        $params = []
+    ) {
+        $statement = $this->prepareAndExecute(
+            $sql,
+            $params
+        );
+
+        return $statement->fetch(PDO::FETCH_OBJ);
+    }
 
     /**
      * @return int
      */
     public function lastInsertId()
     {
-       return $this->pdo->lastInsertId();
+        return $this->pdo->lastInsertId();
     }
 
     /**
