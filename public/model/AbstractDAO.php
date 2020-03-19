@@ -20,7 +20,7 @@ class AbstractDAO{
 
     /**
      * @param $sql string
-     * @param null | mixed
+     * @param null | array
      *
      * @return bool|PDOStatement
      */
@@ -30,13 +30,14 @@ class AbstractDAO{
     ) {
         $statement = $this->pdo->prepare($sql);
         $statement->execute($params);
+
         return $statement;
     }
 
     /**
      * @param $sql string
      * @param $fetchWay string
-     * @param $params mixed
+     * @param $params array
      *
      * @return array
      */
@@ -58,11 +59,18 @@ class AbstractDAO{
        return $statement->fetchAll(PDO::FETCH_OBJ);
        }
    }
+
+    /**
+     * @param $sql string
+     * @param $fetchWay string
+     * @param $params array
+     *
+     * @return mixed
+     */
    public function fetchOne(
        $sql,
        $fetchWay,
        $params = []
-
    ) {
        $statement = $this->prepareAndExecute(
            $sql,
@@ -83,7 +91,6 @@ class AbstractDAO{
      */
     public function lastInsertId()
     {
-
        return $this->pdo->lastInsertId();
     }
 
