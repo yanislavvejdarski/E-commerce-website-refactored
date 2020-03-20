@@ -4,11 +4,12 @@ namespace model;
 use PDO;
 use PDOException;
 
-class CartDAO extends AbstractDAO {
+class CartDAO extends AbstractDAO
+{
 
     /**
-     * @param $id int
-     * @param $userId int
+     * @param int $id
+     * @param int $userId
      *
      * @return array
      */
@@ -17,11 +18,18 @@ class CartDAO extends AbstractDAO {
       $userId
   ) {
             $params = [];
-            $params[] = $id;
-            $params[] = $userId;
-            $sql = "SELECT user_id , product_id , quantity 
-                    FROM cart 
-                    WHERE product_id = ? AND user_id = ?";
+            $params["productId"] = $id;
+            $params["userId"] = $userId;
+            $sql = '
+                SELECT 
+                    user_id,
+                    product_id,
+                    quantity 
+                FROM 
+                    cart 
+                WHERE 
+                    product_id = :productId AND user_id = :userId
+                    ';
 
           return  $this->fetchOneAssoc(
               $sql,
@@ -29,19 +37,28 @@ class CartDAO extends AbstractDAO {
     }
 
     /**
-     * @param $productId int
-     * @param $userId int
+     * @param int $productId
+     * @param int $userId
      */
     public  function putInCart(
         $productId,
         $userId
     ) {
             $params = [];
-            $params[] = $userId;
-            $params[] = $productId;
-            $params[] = 1;
-            $sql = "INSERT INTO cart (user_id , product_id , quantity) 
-                    VALUES (?,?,?)";
+            $params["userId"] = $userId;
+            $params["productId"] = $productId;
+            $params["quantity"] = 1;
+            $sql = '
+                INSERT INTO
+                    cart 
+                    (user_id,
+                     product_id,
+                     quantity) 
+                VALUES 
+                    (:userId,
+                     :productId,
+                     :quantity)
+                    ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -49,17 +66,23 @@ class CartDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
-     * @param $userId int
+     * @param int $id
+     * @param int $userId
      */
     public function updateQuantityOfProductInCart(
         $id,
         $userId) {
             $params = [];
-            $params[] = $userId;
-            $params[] = $id;
-            $sql = "UPDATE cart SET quantity = quantity + 1 
-                    WHERE user_id = ? AND product_id = ?";
+            $params["userId"] = $userId;
+            $params["productId"] = $id;
+            $sql = '
+                UPDATE 
+                    cart 
+                SET 
+                    quantity = quantity + 1 
+                WHERE 
+                    user_id = :userId AND product_id = :productId
+                    ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -67,15 +90,23 @@ class CartDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
+     * @param int $id
      */
-    public function showCart ($id) {
+    public function showCart ($id)
+    {
             $params = [];
-            $params[] = $id;
-            $sql = "SELECT c.product_id , c.quantity , price*c.quantity as price 
-                    FROM cart as c 
-                    JOIN products as p on c.product_id = p.id  
-                    WHERE user_id = ?";
+            $params["userId"] = $id;
+            $sql = '
+                SELECT 
+                    c.product_id,
+                    c.quantity,
+                    price*c.quantity AS price 
+                FROM 
+                    cart AS c 
+                    JOIN products AS p ON c.product_id = p.id  
+                WHERE 
+                    user_id = :userId
+                    ';
             $this->fetchAllAssoc(
                 $sql,
                 $params
@@ -83,9 +114,9 @@ class CartDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
-     * @param $quantity int
-     * @param $userId int
+     * @param int $id
+     * @param int $quantity
+     * @param int $userId
      */
     public  function updateCartQuantity(
         $id,
@@ -93,11 +124,17 @@ class CartDAO extends AbstractDAO {
         $userId
     ) {
             $params = [];
-            $params[] = $quantity;
-            $params[] = $userId;
-            $params[] = $id;
-            $sql = "UPDATE cart SET quantity = ? 
-                    WHERE user_id = ? AND product_id = ?";
+            $params["quantity"] = $quantity;
+            $params["userId"] = $userId;
+            $params["productId"] = $id;
+            $sql = '
+                UPDATE 
+                    cart
+                SET 
+                    quantity = :quantity 
+                WHERE
+                    user_id = :userId AND product_id = :productId
+                    ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -105,18 +142,22 @@ class CartDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
-     * @param $userId int
+     * @param int $id
+     * @param int $userId
      */
     public  function deleteProductFromCart(
         $id,
         $userId
     ) {
             $params = [];
-            $params[] = $userId;
-            $params[] = $id;
-            $sql = "DELETE FROM cart 
-                    WHERE user_id = ? AND product_id = ? ";
+            $params["userId"] = $userId;
+            $params["productId"] = $id;
+            $sql = '
+                DELETE FROM
+                        cart 
+                WHERE
+                    user_id = :userId AND product_id = :productId 
+                    ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -124,13 +165,18 @@ class CartDAO extends AbstractDAO {
     }
 
     /**
-     * @param $userId int
+     * @param int $userId
      */
-    public  function deleteCart ($userId) {
+    public  function deleteCart ($userId)
+    {
             $params = [];
-            $params[] = $userId;
-            $sql = "DELETE FROM cart 
-                    WHERE user_id = ? ";
+            $params["userId"] = $userId;
+            $sql = '
+                DELETE FROM
+                        cart 
+                WHERE 
+                    user_id = :userId 
+                    ';
             $this->prepareAndExecute(
                 $sql,
                 $params

@@ -3,19 +3,29 @@
 namespace model;
 use PDO;
 
-class AddressDAO extends AbstractDAO {
-
+class AddressDAO extends AbstractDAO
+{
     /**
-     * @param $id
+     * @param $id int
      *
-     * @return object
+     * @return array
      */
-    public function getById($id) {
+    public function getById($id)
+    {
         $params = [];
-        $params[] = $id;
-        $sql="SELECT a.id, a.city_id,a.user_id, c.name AS city_name,a.street_name 
-              FROM addresses AS a JOIN cities AS c ON(a.city_id=c.id)
-              WHERE a.id=?;";
+        $params["id"] = $id;
+        $sql='
+            SELECT 
+                a.id,
+                a.city_id,
+                a.user_id,
+                c.NAME AS city_name,
+                a.street_name
+            FROM   
+                addresses AS a 
+                JOIN cities AS c ON( a.city_id = c.id )
+            WHERE  
+                a.id = :id ;';
 
         return $this->fetchOneObject(
             $sql,
@@ -26,22 +36,35 @@ class AddressDAO extends AbstractDAO {
     /**
      * @return array
      */
-    public function getCities() {
+    public function getCities()
+    {
         $sql="SELECT * FROM cities;";
 
         return $this->fetchAllAssoc($sql);
     }
 
     /**
-     * @param $address object
+     * @param Address $address
      */
-    public function add(Address $address) {
+    public function add(Address $address)
+    {
         $params = [];
-        $params[] = $address->getUserId();
-        $params[] = $address->getCityId();
-        $params[] = $address->getStreetName();
-        $sql = "INSERT INTO addresses (user_id, city_id, street_name,date_created) 
-                VALUES (?, ?, ?,now());";
+        $params["userId"] = $address->getUserId();
+        $params["cityId"] = $address->getCityId();
+        $params["streetName"] = $address->getStreetName();
+        $sql = '
+            INSERT INTO 
+                addresses 
+                (user_id,
+                 city_id,
+                 street_name,
+                 date_created) 
+            VALUES 
+                (:userId,
+                 :cityId,
+                 :streetName,
+                 now())
+                 ;';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -50,17 +73,24 @@ class AddressDAO extends AbstractDAO {
     }
 
     /**
-     * @param $user_id int
+     * @param int $userId
      *
      * @return array
      */
-    public function getAll($user_id) {
+    public function getAll($userId)
+    {
         $params = [];
-        $params[] = $user_id;
-        $sql = "SELECT a.id, c.name AS city_name,a.street_name 
-                FROM addresses AS a 
-                JOIN cities AS c ON(a.city_id=c.id)
-                WHERE user_id=?;";
+        $params["userId"] = $userId;
+        $sql = '
+            SELECT 
+                a.id,
+                c.name AS city_name,
+                a.street_name 
+            FROM 
+                addresses AS a 
+                JOIN cities AS c ON(a.city_id = c.id)
+            WHERE user_id = :userId
+                ;';
 
         return $this->fetchAllObject(
             $sql,
@@ -69,16 +99,23 @@ class AddressDAO extends AbstractDAO {
     }
 
     /**
-     * @param $address object
+     * @param Address $address
      */
-    public function edit(Address $address) {
+    public function edit(Address $address)
+    {
         $params = [];
-        $params[] = $address->getCityId();
-        $params[] = $address->getStreetName();
-        $params[] = $address->getId();
-        $sql = "UPDATE addresses 
-                SET city_id=?, street_name=? 
-                WHERE id=? ;";
+        $params["cityId"] = $address->getCityId();
+        $params["streetName"] = $address->getStreetName();
+        $params["addressId"] = $address->getId();
+        $sql = '
+            UPDATE 
+                addresses 
+            SET 
+                city_id = :cityId,
+                street_name = :streetName 
+            WHERE 
+                id = :addressId 
+                ;';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -86,13 +123,18 @@ class AddressDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
+     * @param int $id
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         $params = [];
-        $params[] = $id;
-        $sql = "DELETE FROM addresses 
-                WHERE id=? ;";
+        $params["id"] = $id;
+        $sql = '
+            DELETE FROM 
+                addresses 
+            WHERE 
+                id = :id 
+                ;';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -100,15 +142,22 @@ class AddressDAO extends AbstractDAO {
     }
 
     /**
-     * @param $userId int
+     * @param int $userId
      *
      * @return array
      */
-      public function userAddress($userId) {
+      public function userAddress($userId)
+      {
         $params = [];
-        $params[] = $userId;
-        $sql = "SELECT id FROM addresses 
-                WHERE user_id = ?";
+        $params["userId"] = $userId;
+        $sql = '
+            SELECT 
+                id 
+            FROM 
+                addresses 
+            WHERE 
+                user_id = :userId
+                ';
 
         return $this->fetchAllObject(
             $sql,

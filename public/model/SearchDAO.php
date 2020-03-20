@@ -8,16 +8,23 @@ use PDOException;
 class SearchDAO extends AbstractDAO
 {
     /**
-     * @param $keywords string
+     * @param string $keywords
      *
      * @return array
      */
     public function searchProduct($keywords)
     {
         $params = [];
-        $params[] = "{$keywords}%";
-        $sql = "SELECT id , name FROM products 
-                WHERE name LIKE ? LIMIT 5;";
+        $params["keyWords"] = "{$keywords}%";
+        $sql = '
+            SELECT 
+                id,
+                name 
+            FROM
+                products 
+            WHERE
+                name LIKE :keyWords LIMIT 5
+                ;';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -26,16 +33,23 @@ class SearchDAO extends AbstractDAO
     }
 
     /**
-     * @param $keywords string
+     * @param string $keywords
      *
      * @return array
      */
     public function searchCategorie($keywords)
     {
         $params = [];
-        $params[] = "{$keywords}%";
-        $sql = "SELECT c.id, c.name  FROM categories AS c  
-			    WHERE name LIKE ?;";
+        $params["keyWords"] = "{$keywords}%";
+        $sql = '
+            SELECT 
+                c.id,
+                c.name  
+            FROM 
+                categories AS c  
+            WHERE 
+                name LIKE :keyWords
+                ;';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -44,16 +58,23 @@ class SearchDAO extends AbstractDAO
     }
 
     /**
-     * @param $keywords string
+     * @param string $keywords
      *
      * @return array
      */
     public function searchType($keywords)
     {
         $params = [];
-        $params[] = "{$keywords}%";
-        $sql = "SELECT id, name FROM types 
-                WHERE name LIKE ? LIMIT 4;";
+        $params["keyWords"] = "{$keywords}%";
+        $sql = '
+            SELECT
+                id,
+                name
+            FROM
+                types 
+            WHERE
+                name LIKE :keyWords LIMIT 4
+                ;';
 
         return $this->fetchAllAssoc(
             $sql,

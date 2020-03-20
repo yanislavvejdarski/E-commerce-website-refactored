@@ -4,13 +4,13 @@ namespace model;
 class Address
 {
 private $id;
-private $user_id;
-private $city_id;
+private $userId;
+private $cityId;
 private $street_name;
 
-public function __construct($user_id,$city_id,$street_name){
-    $this->user_id=$user_id;
-    $this->city_id=$city_id;
+public function __construct($userId,$cityId,$street_name){
+    $this->userId=$userId;
+    $this->cityId=$cityId;
     $this->street_name=$street_name;
 }
 
@@ -25,7 +25,7 @@ public function __construct($user_id,$city_id,$street_name){
 
     public function getCityId()
     {
-        return $this->city_id;
+        return $this->cityId;
     }
 
     public function getStreetName()
@@ -36,6 +36,6 @@ public function __construct($user_id,$city_id,$street_name){
 
     public function getUserId()
     {
-        return $this->user_id;
+        return $this->userId;
     }
 }

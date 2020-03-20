@@ -3,18 +3,26 @@ namespace model;
 use PDO;
 use PDOException;
 
-class FavouriteDAO extends AbstractDAO {
+class FavouriteDAO extends AbstractDAO
+{
 
     /**
-     * @param $userId int
+     * @param int $userId
      *
      * @return array
      */
-    public function showFavourites ($userId){
+    public function showFavourites ($userId)
+    {
         $params = [];
-        $params[] = $userId;
-        $sql = "SELECT product_id FROM user_favourite_products 
-                WHERE user_id = ? ";
+        $params["userId"] = $userId;
+        $sql = '
+            SELECT 
+                product_id 
+            FROM 
+                user_favourite_products 
+            WHERE 
+                user_id = :userId 
+                ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -23,18 +31,25 @@ class FavouriteDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
-     * @param $userId int
+     * @param int $id
+     * @param int $userId
      */
     public function addToFavourites (
         $id,
         $userId
     ) {
         $params = [];
-        $params[] = $userId;
-        $params[] = $id;
-        $sql = "INSERT INTO user_favourite_products (user_id , product_id ) 
-                VALUES (? ,?)";
+        $params["userId"] = $userId;
+        $params["productId"] = $id;
+        $sql = '
+            INSERT INTO
+                user_favourite_products 
+                (user_id,
+                 product_id) 
+            VALUES 
+                (:userId,
+                 :productId)
+                 ';
         $this->prepareAndExecute(
             $sql
             ,$params
@@ -42,18 +57,22 @@ class FavouriteDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
-     * @param $userId int
+     * @param int $id
+     * @param int $userId
      */
     public function deleteFromFavourites (
         $id,
         $userId
     ) {
         $params = [];
-        $params[] = $userId;
-        $params[] = $id;
-        $sql = "DELETE FROM user_favourite_products 
-                WHERE user_id = ? AND product_id = ? ";
+        $params["userId"] = $userId;
+        $params["productId"] = $id;
+        $sql = '
+            DELETE FROM
+                user_favourite_products 
+            WHERE 
+                user_id = :userId AND product_id = :productId 
+                ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -61,8 +80,8 @@ class FavouriteDAO extends AbstractDAO {
     }
 
     /**
-     * @param $id int
-     * @param $userId int
+     * @param int $id
+     * @param int $userId
      *
      * @return array
      */
@@ -71,10 +90,16 @@ class FavouriteDAO extends AbstractDAO {
         $userId
     ) {
         $params = [];
-        $params[] = $id;
-        $params[] = $userId;
-        $sql = "SELECT product_id FROM user_favourite_products 
-                WHERE product_id = ? AND user_id = ?";
+        $params["productId"] = $id;
+        $params["userId"] = $userId;
+        $sql = '
+            SELECT 
+                product_id 
+            FROM 
+                user_favourite_products 
+            WHERE 
+                product_id = :productId AND user_id = :userId
+                ';
 
         return $this->fetchOneAssoc(
             $sql,

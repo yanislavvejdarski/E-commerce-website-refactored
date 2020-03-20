@@ -10,21 +10,32 @@ use PDOException;
 class OrderDAO extends AbstractDAO
 {
     /**
-     * @param $orderId int
-     * @param $orderedProducts array
+     * @param int $orderId
+     * @param array $orderedProducts
      */
     function addOrderProducts(
         $orderId,
         $orderedProducts
     ) {
-        foreach ($orderedProducts as $product) {
+        foreach ($orderedProducts as $product)
+        {
             $params = [];
-            $params[] = $orderId;
-            $params[] = $product["product_id"];
-            $params[] = $product["quantity"];
-            $params[] = $product["price"];
-            $sql = "INSERT INTO orders_have_products (order_id , product_id , quantity,price) 
-                    VALUES (?,? ,? ,?)";
+            $params["orderId"] = $orderId;
+            $params["productId"] = $product["product_id"];
+            $params["quantity"] = $product["quantity"];
+            $params["price"] = $product["price"];
+            $sql = '
+                INSERT INTO 
+                    orders_have_products 
+                    (order_id,
+                     product_id,
+                     quantity,
+                     price) 
+                VALUES (:orderId,
+                        :productId,
+                        :quantity,
+                        :price)
+                        ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -33,9 +44,9 @@ class OrderDAO extends AbstractDAO
     }
 
     /**
-     * @param $addressId int
-     * @param $totalPrice float
-     * @param $userId int
+     * @param int $addressId
+     * @param float $totalPrice
+     * @param int $userId
      *
      * @return int
      */
@@ -45,11 +56,20 @@ class OrderDAO extends AbstractDAO
         $userId
     ) {
         $params = [];
-        $params[] = $userId;
-        $params[] = $addressId;
-        $params[] = $totalPrice;
-        $sql = "INSERT INTO orders (user_id , address_id , price)
-                VALUES (?,?,?)";
+        $params["userId"] = $userId;
+        $params["addressId"] = $addressId;
+        $params["totalPrice"] = $totalPrice;
+        $sql = '
+            INSERT INTO 
+                orders 
+                (user_id,
+                 address_id,
+                 price)
+            VALUES 
+                (:userId,
+                 :addressId,
+                 :totalPrice)
+                 ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -59,20 +79,34 @@ class OrderDAO extends AbstractDAO
     }
 
     /**
-     * @param $userId int
+     * @param int $userId
      *
      * @return array
      */
     public function showOrders($userId)
     {
         $params = [];
-        $params[] = $userId;
-        $sql = "SELECT o.id, o.address_id , op.product_id , op.quantity, o.price,op.price as productPrice, p.name ,p.image_url , o.date_created  FROM orders as o
-                JOIN orders_have_products as op
-                ON o.id = op.order_id 
+        $params["userId"] = $userId;
+        $sql = '
+            SELECT 
+                o.id,
+                o.address_id,
+                op.product_id,
+                op.quantity,
+                o.price,
+                op.price as productPrice,
+                p.name,
+                p.image_url,
+                o.date_created  
+            FROM 
+                orders as o
+                JOIN orders_have_products as op ON o.id = op.order_id 
                 JOIN products as p ON p.id = op.product_id
-                WHERE o.user_id = ? 
-                ORDER BY o.date_created DESC";
+            WHERE
+                o.user_id = :userId 
+            ORDER BY
+                o.date_created DESC
+                ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -81,9 +115,9 @@ class OrderDAO extends AbstractDAO
     }
 
     /**
-     * @param $orderedProducts array
-     * @param $totalPrice float
-     * @param $userId int
+     * @param array $orderedProducts
+     * @param float $totalPrice
+     * @param int $userId
      */
     function finishOrder(
         $orderedProducts,
