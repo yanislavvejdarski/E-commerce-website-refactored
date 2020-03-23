@@ -14,7 +14,7 @@ class AddressDAO extends AbstractDAO
     public function getById($id)
     {
         $params = ['id' => $id];
-        $sql='
+        $sql = '
             SELECT 
                 a.id,
                 a.city_id,
