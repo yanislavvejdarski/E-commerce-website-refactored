@@ -1,5 +1,7 @@
 <?php
 namespace model;
+use model\DAO\SearchDAO;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -30,6 +32,7 @@ class Search{
     public function render(){
         if (isset($_POST["search"])){
             $search = new Search($_POST["search"]);
+
                 $search->renderProducts();
                 $search->renderCategories();
                 $search->renderTypes();

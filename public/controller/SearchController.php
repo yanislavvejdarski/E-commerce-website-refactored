@@ -13,8 +13,9 @@ class SearchController extends AbstractController
 {
     public function render()
     {
+
         $postParams = $this->request->postParams();
-        if (isset($post["searchProducts"])) {
+        if (isset($postParams["searchProducts"])) {
             $controller = new Search($postParams["search"]);
             $controller->render();
             exit();

@@ -5,6 +5,7 @@ namespace controller;
 use exception\BadRequestException;
 use exception\NotAuthorizedException;
 
+use helpers\Session;
 use model\DAO\AddressDAO;
 use model\User;
 use model\DAO\UserDAO;
@@ -35,6 +36,7 @@ class UserController extends AbstractController
 
                 if ($user) {
                     if (password_verify($postParams["password"], $user->password)) {
+                        $this->session->setSessionParams("logged_user_id",$user->id);
                         $_SESSION["logged_user_id"] = $user->id;
                         $_SESSION["logged_user_role"] = $user->role;
                         $_SESSION["logged_user_first_name"] = $user->first_name;
@@ -193,8 +195,7 @@ class UserController extends AbstractController
     public function logout()
     {
         if (isset($_SESSION["logged_user_id"])) {
-            unset($_SESSION);
-            session_destroy();
+            $this->session->sessionDestroy();
 
             header("Location: /home");
         }
