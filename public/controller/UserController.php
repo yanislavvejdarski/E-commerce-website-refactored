@@ -5,9 +5,9 @@ namespace controller;
 use exception\BadRequestException;
 use exception\NotAuthorizedException;
 
-use model\AddressDAO;
+use model\DAO\AddressDAO;
 use model\User;
-use model\UserDAO;
+use model\DAO\UserDAO;
 use PHPMailer;
 use helpers\Request;
 

@@ -2,7 +2,7 @@
 
 namespace view;
 
-use model\ProductDAO;
+use model\DAO\ProductDAO;
 
 try {
     ?>

@@ -1,7 +1,7 @@
 <?php
 namespace view;
 
-use model\TypeDAO;
+use model\DAO\TypeDAO;
 
 $typeDAO = new TypeDAO();
 $categories = $typeDAO->getCategories();

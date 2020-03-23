@@ -1,7 +1,7 @@
 <?php
 namespace view;
 
-use model\ProductDAO;
+use model\DAO\ProductDAO;
 
 ?>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"

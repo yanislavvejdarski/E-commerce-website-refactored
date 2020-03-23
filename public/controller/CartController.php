@@ -5,8 +5,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-use model\CartDAO;
-use model\ProductDAO;
+use model\DAO\CartDAO;
+use model\DAO\ProductDAO;
 use helpers\Request;
 
 class CartController extends AbstractController

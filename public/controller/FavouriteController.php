@@ -5,8 +5,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 use exception\NotFoundException;
-use model\FavouriteDAO;
-use model\ProductDAO;
+use model\DAO\FavouriteDAO;
+use model\DAO\ProductDAO;
 use helpers\Request;
 
 

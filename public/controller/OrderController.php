@@ -2,8 +2,8 @@
 
 namespace controller;
 
-use model\CartDAO;
-use model\OrderDAO;
+use model\DAO\CartDAO;
+use model\DAO\OrderDAO;
 use helpers\Request;
 
 ini_set('display_errors', 1);
@@ -19,7 +19,8 @@ class OrderController extends AbstractController
         $orderedProducts = new CartDAO();
         if (isset($postParams["order"])) {
             $orderedProductsa = $orderedProducts->showCart($_SESSION["logged_user_id"]);
-            OrderDAO::finishOrder($orderedProductsa, $postParams["totalPrice"], $_SESSION["logged_user_id"]);
+            $order = new OrderDAO();
+            $order->finishOrder($orderedProductsa, $postParams["totalPrice"], $_SESSION["logged_user_id"]);
             $cart = new CartController;
             $cart->show();
         }
@@ -30,6 +31,7 @@ class OrderController extends AbstractController
 
     public function show()
     {
+
         UserController::validateForLoggedUser();
 
         $products = new OrderDAO();

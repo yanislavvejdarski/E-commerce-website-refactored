@@ -2,9 +2,9 @@
 namespace view;
 
 use controller\AddressController;
-use model\AddressDAO;
-use model\FavouriteDAO;
-use model\ProductDAO;
+use model\DAO\AddressDAO;
+use model\DAO\FavouriteDAO;
+use model\DAO\ProductDAO;
 
 ?>
 

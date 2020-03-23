@@ -4,9 +4,9 @@ namespace controller;
 
 use exception\BadRequestException;
 use model\Filter;
-use model\ProductDAO;
+use model\DAO\ProductDAO;
 use model\Type;
-use model\TypeDAO;
+use model\DAO\TypeDAO;
 use PHPMailer;
 use helpers\Request;
 
@@ -48,29 +48,16 @@ class ProductController extends AbstractController
                 include_once "view/showProductsFromType.php";
 
 
-                $rrp = 99;
-                if (isset($_GET["page"])) {
-                    $page = $_GET["page"];
 
-                } else {
-                    $page = 0;
-                }
-
-                if ($page > 1) {
-                    $start = ($page * $rrp) - $rrp;
-
-                } else {
-                    $start = 0;
-                }
 
 
                 $typeDAO = new TypeDAO();
                 $resultSet = $typeDAO->getNumberOfProductsForType($getParams["typeId"]);
                 $numRows = $resultSet->count;
                 $typeDAO = new TypeDAO();
-                $products = $typeDAO->getAllByType($getParams["typeId"], $start, $rrp);
+                $products = $typeDAO->getAllByType($getParams["typeId"]);
                 $filters = $this->getFilters($getParams["typeId"]);
-                $totalPages = $numRows / $rrp;
+
 
             } else {
                 header("Location: /home");
