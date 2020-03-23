@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace model\DAO;
 
 use PDO;
 
@@ -13,8 +13,7 @@ class RatingDAO extends AbstractDAO
      */
     public function getRatingById($rating_id)
     {
-        $params = [];
-        $params["ratingId"] = $rating_id;
+        $params = ['ratingId' => $rating_id];
         $sql = '
             SELECT 
                 *
@@ -22,7 +21,7 @@ class RatingDAO extends AbstractDAO
                 user_rate_products 
             WHERE 
                 id = :ratingId
-                ;';
+        ';
 
         return $this->fetchOneObject(
             $sql,
@@ -42,11 +41,12 @@ class RatingDAO extends AbstractDAO
         $rating,
         $comment
     ) {
-        $params = [];
-        $params["userId"] = $userId;
-        $params["productId"] = $product_id;
-        $params["rating"] = $rating;
-        $params["comment"] = $comment;
+        $params = [
+            'userId' => $userId,
+            'productId' => $product_id,
+            'rating' => $rating,
+            'comment' => $comment
+        ];
         $sql = '
             INSERT INTO
                 user_rate_products 
@@ -61,7 +61,7 @@ class RatingDAO extends AbstractDAO
                  :rating,
                  :comment,
                  now())
-                 ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -78,10 +78,11 @@ class RatingDAO extends AbstractDAO
         $rating,
         $comment
     ) {
-        $params = [];
-        $params["rating"] = $rating;
-        $params["comment"] = $comment;
-        $params["id"] = $id;
+        $params = [
+            'rating' => $rating,
+            'comment' => $comment,
+            'id' => $id
+        ];
         $sql = '
             UPDATE
                 user_rate_products 
@@ -89,7 +90,8 @@ class RatingDAO extends AbstractDAO
                 stars = :rating,
                 text = :comment 
             WHERE 
-                id = :id ;';
+                id = :id 
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -103,8 +105,7 @@ class RatingDAO extends AbstractDAO
      */
     public function showMyRated($userId)
     {
-        $params = [];
-        $params["userId"] = $userId;
+        $params = ['userId' => $userId];
         $sql = '
             SELECT 
                 p.id AS product_id,
@@ -115,10 +116,10 @@ class RatingDAO extends AbstractDAO
                 urp.text
             FROM 
                 user_rate_products AS urp
-                JOIN products AS p ON(p.id = urp.product_id)
+                JOIN products AS p ON (p.id = urp.product_id)
             WHERE
                 urp.user_id = :userId
-                ;';
+        ';
 
         return $this->fetchAllObject(
             $sql,
@@ -131,10 +132,9 @@ class RatingDAO extends AbstractDAO
      *
      * @return array
      */
-    public function getReviewsNumber($product_id)
+    public function getReviewsNumber($productId)
     {
-        $params = [];
-        $params["productId"] = $product_id;
+        $params = ['productId' => $productId];
         $sql = '
             SELECT 
                 round(avg(stars),2) AS avg_stars,
@@ -143,7 +143,7 @@ class RatingDAO extends AbstractDAO
                 user_rate_products 
             WHERE 
                 product_id = :productId
-                ;';
+        ';
 
         return $this->fetchOneObject(
             $sql,
@@ -152,14 +152,13 @@ class RatingDAO extends AbstractDAO
     }
 
     /**
-     * @param int $product_id
+     * @param int $productId
      *
      * @return array
      */
-    public function getStarsCount($product_id)
+    public function getStarsCount($productId)
     {
-        $params = [];
-        $params["productId"] = $product_id;
+        $params = ['productId' => $productId];
         $sql = '
             SELECT 
                 stars,
@@ -172,7 +171,7 @@ class RatingDAO extends AbstractDAO
                 stars
             ORDER BY
                 stars
-                ;';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -181,14 +180,13 @@ class RatingDAO extends AbstractDAO
     }
 
     /**
-     * @param int $product_id
+     * @param int $productId
      *
      * @return array
      */
-    public function getComments($product_id)
+    public function getComments($productId)
     {
-        $params = [];
-        $params["productId"] = $product_id;
+        $params = ['productId' => $productId];
         $sql = '
             SELECT 
                 CONCAT
@@ -200,10 +198,10 @@ class RatingDAO extends AbstractDAO
                 cast(urp.date_created AS date) AS date 
             FROM 
                 users AS u
-                JOIN user_rate_products AS urp ON(u.id=urp.user_id) 
+                JOIN user_rate_products AS urp ON (u.id=urp.user_id) 
             WHERE
                 product_id = :productId
-                ';
+        ';
 
         return $this->fetchAllObject(
             $sql,

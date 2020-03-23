@@ -1,7 +1,7 @@
 <?php
 
-namespace model;
-
+namespace model\DAO;
+use model\Type;
 use PDO;
 
 class TypeDAO extends AbstractDAO
@@ -13,8 +13,7 @@ class TypeDAO extends AbstractDAO
      */
     public function getTypeInformation($id)
     {
-        $params = [];
-        $params["typeId"] = $id;
+        $params = ['typeId' => $id];
         $sql = '
             SELECT
                 id,
@@ -24,15 +23,15 @@ class TypeDAO extends AbstractDAO
                 types 
             WHERE
                 id = :typeId
-                ';
+        ';
         $rows = $this->fetchOneAssoc(
             $sql,
             $params
         );
         $type = new Type(
-            $rows["id"],
-            $rows["name"],
-            $rows["categorie_id"]
+            $rows['id'],
+            $rows['name'],
+            $rows['categorie_id']
         );
 
         return $type;
@@ -45,8 +44,7 @@ class TypeDAO extends AbstractDAO
      */
     public function getTypesFromCategorieId($id)
     {
-        $params = [];
-        $params["categoryId"] = $id;
+        $params = ['categoryId' => $id];
         $sql = '
             SELECT 
                 id,
@@ -56,7 +54,7 @@ class TypeDAO extends AbstractDAO
                 types 
             WHERE
                 categorie_id = :categoryId
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -72,20 +70,17 @@ class TypeDAO extends AbstractDAO
      * @return array
      */
     public function getAllByType(
-        $id,
-        $start,
-        $productsPerPage
+        $id
     ) {
-        $params = [];
-        $params["typeId"] = $id;
+        $params = ['typeId' => $id];
         $sql = '
             SELECT
                 * 
             FROM 
                 products 
             WHERE 
-                type_id = :typeId LIMIT " . $start . "," . $productsPerPage . ";"
-                ';
+                type_id = :typeId 
+        ';
 
         return $this->fetchAllObject($sql,$params);
     }
@@ -97,18 +92,17 @@ class TypeDAO extends AbstractDAO
      */
     public function getAttributesByType($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT DISTINCT 
                 a.name,
                 pha.value 
             FROM 
                 attributes as a 
-                JOIN product_attributes as pha ON(a.id = pha.attribute_id)
+                JOIN product_attributes as pha ON (a.id = pha.attribute_id)
             WHERE
                 type_id = :id
-                ;';
+        ';
 
         return $this->fetchAllObject(
             $sql,
@@ -123,8 +117,7 @@ class TypeDAO extends AbstractDAO
      */
     public function getNumberOfProductsForType($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT 
                 count(id) AS count
@@ -132,7 +125,7 @@ class TypeDAO extends AbstractDAO
                 products 
             WHERE 
                 type_id = :id
-                ;';
+        ';
 
         return $this->fetchOneObject(
             $sql,
@@ -150,7 +143,7 @@ class TypeDAO extends AbstractDAO
                 * 
             FROM 
                 emag.types
-                ;';
+        ';
 
         return $this->fetchAllObject($sql);
     }
@@ -165,7 +158,7 @@ class TypeDAO extends AbstractDAO
                 * 
             FROM 
                 emag.categories
-                ;';
+        ';
 
         return $this->fetchAllObject($sql);
     }
@@ -177,8 +170,7 @@ class TypeDAO extends AbstractDAO
      */
     public function existsType($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT
                 COUNT(id) as count
@@ -186,7 +178,7 @@ class TypeDAO extends AbstractDAO
                 types 
             WHERE 
                 id = :id
-                ';
+        ';
 
         return $this->fetchOneAssoc(
             $sql,

@@ -6,12 +6,13 @@ class Address
 private $id;
 private $userId;
 private $cityId;
-private $street_name;
+private $streetName;
 
-public function __construct($userId,$cityId,$street_name){
-    $this->userId=$userId;
-    $this->cityId=$cityId;
-    $this->street_name=$street_name;
+public function __construct($userId,$cityId,$streetName)
+{
+    $this->userId = $userId;
+    $this->cityId = $cityId;
+    $this->streetName = $streetName;
 }
 
     public function setId($id)
@@ -30,7 +31,7 @@ public function __construct($userId,$cityId,$street_name){
 
     public function getStreetName()
     {
-        return $this->street_name;
+        return $this->streetName;
     }
 
 

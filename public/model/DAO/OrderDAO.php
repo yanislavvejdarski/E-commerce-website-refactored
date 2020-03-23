@@ -1,11 +1,8 @@
 <?php
 
-namespace model;
+namespace model\DAO;
 
-use model\CartDAO;
-use model\ProductDAO;
-use PDO;
-use PDOException;
+//use PDOException;
 
 class OrderDAO extends AbstractDAO
 {
@@ -19,11 +16,12 @@ class OrderDAO extends AbstractDAO
     ) {
         foreach ($orderedProducts as $product)
         {
-            $params = [];
-            $params["orderId"] = $orderId;
-            $params["productId"] = $product["product_id"];
-            $params["quantity"] = $product["quantity"];
-            $params["price"] = $product["price"];
+            $params = [
+                'orderId' => $orderId,
+                'productId' => $product['product_id'],
+                'quantity' => $product['quantity'],
+                'price' => $product['price']
+            ];
             $sql = '
                 INSERT INTO 
                     orders_have_products 
@@ -35,7 +33,7 @@ class OrderDAO extends AbstractDAO
                         :productId,
                         :quantity,
                         :price)
-                        ';
+            ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -55,10 +53,11 @@ class OrderDAO extends AbstractDAO
         $totalPrice,
         $userId
     ) {
-        $params = [];
-        $params["userId"] = $userId;
-        $params["addressId"] = $addressId;
-        $params["totalPrice"] = $totalPrice;
+        $params = [
+            'userId' => $userId,
+            'addressId' => $addressId,
+            'totalPrice' => $totalPrice
+        ];
         $sql = '
             INSERT INTO 
                 orders 
@@ -69,7 +68,7 @@ class OrderDAO extends AbstractDAO
                 (:userId,
                  :addressId,
                  :totalPrice)
-                 ';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -85,8 +84,7 @@ class OrderDAO extends AbstractDAO
      */
     public function showOrders($userId)
     {
-        $params = [];
-        $params["userId"] = $userId;
+        $params = ['userId' => $userId];
         $sql = '
             SELECT 
                 o.id,
@@ -106,7 +104,7 @@ class OrderDAO extends AbstractDAO
                 o.user_id = :userId 
             ORDER BY
                 o.date_created DESC
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -126,7 +124,7 @@ class OrderDAO extends AbstractDAO
     ) {
         try {
             $this->beginTransaction();
-            $id = $this->addOrder($_POST["address"], $totalPrice, $_SESSION["logged_user_id"]);
+            $id = $this->addOrder($_POST['address'], $totalPrice, $_SESSION['logged_user_id']);
             $orderDao = new OrderDAO();
             $orderDao->addOrderProducts(
                 $id,
@@ -137,7 +135,7 @@ class OrderDAO extends AbstractDAO
             $cart = new CartDAO();
             $cart->deleteCart($userId);
             $this->commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->rollBack();
             echo $e->getMessage();
         }

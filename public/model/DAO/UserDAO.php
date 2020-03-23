@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace model\DAO;
 
 class UserDAO extends AbstractDAO
 {
@@ -11,8 +11,7 @@ class UserDAO extends AbstractDAO
      */
     public function getUserByEmail($email)
     {
-        $params = [];
-        $params["email"] = $email;
+        $params = ['email' => $email];
         $sql = '
             SELECT
                 * 
@@ -20,7 +19,7 @@ class UserDAO extends AbstractDAO
                 users 
             WHERE 
                 email = :email
-                ;';
+        ';
 
         return $this->fetchOneObject(
             $sql,
@@ -35,8 +34,7 @@ class UserDAO extends AbstractDAO
      */
     public function getUserById($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT
                 *
@@ -44,7 +42,7 @@ class UserDAO extends AbstractDAO
                 users 
             WHERE
                 id = :id
-                ;';
+        ';
 
         return $this->fetchOneObject(
             $sql,
@@ -57,15 +55,16 @@ class UserDAO extends AbstractDAO
      */
     public function add(User $user)
     {
-        $params = [];
-        $params["email"] = $user->getEmail();
-        $params["password"] = $user->getPassword();
-        $params["firstName"] = $user->getFirstName();
-        $params["lastName"] = $user->getLastName();
-        $params["age"] = $user->getAge();
-        $params["phoneNumber"] = $user->getPhoneNumber();
-        $params["role"] = $user->getRole();
-        $params["subscription"] = $user->getSubscription();
+        $params = [
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'age' => $user->getAge(),
+            'phoneNumber' => $user->getPhoneNumber(),
+            'role' => $user->getRole(),
+            'subscription' => $user->getSubscription()
+        ];
         $sql = '
             INSERT INTO
                 users
@@ -88,7 +87,7 @@ class UserDAO extends AbstractDAO
                  :role,
                  :subscription,
                  now())
-                 ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -101,15 +100,16 @@ class UserDAO extends AbstractDAO
      */
     public function update(User $user)
     {
-        $params = [];
-        $params["email"] = $user->getEmail();
-        $params["password"] = $user->getPassword();
-        $params["firstName"] = $user->getFirstName();
-        $params["lastName"] = $user->getLastName();
-        $params["age"] = $user->getAge();
-        $params["phoneNumber"] = $user->getPhoneNumber();
-        $params["subscription"] = $user->getSubscription();
-        $params["id"] = $user->getId();
+        $params = [
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'age' => $user->getAge(),
+            'phoneNumber' => $user->getPhoneNumber(),
+            'subscription' => $user->getSubscription(),
+            'id' => $user->getId(),
+        ];
         $sql = '
             UPDATE 
                 users 
@@ -123,7 +123,7 @@ class UserDAO extends AbstractDAO
                 subscription = :subscription
             WHERE 
                 id = :id
-                ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -140,9 +140,10 @@ class UserDAO extends AbstractDAO
         $email,
         $newPassword
     ) {
-        $params = [];
-        $params["newPassword"] = $newPassword;
-        $params["email"] = $email;
+        $params = [
+            'newPassword' => $newPassword,
+            'email' => $email
+        ];
         $sql = '
             UPDATE
                 users 
@@ -150,7 +151,7 @@ class UserDAO extends AbstractDAO
                 password = :newPassword
             WHERE 
                 email = :email
-                ;';
+        ';
         if ($this->prepareAndExecute($sql, $params)) {
             return true;
         } else {

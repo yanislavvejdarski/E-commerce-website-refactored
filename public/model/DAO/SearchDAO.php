@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace model\DAO;
 
 use PDO;
 use PDOException;
@@ -14,8 +14,7 @@ class SearchDAO extends AbstractDAO
      */
     public function searchProduct($keywords)
     {
-        $params = [];
-        $params["keyWords"] = "{$keywords}%";
+        $params = ['keyWords' => "{$keywords}%"];
         $sql = '
             SELECT 
                 id,
@@ -24,7 +23,7 @@ class SearchDAO extends AbstractDAO
                 products 
             WHERE
                 name LIKE :keyWords LIMIT 5
-                ;';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -39,8 +38,7 @@ class SearchDAO extends AbstractDAO
      */
     public function searchCategorie($keywords)
     {
-        $params = [];
-        $params["keyWords"] = "{$keywords}%";
+        $params = ['keyWords' => "{$keywords}%"];
         $sql = '
             SELECT 
                 c.id,
@@ -49,7 +47,7 @@ class SearchDAO extends AbstractDAO
                 categories AS c  
             WHERE 
                 name LIKE :keyWords
-                ;';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -64,8 +62,7 @@ class SearchDAO extends AbstractDAO
      */
     public function searchType($keywords)
     {
-        $params = [];
-        $params["keyWords"] = "{$keywords}%";
+        $params = ['keyWords' => "{$keywords}%"];
         $sql = '
             SELECT
                 id,
@@ -74,7 +71,7 @@ class SearchDAO extends AbstractDAO
                 types 
             WHERE
                 name LIKE :keyWords LIMIT 4
-                ;';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,

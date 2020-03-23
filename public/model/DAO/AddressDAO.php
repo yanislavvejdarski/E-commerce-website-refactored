@@ -1,19 +1,19 @@
 <?php
 
-namespace model;
+namespace model\DAO;
+use model\Address;
 use PDO;
 
 class AddressDAO extends AbstractDAO
 {
     /**
-     * @param $id int
+     * @param int $id
      *
-     * @return array
+     * @return object
      */
     public function getById($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql='
             SELECT 
                 a.id,
@@ -23,9 +23,10 @@ class AddressDAO extends AbstractDAO
                 a.street_name
             FROM   
                 addresses AS a 
-                JOIN cities AS c ON( a.city_id = c.id )
+                JOIN cities AS c ON ( a.city_id = c.id )
             WHERE  
-                a.id = :id ;';
+                a.id = :id 
+        ';
 
         return $this->fetchOneObject(
             $sql,
@@ -38,7 +39,7 @@ class AddressDAO extends AbstractDAO
      */
     public function getCities()
     {
-        $sql="SELECT * FROM cities;";
+        $sql='SELECT * FROM cities;';
 
         return $this->fetchAllAssoc($sql);
     }
@@ -48,23 +49,28 @@ class AddressDAO extends AbstractDAO
      */
     public function add(Address $address)
     {
-        $params = [];
-        $params["userId"] = $address->getUserId();
-        $params["cityId"] = $address->getCityId();
-        $params["streetName"] = $address->getStreetName();
+        $params = [
+            'userId' => $address->getUserId(),
+            'cityId' => $address->getCityId(),
+            'streetName' => $address->getStreetName()
+        ];
         $sql = '
             INSERT INTO 
                 addresses 
-                (user_id,
+                (
+                 user_id,
                  city_id,
                  street_name,
-                 date_created) 
+                 date_created
+                 ) 
             VALUES 
-                (:userId,
+                (
+                 :userId,
                  :cityId,
                  :streetName,
-                 now())
-                 ;';
+                 now()
+                 )
+               ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -79,8 +85,7 @@ class AddressDAO extends AbstractDAO
      */
     public function getAll($userId)
     {
-        $params = [];
-        $params["userId"] = $userId;
+        $params = ['userId' => $userId];
         $sql = '
             SELECT 
                 a.id,
@@ -88,9 +93,9 @@ class AddressDAO extends AbstractDAO
                 a.street_name 
             FROM 
                 addresses AS a 
-                JOIN cities AS c ON(a.city_id = c.id)
+                JOIN cities AS c ON (a.city_id = c.id)
             WHERE user_id = :userId
-                ;';
+        ';
 
         return $this->fetchAllObject(
             $sql,
@@ -103,10 +108,11 @@ class AddressDAO extends AbstractDAO
      */
     public function edit(Address $address)
     {
-        $params = [];
-        $params["cityId"] = $address->getCityId();
-        $params["streetName"] = $address->getStreetName();
-        $params["addressId"] = $address->getId();
+        $params = [
+            'cityId' => $address->getCityId(),
+            'streetName' => $address->getStreetName(),
+            'addressId' => $address->getId()
+        ];
         $sql = '
             UPDATE 
                 addresses 
@@ -115,7 +121,7 @@ class AddressDAO extends AbstractDAO
                 street_name = :streetName 
             WHERE 
                 id = :addressId 
-                ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -127,14 +133,13 @@ class AddressDAO extends AbstractDAO
      */
     public function delete($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             DELETE FROM 
                 addresses 
             WHERE 
                 id = :id 
-                ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -148,8 +153,7 @@ class AddressDAO extends AbstractDAO
      */
       public function userAddress($userId)
       {
-        $params = [];
-        $params["userId"] = $userId;
+        $params = ['userId' => $userId];
         $sql = '
             SELECT 
                 id 
@@ -157,7 +161,7 @@ class AddressDAO extends AbstractDAO
                 addresses 
             WHERE 
                 user_id = :userId
-                ';
+        ';
 
         return $this->fetchAllObject(
             $sql,

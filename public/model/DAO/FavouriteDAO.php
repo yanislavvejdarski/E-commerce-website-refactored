@@ -1,5 +1,5 @@
 <?php
-namespace model;
+namespace model\DAO;
 use PDO;
 use PDOException;
 
@@ -13,8 +13,7 @@ class FavouriteDAO extends AbstractDAO
      */
     public function showFavourites ($userId)
     {
-        $params = [];
-        $params["userId"] = $userId;
+        $params = ['userId' => $userId];
         $sql = '
             SELECT 
                 product_id 
@@ -22,7 +21,7 @@ class FavouriteDAO extends AbstractDAO
                 user_favourite_products 
             WHERE 
                 user_id = :userId 
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -38,9 +37,10 @@ class FavouriteDAO extends AbstractDAO
         $id,
         $userId
     ) {
-        $params = [];
-        $params["userId"] = $userId;
-        $params["productId"] = $id;
+        $params = [
+            'userId' => $userId,
+            'productId' => $id
+        ];
         $sql = '
             INSERT INTO
                 user_favourite_products 
@@ -49,7 +49,7 @@ class FavouriteDAO extends AbstractDAO
             VALUES 
                 (:userId,
                  :productId)
-                 ';
+        ';
         $this->prepareAndExecute(
             $sql
             ,$params
@@ -64,15 +64,16 @@ class FavouriteDAO extends AbstractDAO
         $id,
         $userId
     ) {
-        $params = [];
-        $params["userId"] = $userId;
-        $params["productId"] = $id;
+        $params = [
+            'userId' => $userId,
+            'productId' => $id
+        ];
         $sql = '
             DELETE FROM
                 user_favourite_products 
             WHERE 
                 user_id = :userId AND product_id = :productId 
-                ';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -89,9 +90,10 @@ class FavouriteDAO extends AbstractDAO
         $id,
         $userId
     ) {
-        $params = [];
-        $params["productId"] = $id;
-        $params["userId"] = $userId;
+        $params = [
+            'productId' => $id,
+            'userId' => $userId
+        ];
         $sql = '
             SELECT 
                 product_id 
@@ -99,7 +101,7 @@ class FavouriteDAO extends AbstractDAO
                 user_favourite_products 
             WHERE 
                 product_id = :productId AND user_id = :userId
-                ';
+        ';
 
         return $this->fetchOneAssoc(
             $sql,

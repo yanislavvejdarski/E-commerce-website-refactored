@@ -1,10 +1,10 @@
 <?php
 
-namespace model;
+namespace model\DAO;
 
 use PDO;
 use PDOException;
-
+use model\Product;
 class ProductDAO extends AbstractDAO
 {
     /**
@@ -17,7 +17,7 @@ class ProductDAO extends AbstractDAO
                 * 
             FROM 
                 producers
-                ;';
+        ';
 
         return $this->fetchAllObject($sql);
     }
@@ -32,7 +32,7 @@ class ProductDAO extends AbstractDAO
                 * 
             FROM 
                 types
-                ;';
+        ';
 
         return $this->fetchAllObject($sql);
     }
@@ -44,8 +44,7 @@ class ProductDAO extends AbstractDAO
      */
     public function getById($id)
     {
-        $params = [];
-        $params["productId"] = $id;
+        $params = ['productId' => $id];
         $sql = '
             SELECT
                 p.name,
@@ -59,10 +58,11 @@ class ProductDAO extends AbstractDAO
                 p.image_url
             FROM 
                 products AS p 
-                JOIN producers AS pr ON(p.producer_id=pr.id)
+                JOIN producers AS pr ON (p.producer_id=pr.id)
                 JOIN types AS t ON (p.type_id=t.id)
             WHERE 
-                p.id = :productId;';
+                p.id = :productId
+        ';
 
         return $this->fetchOneAssoc(
             $sql,
@@ -71,27 +71,29 @@ class ProductDAO extends AbstractDAO
     }
 
     /**
-     * @param string $product_name
-     * @param int $producer_id
-     * @param float $product_price
-     * @param int $type_id
+     * @param string $productName
+     * @param int $producerId
+     * @param float $productPrice
+     * @param int $typeId
      * @param int $quantity
-     * @param string $image_url
+     * @param string $imageUrl
      */
-    public function add($product_name,
-                        $producer_id,
-                        $product_price,
-                        $type_id,
+    public function add($productName,
+                        $producerId,
+                        $productPrice,
+                        $typeId,
                         $quantity,
-                        $image_url
+                        $imageUrl
     ) {
-        $params = [];
-        $params["productName"] = $product_name;
-        $params["producerId"] = $producer_id;
-        $params["productPrice"] = $product_price;
-        $params["typeId"] = $type_id;
-        $params["quantity"] = $quantity;
-        $params["imageUrl"] = $image_url;
+        $params = [
+            'productName' => $productName,
+            'productName' => $productName,
+            'producerId' => $producerId,
+            'productPrice' => $productPrice,
+            'typeId' => $typeId,
+            'quantity' => $quantity,
+            'imageUrl' => $imageUrl,
+        ];
         $sql = '
             INSERT INTO 
                 products 
@@ -110,20 +112,20 @@ class ProductDAO extends AbstractDAO
                  :quantity,
                  :imageUrl,
                  now())
-                 ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
         );
-        $product_id = ($this->lastInsertId());
+        $productId = ($this->lastInsertId());
         new Product(
-            $product_id,
-            $product_name,
-            $producer_id,
-            $product_price,
-            $type_id,
+            $productId,
+            $productName,
+            $producerId,
+            $productPrice,
+            $typeId,
             $quantity,
-            $image_url
+            $imageUrl
         );
     }
 
@@ -132,15 +134,16 @@ class ProductDAO extends AbstractDAO
      */
     public function edit(array $product)
     {
-        $params = [];
-        $params["name"] = $product["name"];
-        $params["producerId"] = $product["producer_id"];
-        $params["price"] = $product["price"];
-        $params["oldPrice"] = $product["old_price"];
-        $params["typeId"] = $product["type_id"];
-        $params["quantity"] = $product["quantity"];
-        $params["imageUrl"] = $product["image_url"];
-        $params["productId"] = $product["product_id"];
+        $params = [
+            'name' => $product['name'],
+            'producerId' => $product['producer_id'],
+            'price' => $product['price'],
+            'oldPrice' => $product['old_price'],
+            'typeId' => $product['type_id'],
+            'quantity' => $product['quantity'],
+            'imageUrl' => $product['image_url'],
+            'productId' => $product['product_id'],
+        ];
         $sql = '
             UPDATE
                 products
@@ -153,7 +156,8 @@ class ProductDAO extends AbstractDAO
                 quantity = :quantity,
                 image_url = :imageUrl 
             WHERE 
-                id = :productId ;';
+                id = :productId 
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -167,8 +171,7 @@ class ProductDAO extends AbstractDAO
      */
     public function getProductsFromTypeId($id)
     {
-        $params = [];
-        $params["typeId"] = $id;
+        $params = ['typeId' => $id];
         $sql = '
             SELECT
                 id,
@@ -177,7 +180,7 @@ class ProductDAO extends AbstractDAO
                 products 
             WHERE
                 type_id = :typeId
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -192,8 +195,7 @@ class ProductDAO extends AbstractDAO
      */
     public function getProductsFromTypeIdAsc($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT
                 id,
@@ -203,7 +205,8 @@ class ProductDAO extends AbstractDAO
             WHERE
                 type_id = :id 
             ORDER BY
-                price ASC';
+                price ASC
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -218,8 +221,7 @@ class ProductDAO extends AbstractDAO
      */
     public function getProductsFromTypeIdDesc($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT
                 id,
@@ -230,7 +232,7 @@ class ProductDAO extends AbstractDAO
                 type_id = :id
             ORDER BY
                 price DESC
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -245,8 +247,7 @@ class ProductDAO extends AbstractDAO
      */
     public function checkQuantity($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT
                 quantity
@@ -254,7 +255,7 @@ class ProductDAO extends AbstractDAO
                 products 
             WHERE 
                 id = :id
-                ';
+        ';
 
         return $this->fetchOneAssoc(
             $sql,
@@ -269,8 +270,7 @@ class ProductDAO extends AbstractDAO
      */
     public function findProduct($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT 
                 id,
@@ -284,19 +284,19 @@ class ProductDAO extends AbstractDAO
                 products 
             WHERE
                 id = :id
-                ';
+        ';
         $rows = $this->fetchOneAssoc(
             $sql,
             $params
         );
         $product = new Product(
-            $rows["id"],
-            $rows["name"],
-            $rows["producer_id"],
-            $rows["price"],
-            $rows["type_id"],
-            $rows["quantity"],
-            $rows["image_url"]
+            $rows['id'],
+            $rows['name'],
+            $rows['producer_id'],
+            $rows['price'],
+            $rows['type_id'],
+            $rows['quantity'],
+            $rows['image_url']
         );
 
         return $product;
@@ -309,9 +309,10 @@ class ProductDAO extends AbstractDAO
     {
         foreach ($orderedProducts as $product)
         {
-            $params = [];
-            $params["quantity"] = $product["quantity"];
-            $params["productId"] = $product["product_id"];
+            $params = [
+                'quantity' => $product['quantity'],
+                'productId' => $product['product_id']
+            ];
             $sql = '
                 UPDATE
                     products
@@ -319,7 +320,7 @@ class ProductDAO extends AbstractDAO
                     quantity = quantity - :quantity 
                 WHERE 
                     id = :productId
-                    ';
+            ';
             $this->prepareAndExecute(
                 $sql,
                 $params
@@ -334,8 +335,7 @@ class ProductDAO extends AbstractDAO
      */
     public function getProductAttributes($id)
     {
-        $params = [];
-        $params["id"] = $id;
+        $params = ['id' => $id];
         $sql = '
             SELECT 
                 name
@@ -343,7 +343,7 @@ class ProductDAO extends AbstractDAO
                 attributes 
             WHERE
                 type_id = :id
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -361,9 +361,10 @@ class ProductDAO extends AbstractDAO
         $typeId,
         $attributeName
     ) {
-        $params = [];
-        $params ["typeId"] = $typeId;
-        $params ["attributeName"] = $attributeName;
+        $params = [
+            'typeId' => $typeId,
+            'attributeName' => $attributeName
+        ];
         $sql = '
              SELECT 
                 value 
@@ -372,7 +373,7 @@ class ProductDAO extends AbstractDAO
                 JOIN attributes ON attribute_id = id 
              WHERE
                 type_id = :typeId AND name = :attributeName
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -388,9 +389,10 @@ class ProductDAO extends AbstractDAO
         $product_id,
         $price
     ) {
-        $params = [];
-        $params["price"] = $price;
-        $params["productId"] = $product_id;
+        $params = [
+            'price' => $price,
+            'productId' => $product_id
+        ];
         $sql = '
             UPDATE 
                 products
@@ -398,7 +400,7 @@ class ProductDAO extends AbstractDAO
                 price = :price, old_price = NULL 
             WHERE
                 id = :productId 
-                ;';
+        ';
         $this->prepareAndExecute(
             $sql,
             $params
@@ -430,8 +432,7 @@ class ProductDAO extends AbstractDAO
      */
     public function getUserEmailsByLikedProduct($productId)
     {
-        $params = [];
-        $params["productId"] = $productId;
+        $params = ['productId' => $productId];
         $sql = '
             SELECT 
                 email 
@@ -440,7 +441,7 @@ class ProductDAO extends AbstractDAO
                 JOIN user_favourite_products as uf ON u.id = uf.user_id
             WHERE 
                 uf.product_id = :productId and u.subscription = "yes"
-                ';
+        ';
 
         return $this->fetchAllAssoc(
             $sql,
@@ -464,12 +465,12 @@ class ProductDAO extends AbstractDAO
                 count(ohp.product_id) as ordered_count 
             FROM 
                 emag.products AS p
-                JOIN orders_have_products AS ohp ON(p.id=ohp.product_id)
+                JOIN orders_have_products AS ohp ON (p.id=ohp.product_id)
             GROUP BY
                 p.id
             ORDER BY 
                 ordered_count DESC LIMIT 6
-                ;';
+        ';
 
         return $this->fetchAllObject($sql);
     }
@@ -482,16 +483,16 @@ class ProductDAO extends AbstractDAO
     public function getProductAttributesById($id)
     {
         $params = [];
-        $params["id"] = $id;
+        $params['id'] = $id;
         $sql = '
             SELECT 
                 a.name,pa.value 
             FROM 
                 attributes AS a
-                JOIN product_attributes AS pa ON(a.id=pa.attribute_id)
+                JOIN product_attributes AS pa ON (a.id=pa.attribute_id)
             WHERE 
                 product_id = :id
-                ;';
+        ';
 
         return $this->fetchAllObject(
             $sql,
