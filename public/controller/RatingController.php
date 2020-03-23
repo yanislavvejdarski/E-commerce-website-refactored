@@ -4,8 +4,8 @@ namespace controller;
 
 use exception\BadRequestException;
 use exception\NotAuthorizedException;
-use model\ProductDAO;
-use model\RatingDAO;
+use model\DAO\ProductDAO;
+use model\DAO\RatingDAO;
 use helpers\Request;
 
 class ratingController extends AbstractController
@@ -112,7 +112,7 @@ class ratingController extends AbstractController
     {
         UserController::validateForLoggedUser();
         $ratingDAO = new RatingDAO();
-        $myRatings = $ratingDAO::showMyRated($_SESSION["logged_user_id"]);
+        $myRatings = $ratingDAO->showMyRated($_SESSION["logged_user_id"]);
         include_once "view/myRated.php";
     }
 

@@ -4,38 +4,67 @@ namespace model;
 class Address
 {
 private $id;
-private $user_id;
-private $city_id;
-private $street_name;
+private $userId;
+private $cityId;
+private $streetName;
 
-public function __construct($user_id,$city_id,$street_name){
-    $this->user_id=$user_id;
-    $this->city_id=$city_id;
-    $this->street_name=$street_name;
+    /**
+     * Address constructor.
+     * @param int $userId
+     * @param int $cityId
+     * @param string $streetName
+     */
+public function __construct(
+    $userId,
+    $cityId,
+    $streetName
+) {
+    $this->userId = $userId;
+    $this->cityId = $cityId;
+    $this->streetName = $streetName;
 }
 
+    /**
+     * @param int $id
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
+
+    /**
+     * @return int
+     */
     public function getId()
     {
+
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
     public function getCityId()
     {
-        return $this->city_id;
+
+        return $this->cityId;
     }
 
+    /**
+     * @return string
+     */
     public function getStreetName()
     {
-        return $this->street_name;
+
+        return $this->streetName;
     }
 
-
+    /**
+     * @return int
+     */
     public function getUserId()
     {
-        return $this->user_id;
+
+        return $this->userId;
     }
 }

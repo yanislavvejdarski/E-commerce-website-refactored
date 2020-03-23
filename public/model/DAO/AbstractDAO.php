@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace model\DAO;
 
 use model\DBManager;
 use PDO;

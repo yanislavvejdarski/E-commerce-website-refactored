@@ -4,17 +4,18 @@ namespace controller;
 use exception\BadRequestException;
 use exception\NotAuthorizedException;
 use model\Address;
-use model\AddressDAO;
+use model\DAO\AddressDAO;
 use helpers\Request;
 
 class AddressController extends AbstractController {
-    public function add(){
+    public function add()
+    {
         UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         $err=false;
         $msg='';
         if(isset($postParams["add"])){
-            if(empty($postParams["city"]) || empty($postParams["street"])) {
+            if(empty($postParams["city"]) || empty($postParams["street"])){
                 $msg = 'All fields are required!';
             }elseif(!$this->validateCity($postParams["city"])){
                 $msg="Invalid city!";

@@ -2,9 +2,9 @@
 namespace view;
 
 use controller\RatingController;
-use model\FavouriteDAO;
+use model\DAO\FavouriteDAO;
 use controller\ProductController;
-use model\RatingDAO;
+use model\DAO\RatingDAO;
 
 
 $ratingDAO = new RatingDAO();

@@ -4,9 +4,9 @@ namespace controller;
 
 use exception\BadRequestException;
 use model\Filter;
-use model\ProductDAO;
+use model\DAO\ProductDAO;
 use model\Type;
-use model\TypeDAO;
+use model\DAO\TypeDAO;
 use PHPMailer;
 use helpers\Request;
 
@@ -19,7 +19,6 @@ class ProductController extends AbstractController
 {
     public function show()
     {
-
         $getParams = $this->request->getParams();
         if (isset($getParams["product"])) {
             $productDAO = new ProductDAO();
@@ -38,53 +37,37 @@ class ProductController extends AbstractController
             }
         }
         if (isset($getParams["typeId"])) {
-            $checkType = TypeDAO::existsType($getParams["typeId"]);
+            $typeDAO = new TypeDAO();
+            $checkType = $typeDAO->existsType($getParams["typeId"]);
             if ($checkType["count"] > 0) {
 
                 $productDAO = new ProductDAO();
                 $products = $productDAO->getProductsFromTypeId($getParams["typeId"]);
-                $typeDAO = new TypeDAO();
+
                 $type = $typeDAO->getTypeInformation($getParams["typeId"]);
                 include_once "view/showProductsFromType.php";
 
 
-                $rrp = 99;
-                if (isset($_GET["page"])) {
-                    $page = $_GET["page"];
 
-                } else {
-                    $page = 0;
-                }
-
-                if ($page > 1) {
-                    $start = ($page * $rrp) - $rrp;
-
-                } else {
-                    $start = 0;
-                }
 
 
                 $typeDAO = new TypeDAO();
                 $resultSet = $typeDAO->getNumberOfProductsForType($getParams["typeId"]);
                 $numRows = $resultSet->count;
                 $typeDAO = new TypeDAO();
-                $products = $typeDAO->getAllByType($getParams["typeId"], $start, $rrp);
+                $products = $typeDAO->getAllByType($getParams["typeId"]);
                 $filters = $this->getFilters($getParams["typeId"]);
-                $totalPages = $numRows / $rrp;
+
 
             } else {
                 header("Location: /home");
             }
-
-
             include_once "view/showProductByType.php";
         }
     }
 
     public function getFilters($id)
     {
-
-
         $typeDAO = new TypeDAO();
         $typeNames = $typeDAO->getAttributesByType($id);
 
