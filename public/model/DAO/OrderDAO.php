@@ -25,14 +25,19 @@ class OrderDAO extends AbstractDAO
             $sql = '
                 INSERT INTO 
                     orders_have_products 
-                    (order_id,
-                     product_id,
-                     quantity,
-                     price) 
-                VALUES (:orderId,
+                    (
+                         order_id,
+                         product_id,
+                         quantity,
+                         price
+                     ) 
+                VALUES 
+                    (
+                        :orderId,
                         :productId,
                         :quantity,
-                        :price)
+                        :price
+                    )
             ';
             $this->prepareAndExecute(
                 $sql,
@@ -61,13 +66,17 @@ class OrderDAO extends AbstractDAO
         $sql = '
             INSERT INTO 
                 orders 
-                (user_id,
-                 address_id,
-                 price)
+                 (
+                     user_id,
+                     address_id,
+                     price
+                 )
             VALUES 
-                (:userId,
-                 :addressId,
-                 :totalPrice)
+                (
+                     :userId,
+                     :addressId,
+                     :totalPrice
+                 )
         ';
         $this->prepareAndExecute(
             $sql,
@@ -135,7 +144,9 @@ class OrderDAO extends AbstractDAO
             $cart = new CartDAO();
             $cart->deleteCart($userId);
             $this->commit();
-        } catch (\PDOException $e) {
+        }
+        catch (\PDOException $e)
+        {
             $this->rollBack();
             echo $e->getMessage();
         }

@@ -64,8 +64,6 @@ class TypeDAO extends AbstractDAO
 
     /**
      * @param int $id
-     * @param int $start
-     * @param int $productsPerPage
      *
      * @return array
      */

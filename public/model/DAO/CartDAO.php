@@ -16,24 +16,25 @@ class CartDAO extends AbstractDAO
       $id,
       $userId
   ) {
-            $params = [
-                'productId' => $id,
-                'userId' => $userId
-            ];
-            $sql = '
-                SELECT 
-                    user_id,
-                    product_id,
-                    quantity 
-                FROM 
-                    cart 
-                WHERE 
-                    product_id = :productId AND user_id = :userId
-            ';
+        $params = [
+            'productId' => $id,
+            'userId' => $userId
+        ];
+        $sql = '
+            SELECT 
+                user_id,
+                product_id,
+                quantity 
+            FROM 
+                cart 
+            WHERE 
+                product_id = :productId AND user_id = :userId
+        ';
 
           return  $this->fetchOneAssoc(
               $sql,
-              $params);
+              $params
+          );
     }
 
     /**
@@ -52,13 +53,17 @@ class CartDAO extends AbstractDAO
             $sql = '
                 INSERT INTO
                     cart 
-                    (user_id,
-                     product_id,
-                     quantity) 
+                    (
+                        user_id,
+                        product_id,
+                        quantity
+                     ) 
                 VALUES 
-                    (:userId,
-                     :productId,
-                     :quantity)
+                    (
+                        :userId,
+                        :productId,
+                        :quantity
+                     )
             ';
             $this->prepareAndExecute(
                 $sql,
@@ -72,7 +77,8 @@ class CartDAO extends AbstractDAO
      */
     public function updateQuantityOfProductInCart(
         $id,
-        $userId) {
+        $userId
+    ) {
             $params = [
                 'userId' => $userId,
                 'productId' => $id
@@ -93,25 +99,28 @@ class CartDAO extends AbstractDAO
 
     /**
      * @param int $id
+     *
+     * @return array
      */
     public function showCart ($id)
     {
-            $params = ['userId' => $id];
-            $sql = '
-                SELECT 
-                    c.product_id,
-                    c.quantity,
-                    price*c.quantity AS price 
-                FROM 
-                    cart AS c 
-                    JOIN products AS p ON c.product_id = p.id  
-                WHERE 
-                    user_id = :userId
-            ';
-           return $this->fetchAllAssoc(
-                $sql,
-                $params
-            );
+        $params = ['userId' => $id];
+        $sql = '
+            SELECT 
+                c.product_id,
+                c.quantity,
+                price * c.quantity AS price 
+            FROM 
+                cart AS c 
+                JOIN products AS p ON c.product_id = p.id  
+            WHERE 
+                user_id = :userId
+        ';
+
+       return $this->fetchAllAssoc(
+            $sql,
+            $params
+        );
     }
 
     /**
@@ -172,16 +181,16 @@ class CartDAO extends AbstractDAO
      */
     public  function deleteCart ($userId)
     {
-            $params = ['userId' => $userId];
-            $sql = '
-                DELETE FROM
-                        cart 
-                WHERE 
-                    user_id = :userId 
-            ';
-            $this->prepareAndExecute(
-                $sql,
-                $params
-            );
+        $params = ['userId' => $userId];
+        $sql = '
+            DELETE FROM
+                    cart 
+            WHERE 
+                user_id = :userId 
+        ';
+        $this->prepareAndExecute(
+            $sql,
+            $params
+        );
     }
 }

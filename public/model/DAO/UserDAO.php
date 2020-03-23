@@ -68,25 +68,29 @@ class UserDAO extends AbstractDAO
         $sql = '
             INSERT INTO
                 users
-                (email,
-                 password,
-                 first_name,
-                 last_name,
-                 age,
-                 phone_number,
-                 role,
-                 subscription,
-                 date_created)
+                (
+                     email,
+                     password,
+                     first_name,
+                     last_name,
+                     age,
+                     phone_number,
+                     role,
+                     subscription,
+                     date_created
+                 )
             VALUES 
-                (:email,
-                 :password,
-                 :firstName,
-                 :lastName,
-                 :age,
-                 :phoneNumber,
-                 :role,
-                 :subscription,
-                 now())
+                (
+                     :email,
+                     :password,
+                     :firstName,
+                     :lastName,
+                     :age,
+                     :phoneNumber,
+                     :role,
+                     :subscription,
+                     now()
+                 )
         ';
         $this->prepareAndExecute(
             $sql,

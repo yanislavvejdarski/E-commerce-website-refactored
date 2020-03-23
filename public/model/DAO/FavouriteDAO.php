@@ -44,11 +44,15 @@ class FavouriteDAO extends AbstractDAO
         $sql = '
             INSERT INTO
                 user_favourite_products 
-                (user_id,
-                 product_id) 
+                (
+                     user_id,
+                     product_id
+                 ) 
             VALUES 
-                (:userId,
-                 :productId)
+                (
+                     :userId,
+                     :productId
+                 )
         ';
         $this->prepareAndExecute(
             $sql

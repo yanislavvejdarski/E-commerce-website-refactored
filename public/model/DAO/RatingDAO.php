@@ -50,17 +50,21 @@ class RatingDAO extends AbstractDAO
         $sql = '
             INSERT INTO
                 user_rate_products 
-                (user_id,
-                 product_id,
-                 stars,
-                 text,
-                 date_created) 
+                (
+                    user_id,
+                    product_id,
+                    stars,
+                    text,
+                    date_created
+                 ) 
             VALUES 
-                (:userId,
-                 :productId,
-                 :rating,
-                 :comment,
-                 now())
+                (
+                    :userId,
+                    :productId,
+                    :rating,
+                    :comment,
+                     now()
+                 )
         ';
         $this->prepareAndExecute(
             $sql,
@@ -128,7 +132,7 @@ class RatingDAO extends AbstractDAO
     }
 
     /**
-     * @param int $product_id
+     * @param int $productId
      *
      * @return array
      */
@@ -190,11 +194,13 @@ class RatingDAO extends AbstractDAO
         $sql = '
             SELECT 
                 CONCAT
-                (u.first_name,
-                \" \",
-                u.last_name) AS full_name,
-                urp.stars,
-                urp.text,
+                (
+                    u.first_name,
+                     " ",
+                    u.last_name
+                 ) AS full_name,
+                 urp.stars,
+                 urp.text,
                 cast(urp.date_created AS date) AS date 
             FROM 
                 users AS u

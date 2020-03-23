@@ -39,7 +39,12 @@ class AddressDAO extends AbstractDAO
      */
     public function getCities()
     {
-        $sql='SELECT * FROM cities;';
+        $sql='
+            SELECT 
+                *
+            FROM 
+                cities
+        ';
 
         return $this->fetchAllAssoc($sql);
     }
@@ -58,17 +63,17 @@ class AddressDAO extends AbstractDAO
             INSERT INTO 
                 addresses 
                 (
-                 user_id,
-                 city_id,
-                 street_name,
-                 date_created
+                     user_id,
+                     city_id,
+                     street_name,
+                     date_created
                  ) 
             VALUES 
                 (
-                 :userId,
-                 :cityId,
-                 :streetName,
-                 now()
+                     :userId,
+                     :cityId,
+                     :streetName,
+                     now()
                  )
                ';
         $this->prepareAndExecute(
@@ -94,7 +99,8 @@ class AddressDAO extends AbstractDAO
             FROM 
                 addresses AS a 
                 JOIN cities AS c ON (a.city_id = c.id)
-            WHERE user_id = :userId
+            WHERE 
+                user_id = :userId
         ';
 
         return $this->fetchAllObject(

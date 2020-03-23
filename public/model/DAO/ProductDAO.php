@@ -97,21 +97,25 @@ class ProductDAO extends AbstractDAO
         $sql = '
             INSERT INTO 
                 products 
-                (name,
-                 producer_id,
-                 price,
-                 type_id,
-                 quantity,
-                 image_url,
-                 date_created) 
+                (
+                     name,
+                     producer_id,
+                     price,
+                     type_id,
+                     quantity,
+                     image_url,
+                     date_created
+                 ) 
             VALUES 
-                (:productName,
-                 :producerId,
-                 :productPrice,
-                 :typeId,
-                 :quantity,
-                 :imageUrl,
-                 now())
+                (
+                     :productName,
+                     :producerId,
+                     :productPrice,
+                     :typeId,
+                     :quantity,
+                     :imageUrl,
+                     now()
+                 )
         ';
         $this->prepareAndExecute(
             $sql,
