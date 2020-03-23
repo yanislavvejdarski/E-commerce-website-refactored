@@ -14,8 +14,11 @@ private $streetName;
      * @param int $cityId
      * @param string $streetName
      */
-public function __construct($userId,$cityId,$streetName)
-{
+public function __construct(
+    $userId,
+    $cityId,
+    $streetName
+) {
     $this->userId = $userId;
     $this->cityId = $cityId;
     $this->streetName = $streetName;
