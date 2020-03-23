@@ -157,8 +157,8 @@ class AddressDAO extends AbstractDAO
      *
      * @return array
      */
-      public function userAddress($userId)
-      {
+    public function userAddress($userId)
+    {
         $params = ['userId' => $userId];
         $sql = '
             SELECT 
@@ -173,5 +173,5 @@ class AddressDAO extends AbstractDAO
             $sql,
             $params
         );
-      }
+    }
 }

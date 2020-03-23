@@ -78,12 +78,13 @@ class ProductDAO extends AbstractDAO
      * @param int $quantity
      * @param string $imageUrl
      */
-    public function add($productName,
-                        $producerId,
-                        $productPrice,
-                        $typeId,
-                        $quantity,
-                        $imageUrl
+    public function add(
+            $productName,
+            $producerId,
+            $productPrice,
+            $typeId,
+            $quantity,
+            $imageUrl
     ) {
         $params = [
             'productName' => $productName,
