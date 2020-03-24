@@ -392,26 +392,26 @@ class ProductController extends AbstractController
 
                 $alias = 'attr$counter';
                 if ($counter == 0) {
-                    $msg .= 'SELECT * FROM (
+                    $msg .= "SELECT * FROM (
                                 SELECT distinct  p.name , p.id , p.price , p.quantity , p.image_url 
                                 FROM products as p 
                                 JOIN product_attributes as pha ON (p.id = pha.product_id)
                                 JOIN attributes as a ON (pha.attribute_id = a.id) 
                                 WHERE p.type_id = 1
-                                AND  a.name=? AND pha.value in($stringParams)) as $alias';
+                                AND  a.name=? AND pha.value in($stringParams)) as $alias";
                     $args[] .= $name;
                     $args = array_merge($args, $checked);
                 } else {
                     $prevIndex = $counter - 1;
-                    $prevAlias = 'attr$prevIndex';
-                    $msg .= ' join (
+                    $prevAlias = "attr$prevIndex";
+                    $msg .= " join (
                             SELECT distinct p.id 
                             FROM products as p
                             JOIN product_attributes as pha ON (p.id = pha.product_id)
                             JOIN attributes as a ON (pha.attribute_id = a.id) 
                             WHERE p.type_id = 1
                             AND  a.name=? AND pha.value in($stringParams)
-                            ) as $alias on $prevAlias.id = $alias.id';
+                            ) as $alias on $prevAlias.id = $alias.id";
 
                     $args[] .= $name;
                     $args = array_merge($args, $checked);
