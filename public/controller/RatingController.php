@@ -28,7 +28,7 @@ class ratingController extends AbstractController
                 if ($msg == "") {
 
                     $ratingDAO = new RatingDAO();
-                    $ratingDAO->addRating($_SESSION["logged_user_id"], $this->request->postParam("product_id"), $this->request->postParam("rating"), $this->request->postParam("comment"));
+                    $ratingDAO->addRating($this->session->getSessionParam("logged_user_id"), $this->request->postParam("product_id"), $this->request->postParam("rating"), $this->request->postParam("comment"));
                     header("Location: product/" . $this->request->postParam("product_id"));
 
                 } else {
@@ -57,7 +57,7 @@ class ratingController extends AbstractController
 
             $ratingDAO = new RatingDAO();
             $rating = $ratingDAO->getRatingById($postParams["rating_id"]);
-            if ($rating->user_id !== $_SESSION["logged_user_id"]) {
+            if ($rating->user_id !== $this->session->getSessionParam("logged_user_id")) {
                 throw new NotAuthorizedException("Not authorized for this operation!");
             } elseif ($msg == "") {
                 $ratingDAO = new RatingDAO();
@@ -112,7 +112,7 @@ class ratingController extends AbstractController
     {
         UserController::validateForLoggedUser();
         $ratingDAO = new RatingDAO();
-        $myRatings = $ratingDAO->showMyRated($_SESSION["logged_user_id"]);
+        $myRatings = $ratingDAO->showMyRated($this->session->getSessionParam("logged_user_id"));
         include_once "view/myRated.php";
     }
 

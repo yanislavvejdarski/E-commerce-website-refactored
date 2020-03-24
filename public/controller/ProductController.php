@@ -29,8 +29,6 @@ class ProductController extends AbstractController
 
             $typeDAO = new TypeDAO();
             $types = $typeDAO->getTypesFromCategorieId($getParams["ctgId"]);
-
-
             foreach ($types as $type) {
                 $typeObject = new Type($type["id"], $type["name"], $type["categorie_id"]);
                 $typeObject->show();
@@ -43,21 +41,14 @@ class ProductController extends AbstractController
 
                 $productDAO = new ProductDAO();
                 $products = $productDAO->getProductsFromTypeId($getParams["typeId"]);
-
                 $type = $typeDAO->getTypeInformation($getParams["typeId"]);
                 include_once "view/showProductsFromType.php";
-
-
-
-
-
                 $typeDAO = new TypeDAO();
                 $resultSet = $typeDAO->getNumberOfProductsForType($getParams["typeId"]);
                 $numRows = $resultSet->count;
                 $typeDAO = new TypeDAO();
                 $products = $typeDAO->getAllByType($getParams["typeId"]);
                 $filters = $this->getFilters($getParams["typeId"]);
-
 
             } else {
                 header("Location: /home");
@@ -70,20 +61,16 @@ class ProductController extends AbstractController
     {
         $typeDAO = new TypeDAO();
         $typeNames = $typeDAO->getAttributesByType($id);
-
         $filter = new Filter();
         $filter->setFilterNames($typeNames);
         $filter->setFilterValues($typeNames);
 
         return $filter;
-
-
     }
 
     public function addProduct()
     {
         UserController::validateForAdmin();
-
         $postParams = $this->request->postParams();
         $msg = '';
         if (isset($postParams["save"])) {
@@ -111,19 +98,16 @@ class ProductController extends AbstractController
                     $filename = time() . "." . $extension;
                     $img_url = "images" . DIRECTORY_SEPARATOR . $filename;
                     if (!move_uploaded_file($_FILES["file"]["tmp_name"], $img_url)) {
-
                         $msg = "Image error!";
                     }
                 }
                 if ($msg == "") {
-
                     $productDAO = new ProductDAO();
                     $productDAO->add($postParams["name"], $postParams["producer_id"], $postParams["price"], $postParams["type_id"], $postParams["quantity"], $img_url);
                     $msg = "Product added successfully!";
                 } else {
                     throw new BadRequestException("$msg");
                 }
-
             }
         }
         include_once "view/addProduct.php";
@@ -150,7 +134,6 @@ class ProductController extends AbstractController
             } elseif ($this->validateQuantity($postParams["quantity"])) {
                 $msg = "Invalid quantity format!";
             } else {
-
                 if ($msg == "") {
                     $price = $postParams["price"];
                     $old_price = NULL;
@@ -161,8 +144,6 @@ class ProductController extends AbstractController
                             $price = $postParams["newPrice"];
                             $old_price = $postParams["price"];
                         }
-
-
                     }
                 } else {
                     throw new BadRequestException("$msg");
@@ -196,30 +177,22 @@ class ProductController extends AbstractController
                     $product["type_id"] = $postParams["type_id"];
                     $product["quantity"] = $postParams["quantity"];
                     $product["image_url"] = $img_url;
-
-
                     $productDAO = new ProductDAO();
                     $productDAO->edit($product);
                     if (!empty($postParams["newPrice"])) {
                         $this->sendPromotionEmail($product["product_id"], $product["name"]);
                     }
-
-
                 } else {
                     throw new BadRequestException("$msg");
                 }
-
             }
-
         }
-
         if (isset($postParams["product_id"])) {
             $productId = $postParams["product_id"];
             include_once "view/editProduct.php";
         } else {
             header("Location:/home");
         }
-
     }
 
     public function validatePrice($price)
@@ -254,8 +227,6 @@ class ProductController extends AbstractController
             $oldPrice = $product["old_price"];
             $discount = round((($product["old_price"] - $product["price"]) / $product["old_price"]) * 100, 0);
         }
-
-
         $isInStock = null;
         if ($product["quantity"] == 0) {
             $isInStock = "Not available";
@@ -264,12 +235,12 @@ class ProductController extends AbstractController
         } elseif ($product["quantity"] > 10) {
             $isInStock = "In stock";
         }
-
         $status = [];
         $status["in_promotion"] = $inPromotion;
         $status["old_price"] = $oldPrice;
         $status["discount"] = $discount;
         $status["is_in_stock"] = $isInStock;
+
         return $status;
     }
 
@@ -284,13 +255,10 @@ class ProductController extends AbstractController
                     $productDAO = new ProductDAO();
                     $productDAO->removePromotion($postParams["product_id"], $postParams["product_old_price"]);
                 }
-
                 $productId = $postParams["product_id"];
                 include_once "view/editProduct.php";
             }
         }
-
-
     }
 
     public function addProductPage()
@@ -328,8 +296,6 @@ class ProductController extends AbstractController
                 include_once "view/editProduct.php";
             } else {
                 include_once "view/main.php";
-
-
             }
         } else {
             include_once "view/main.php";
@@ -369,7 +335,6 @@ class ProductController extends AbstractController
                                 JOIN attributes as a ON (pha.attribute_id = a.id) 
                                 WHERE p.type_id = 1
                                 AND  a.name=? AND pha.value in($stringParams)) as $alias";
-
                     $args[] .= $name;
                     $args = array_merge($args, $checked);
                 } else {

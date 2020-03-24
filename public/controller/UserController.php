@@ -36,11 +36,10 @@ class UserController extends AbstractController
 
                 if ($user) {
                     if (password_verify($postParams["password"], $user->password)) {
-                        $this->session->setSessionParams("logged_user_id",$user->id);
-                        $_SESSION["logged_user_id"] = $user->id;
-                        $_SESSION["logged_user_role"] = $user->role;
-                        $_SESSION["logged_user_first_name"] = $user->first_name;
-                        $_SESSION["logged_user_last_name"] = $user->last_name;
+                        $this->session->setSessionParam("logged_user_id", $user->id);
+                        $this->session->setSessionParam("logged_user_role", $user->role);
+                        $this->session->setSessionParam("logged_user_first_name", $user->first_name);
+                        $this->session->setSessionParam("logged_user_last_name", $user->last_name);
                     } else {
                         include_once "view/login.php";
                         throw new NotAuthorizedException('Invalid username or password!');
@@ -102,17 +101,18 @@ class UserController extends AbstractController
             if ($msg == "") {
                 $role = "user";
                 $password = password_hash($postParams["password"], PASSWORD_BCRYPT);
-                $first_name = ucfirst($postParams["first_name"]);
-                $last_name = ucfirst($postParams["last_name"]);
-                $newUser = new User($postParams["email"], $password, $first_name, $last_name, $postParams["age"], $postParams["phone_number"], $role, $subscription);
+                $firstName = ucfirst($postParams["first_name"]);
+                $lastName = ucfirst($postParams["last_name"]);
+                $newUser = new User($postParams["email"], $password, $firstName, $lastName, $postParams["age"], $postParams["phone_number"], $role, $subscription);
 
                 $userDAO = new UserDAO();
                 $userDAO->add($newUser);
 
-                $_SESSION["logged_user_id"] = $newUser->getId();
-                $_SESSION["logged_user_role"] = $newUser->getRole();
-                $_SESSION["logged_user_first_name"] = $newUser->getFirstName();
-                $_SESSION["logged_user_last_name"] = $newUser->getLastName();
+                $this->session->setSessionParam("logged_user_id", $newUser->getId());
+                $this->session->setSessionParam("logged_user_role", $newUser->getRole());
+                $this->session->setSessionParam("logged_user_first_name", $newUser->getFirstName());
+                $this->session->setSessionParam("logged_user_last_name", $newUser->getLastName());
+
                 header("Location: /home");
             } else {
                 throw new BadRequestException("$msg");
@@ -147,7 +147,7 @@ class UserController extends AbstractController
             if ($msg == "") {
 
                 $userDAO = new UserDAO();
-                $user = $userDAO->getUserById($_SESSION["logged_user_id"]);
+                $user = $userDAO->getUserById($this->session->getSessionParam("logged_user_id"));
                 if (password_verify($postParams["accountPassword"], $user->password) == false) {
 
                     throw new NotAuthorizedException("Incorrect account password!");
@@ -177,10 +177,10 @@ class UserController extends AbstractController
             }
             if ($msg == "") {
                 $role = "user";
-                $first_name = ucfirst($postParams["first_name"]);
+                $firstName = ucfirst($postParams["first_name"]);
                 $last_name = ucfirst($postParams["last_name"]);
-                $user = new User($postParams["email"], $password, $first_name, $last_name, $postParams["age"], $postParams["phone_number"], $role, $subscription);
-                $user->setId($_SESSION["logged_user_id"]);
+                $user = new User($postParams["email"], $password, $firstName, $last_name, $postParams["age"], $postParams["phone_number"], $role, $subscription);
+                $user->setId($this->session->getSessionParam("logged_user_id"));
 
                 $userDAO = new UserDAO();
                 $userDAO->update($user);
@@ -194,7 +194,8 @@ class UserController extends AbstractController
 
     public function logout()
     {
-        if (isset($_SESSION["logged_user_id"])) {
+        $sessionParams = $this->session->getSessionParams();
+        if (isset($sessionParams["logged_user_id"])) {
             $this->session->sessionDestroy();
 
             header("Location: /home");
@@ -213,12 +214,14 @@ class UserController extends AbstractController
 
     public function account()
     {
+
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
+        $sessionParams = $this->session->getSessionParams();
         $userDAO = new UserDAO();
-        $user = $userDAO->getUserByid($_SESSION["logged_user_id"]);
+        $user = $userDAO->getUserByid($sessionParams["logged_user_id"]);
         $addressDAO = new AddressDAO();
-        $addresses = $addressDAO->getAll($_SESSION["logged_user_id"]);
+        $addresses = $addressDAO->getAll($sessionParams["logged_user_id"]);
         include_once "view/account.php";
 
     }
@@ -227,7 +230,7 @@ class UserController extends AbstractController
     {
         $this->validateForLoggedUser();
         $userDAO = new UserDAO();
-        $user = $userDAO->getUserByid($_SESSION["logged_user_id"]);
+        $user = $userDAO->getUserByid($this->session->getSessionParam("logged_user_id"));
         include_once "view/editProfile.php";
     }
 
@@ -235,7 +238,7 @@ class UserController extends AbstractController
     {
 
         $userDAO = new UserDAO();
-        $user = $userDAO->getUserByid($_SESSION["logged_user_id"]);
+        $user = $userDAO->getUserByid($this->session->getSessionParam("logged_user_id"));
         unset($user->password);
         return $user;
     }
@@ -291,14 +294,19 @@ class UserController extends AbstractController
 
     public static function validateForLoggedUser()
     {
-        if (!isset($_SESSION["logged_user_id"])) {
+        $sessionInstance = Session::getInstance();
+        $sessionParams = $sessionInstance->getSessionParams();
+
+        if (!isset($sessionParams["logged_user_id"])) {
             header("Location:/loginPage");
         }
     }
 
     public static function validateForAdmin()
     {
-        if (!isset($_SESSION["logged_user_id"]) || $_SESSION["logged_user_role"] != "admin") {
+        $sessionInstance = new Session();
+        $sessionParams = $sessionInstance->getSessionParams();
+        if (!isset($sessionParams["logged_user_id"]) || $sessionParams["logged_user_role"] != "admin") {
             header("Location: /home");
         }
     }

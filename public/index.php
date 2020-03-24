@@ -24,7 +24,7 @@ spl_autoload_register(function ($class) {
 
 });
 use helpers\Session;
-$session = Session::getInstance();
+Session::getInstance();
 if (!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){ // AJAX HEADER REQUEST
 
 ?>

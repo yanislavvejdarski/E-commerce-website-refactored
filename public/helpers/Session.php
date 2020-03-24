@@ -5,56 +5,97 @@ namespace helpers;
 class Session
 {
     /**
+     * @var Session
+     */
+    private static $instance;
+
+    /**
      * @var array
      */
     private $session;
+
+    /**
+     * @var bool
+     */
+    private $sessionStarted = false;
 
     /**
      * Session constructor.
      */
     public function __construct()
     {
-        $this->session = $_SESSION;
     }
 
     /**
-     * @var instance
-     */
-    private static $instance;
-
-    /**
-     * @return instance
+     * @return Session
      */
     public static function getInstance()
     {
         if (Session::$instance == null) {
-            session_start();
             Session::$instance = new Session;
+            Session::$instance->sessionStart();
         }
-        return Session::$instance;
 
+        return Session::$instance;
     }
 
+    /**
+     * Start Session
+     */
+    public function sessionStart()
+    {
+        if ($this->sessionStarted == false) {
+            session_start();
+            $this->session = $_SESSION;
+            $this->sessionStarted = true;
+        }
+    }
+
+    /**
+     * Destroy Session
+     */
     public function sessionDestroy()
     {
-        unset($this->session);
-        session_destroy();
+        if ($this->sessionStarted == true) {
+            unset($this->session);
+            session_destroy();
+            $this->sessionStarted = false;
+        }
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     public function setSessionParam(
         $key,
         $value
     ) {
-
-        return $this->session[$key] = $value;
+        $this->session[$key] = $value;
+        $_SESSION[$key] = $value;
     }
 
-    public function getSessionParam($key)
+    /**
+     * @param string $key
+     * @param null $defaultReturn
+     *
+     * @return mixed|null
+     */
+    public function getSessionParam($key, $defaultReturn = null)
     {
+        if (isset($this->session[$key])) {
 
-        return $this->session[$key];
+            return $this->session[$key];
+        }
+
+        return $defaultReturn;
     }
 
+    /**
+     * @return array
+     */
     public function getSessionParams()
     {
 
