@@ -22,7 +22,7 @@ class Session
     /**
      * Session constructor.
      */
-    public function __construct()
+    private function __construct()
     {
     }
 
@@ -73,7 +73,6 @@ class Session
         $key,
         $value
     ) {
-        $this->session[$key] = $value;
         $_SESSION[$key] = $value;
     }
 
@@ -83,8 +82,10 @@ class Session
      *
      * @return mixed|null
      */
-    public function getSessionParam($key, $defaultReturn = null)
-    {
+    public function getSessionParam(
+        $key,
+        $defaultReturn = null
+    ) {
         if (isset($this->session[$key])) {
 
             return $this->session[$key];

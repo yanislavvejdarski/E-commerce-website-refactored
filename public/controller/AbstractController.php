@@ -8,9 +8,13 @@ use helpers\Session;
 abstract class AbstractController
 {
     /**
-     * @var instance
+     * @var Request
      */
     protected $request;
+    /**
+     * @var Session
+     */
+    protected $session;
 
     /**
      * AbstractController constructor.
