@@ -3,13 +3,19 @@
 namespace controller;
 
 use helpers\Request;
+use helpers\Session;
 
 abstract class AbstractController
 {
     /**
-     * @var instance
+     * @var Request
      */
     protected $request;
+
+    /**
+     * @var Session
+     */
+    protected $session;
 
     /**
      * AbstractController constructor.
@@ -17,5 +23,6 @@ abstract class AbstractController
     public function __construct()
     {
         $this->request = Request::getInstance();
+        $this->session = Session::getInstance();
     }
 }

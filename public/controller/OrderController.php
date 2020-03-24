@@ -12,30 +12,37 @@ error_reporting(E_ALL);
 
 class OrderController extends AbstractController
 {
+    /**
+     *  Finish Order
+     */
     public function order()
     {
         UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
+        $sessionParams = $this->session->getSessionParams();
         $orderedProducts = new CartDAO();
-        if (isset($postParams["order"])) {
-            $orderedProductsa = $orderedProducts->showCart($_SESSION["logged_user_id"]);
+        if (isset($postParams['order'])) {
+            $orderedProductsa = $orderedProducts->showCart($sessionParams['logged_user_id']);
             $order = new OrderDAO();
-            $order->finishOrder($orderedProductsa, $postParams["totalPrice"], $_SESSION["logged_user_id"]);
+            $order->finishOrder(
+                $orderedProductsa,
+                $postParams['totalPrice'],
+                $sessionParams['logged_user_id']
+            );
             $cart = new CartController;
             $cart->show();
         }
-
-        $msg = "Order received!";
-
+        $msg = 'Order received!';
     }
 
+    /**
+     * Show Orders Page
+     */
     public function show()
     {
-
         UserController::validateForLoggedUser();
-
         $products = new OrderDAO();
-        $products = $products->showOrders($_SESSION["logged_user_id"]);
-        include_once "view/orders.php";
+        $products = $products->showOrders($this->session->getSessionParam('logged_user_id'));
+        include_once 'view/orders.php';
     }
 }

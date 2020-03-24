@@ -6,22 +6,22 @@ class User
     private $id;
     private $email;
     private $password;
-    private $first_name;
-    private $last_name;
+    private $firstName;
+    private $lastName;
     private $age;
-    private $phone_number;
+    private $phoneNumber;
     private $role;
     private $subscription;
 
 
-    public function __construct($email,$password,$first_name,$last_name,$age,$phone_number,$role,$subscription){
+    public function __construct($email,$password,$firstName,$lastName,$age,$phoneNumber,$role,$subscription){
 
         $this->email=$email;
         $this->password=$password;
-        $this->first_name=$first_name;
-        $this->last_name=$last_name;
+        $this->firstName=$firstName;
+        $this->lastName=$lastName;
         $this->age=$age;
-        $this->phone_number=$phone_number;
+        $this->phoneNumber=$phoneNumber;
         $this->role=$role;
         $this->subscription=$subscription;
     }
@@ -60,7 +60,7 @@ class User
 
     public function getLastName()
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
 
@@ -72,7 +72,7 @@ class User
 
     public function getPhoneNumber()
     {
-        return $this->phone_number;
+        return $this->phoneNumber;
     }
 
 

@@ -62,6 +62,7 @@ class SearchDAO extends AbstractDAO
      */
     public function searchType($keywords)
     {
+
         $params = ['keyWords' => "{$keywords}%"];
         $sql = '
             SELECT
