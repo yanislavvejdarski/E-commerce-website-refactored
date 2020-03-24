@@ -86,12 +86,8 @@ class Session
         $key,
         $defaultReturn = null
     ) {
-        if (isset($this->session[$key])) {
 
-            return $this->session[$key];
-        }
-
-        return $defaultReturn;
+        return isset($this->session[$key]) ? $this->session[$key] : $defaultReturn;
     }
 
     /**

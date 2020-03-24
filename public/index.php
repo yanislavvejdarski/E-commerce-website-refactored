@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+use helpers\Session;
 
 function handleExceptions(Exception $exception)
 {
@@ -23,7 +24,6 @@ spl_autoload_register(function ($class) {
     require_once str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
 
 });
-use helpers\Session;
 Session::getInstance();
 if (!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){ // AJAX HEADER REQUEST
 

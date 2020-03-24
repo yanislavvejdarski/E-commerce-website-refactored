@@ -10,12 +10,15 @@ use helpers\Request;
 
 class ratingController extends AbstractController
 {
+    /**
+     * @throws BadRequestException
+     * @throws NotAuthorizedException
+     */
     public function rate()
     {
         UserController::validateForLoggedUser();
         $msg = "";
         if (!empty($this->request->postParam("save"))) {
-
             if (empty($this->request->postParam("comment")) || empty($this->request->postParam("rating"))) {
                 $msg = "All fields are required!";
             } elseif ($this->commentValidation($this->request->postParam("comment"))) {
@@ -26,11 +29,14 @@ class ratingController extends AbstractController
             $productDAO = new ProductDAO();
             if ($productDAO->findProduct($this->request->postParam("product_id"))) {
                 if ($msg == "") {
-
                     $ratingDAO = new RatingDAO();
-                    $ratingDAO->addRating($this->session->getSessionParam("logged_user_id"), $this->request->postParam("product_id"), $this->request->postParam("rating"), $this->request->postParam("comment"));
+                    $ratingDAO->addRating(
+                        $this->session->getSessionParam("logged_user_id"),
+                        $this->request->postParam("product_id"),
+                        $this->request->postParam("rating"),
+                        $this->request->postParam("comment")
+                    );
                     header("Location: product/" . $this->request->postParam("product_id"));
-
                 } else {
                     throw new BadRequestException("$msg");
                 }
@@ -40,13 +46,16 @@ class ratingController extends AbstractController
         }
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws NotAuthorizedException
+     */
     public function editRate()
     {
         $msg = "";
         UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         if (!empty($postParams["saveChanges"])) {
-
             if (empty($postParams["comment"]) || empty($postParams["comment"])) {
                 $msg = "All fields are required!";
             } elseif ($this->commentValidation($postParams["comment"])) {
@@ -54,14 +63,17 @@ class ratingController extends AbstractController
             } elseif ($this->ratingValidation($postParams["rating"])) {
                 $msg = "Invalid rating!";
             }
-
             $ratingDAO = new RatingDAO();
             $rating = $ratingDAO->getRatingById($postParams["rating_id"]);
             if ($rating->user_id !== $this->session->getSessionParam("logged_user_id")) {
                 throw new NotAuthorizedException("Not authorized for this operation!");
             } elseif ($msg == "") {
                 $ratingDAO = new RatingDAO();
-                $ratingDAO->editRating($postParams["rating_id"], $postParams["rating"], $postParams["comment"]);
+                $ratingDAO->editRating(
+                    $postParams["rating_id"],
+                    $postParams["rating"],
+                    $postParams["comment"]
+                );
                 header("Location: /ratedProducts");
             }
         } else {
@@ -69,9 +81,12 @@ class ratingController extends AbstractController
         }
     }
 
+    /**
+     * @param int $product_id
+     * @return array
+     */
     public function showStars($product_id)
     {
-
         $ratingDAO = new RatingDAO();
         $product_stars = $ratingDAO->getStarsCount($product_id);
         $starsCountArr = [];
@@ -87,27 +102,43 @@ class ratingController extends AbstractController
                 $starsCountArr[$i] = 0;
             }
         }
+
         return $starsCountArr;
     }
 
+    /**
+     * @param string $comment
+     *
+     * @return bool
+     */
     public function commentValidation($comment)
     {
         $err = false;
         if (strlen($comment) < 4 || strlen($comment) > 200) {
             $err = true;
         }
+
         return $err;
     }
 
+    /**
+     * @param int $rating
+     *
+     * @return bool
+     */
     public function ratingValidation($rating)
     {
         $err = false;
         if (!is_numeric($rating) || !preg_match('/^[1-5]+$/', $rating)) {
             $err = true;
         }
+
         return $err;
     }
 
+    /**
+     * Show My Rated Products Page
+     */
     public function myRated()
     {
         UserController::validateForLoggedUser();
@@ -116,6 +147,9 @@ class ratingController extends AbstractController
         include_once "view/myRated.php";
     }
 
+    /**
+     * Show Rating Product Page
+     */
     public function rateProduct()
     {
         $getParams = $this->request->getParams();
@@ -123,6 +157,9 @@ class ratingController extends AbstractController
         include_once "view/rateProduct.php";
     }
 
+    /**
+     * Show Edit Product Rating Page
+     */
     public function editRatedPage()
     {
         UserController::validateForLoggedUser();

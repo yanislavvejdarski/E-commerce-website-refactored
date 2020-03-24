@@ -12,6 +12,9 @@ error_reporting(E_ALL);
 
 class OrderController extends AbstractController
 {
+    /**
+     *  Finish Order
+     */
     public function order()
     {
         UserController::validateForLoggedUser();
@@ -21,13 +24,20 @@ class OrderController extends AbstractController
         if (isset($postParams["order"])) {
             $orderedProductsa = $orderedProducts->showCart($sessionParams["logged_user_id"]);
             $order = new OrderDAO();
-            $order->finishOrder($orderedProductsa, $postParams["totalPrice"], $sessionParams["logged_user_id"]);
+            $order->finishOrder(
+                $orderedProductsa,
+                $postParams["totalPrice"],
+                $sessionParams["logged_user_id"]
+            );
             $cart = new CartController;
             $cart->show();
         }
         $msg = "Order received!";
     }
 
+    /**
+     * Show Orders Page
+     */
     public function show()
     {
         UserController::validateForLoggedUser();

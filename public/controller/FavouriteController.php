@@ -13,6 +13,9 @@ use helpers\Request;
 
 class FavouriteController extends AbstractController
 {
+    /**
+     * Show Favourites
+     */
     public function show()
     {
         $validateSession = new UserController();
@@ -30,6 +33,10 @@ class FavouriteController extends AbstractController
         }
     }
 
+    /**
+     * Add Product To Favourites
+     * @throws NotFoundException
+     */
     public function add()
     {
         $validateSession = new UserController();
@@ -41,15 +48,20 @@ class FavouriteController extends AbstractController
             if (isset($postParams["like"])) {
                 $prdId = $postParams["like"];
                 $favoriteDAO = new FavouriteDAO();
-                $check = $favoriteDAO->checkIfInFavourites($getParams["product"], $sessionParams["logged_user_id"]);
-
+                $check = $favoriteDAO->checkIfInFavourites(
+                    $getParams["product"],
+                    $sessionParams["logged_user_id"]
+                );
                 if ($check) {
                     echo "Already added in Favourites";
                 } else {
                     $productDAO = new ProductDAO();
                     $cheker = $productDAO->findProduct($getParams["product"]);
                     if ($cheker->id != "") {
-                        $favoriteDAO->addToFavourites($getParams["product"], $sessionParams["logged_user_id"]);
+                        $favoriteDAO->addToFavourites(
+                            $getParams["product"],
+                            $sessionParams["logged_user_id"]
+                        );
                         header("Location:/product/$prdId");
                     } else {
                         $this->show();
@@ -58,14 +70,20 @@ class FavouriteController extends AbstractController
                 }
             } else {
                 $favoriteDAO = new FavouriteDAO();
-                $check = $favoriteDAO->checkIfInFavourites($getParams["product"], $sessionParams["logged_user_id"]);
+                $check = $favoriteDAO->checkIfInFavourites(
+                    $getParams["product"],
+                    $sessionParams["logged_user_id"]
+                );
                 if ($check) {
                     echo "Already added in Favourites";
                 } else {
                     $productDAO = new ProductDAO();
                     $cheker = $productDAO->findProduct($getParams["product"]);
                     if ($cheker->id != "") {
-                        $favoriteDAO->addToFavourites($getParams["product"], $sessionParams["logged_user_id"]);
+                        $favoriteDAO->addToFavourites(
+                            $getParams["product"],
+                            $sessionParams["logged_user_id"]
+                        );
                         $this->show();
                         include_once "view/favourites.php";
                     } else {
@@ -79,7 +97,10 @@ class FavouriteController extends AbstractController
         }
     }
 
-
+    /**
+     * Delete Product From Favourites
+     * @throws NotFoundException
+     */
     public function delete()
     {
         $validateSession = new UserController();
@@ -91,7 +112,10 @@ class FavouriteController extends AbstractController
             $prdId = $like;
             if (isset($getParams["product"]) && is_numeric($getParams["product"])) {
                 $favoriteDAO = new FavouriteDAO();
-                $favoriteDAO->deleteFromFavourites($getParams["product"], $sessionParams["logged_user_id"]);
+                $favoriteDAO->deleteFromFavourites(
+                    $getParams["product"],
+                    $sessionParams["logged_user_id"]
+                );
                 header("Location: /product/" . $prdId);
             } else {
                 $this->show();
@@ -100,7 +124,10 @@ class FavouriteController extends AbstractController
         } else {
             if (isset($getParams["product"]) && is_numeric($getParams["product"])) {
                 $favoriteDAO = new FavouriteDAO();
-                $favoriteDAO->deleteFromFavourites($getParams["product"], $sessionParams["logged_user_id"]);
+                $favoriteDAO->deleteFromFavourites(
+                    $getParams["product"],
+                    $sessionParams["logged_user_id"]
+                );
                 $this->show();
             } else {
                 $this->show();

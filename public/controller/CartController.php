@@ -11,6 +11,9 @@ use helpers\Request;
 
 class CartController extends AbstractController
 {
+    /**
+     * Add Product To Cart
+     */
     public function add()
     {
         $validateSession = new UserController();
@@ -21,17 +24,26 @@ class CartController extends AbstractController
             $cartDAO = new CartDAO();
             $productDAO = new ProductDAO();
             $quantity = $productDAO->checkQuantity($getParams["product"]);
-            $check = $cartDAO->checkIfInCart($getParams["product"], $sessionParams["logged_user_id"]);
+            $check = $cartDAO->checkIfInCart(
+                $getParams["product"],
+                $sessionParams["logged_user_id"]
+            );
             if ($check) {
                 if ($check["quantity"] < $quantity["quantity"] && $quantity["quantity"] > 0) {
-                    $cartDAO->updateQuantityOfProductInCart($getParams["product"], $sessionParams["logged_user_id"]);
+                    $cartDAO->updateQuantityOfProductInCart(
+                        $getParams["product"],
+                        $sessionParams["logged_user_id"]
+                    );
                     $this->show();
                 } else {
                     echo "<h1>No more available Pieces</h1>";
                     $this->show();
                 }
             } elseif ($quantity["quantity"] > 0) {
-                $cartDAO->putInCart($getParams["product"], $sessionParams["logged_user_id"]);
+                $cartDAO->putInCart(
+                    $getParams["product"],
+                    $sessionParams["logged_user_id"]
+                );
                 $this->show();
             } else {
                 echo "<h1>Quantity Not Available</h1>";
@@ -43,6 +55,9 @@ class CartController extends AbstractController
         }
     }
 
+    /**
+     * Show Cart Page
+     */
     public function show()
     {
         $validateSession = new UserController();
@@ -53,6 +68,9 @@ class CartController extends AbstractController
         include_once "view/cart.php";
     }
 
+    /**
+     * Upgrade Product Quantity In Cart
+     */
     public function update()
     {
         $validateSession = new UserController();
@@ -64,7 +82,11 @@ class CartController extends AbstractController
             $productQuantity = $productDAO->checkQuantity($postParams["productId"]);
             if ($productQuantity["quantity"] >= $postParams["quantity"]) {
                 $cartDAO = new CartDAO();
-                $cartDAO->updateCartQuantity($postParams["productId"], $postParams["quantity"], $this->session->getSessionParam("logged_user_id"));
+                $cartDAO->updateCartQuantity(
+                    $postParams["productId"],
+                    $postParams["quantity"],
+                    $this->session->getSessionParam("logged_user_id")
+                );
                 $this->show();
             } else {
                 $this->show();
@@ -76,16 +98,19 @@ class CartController extends AbstractController
         }
     }
 
+    /**
+     * Delete Product From Cart
+     */
     public function delete()
     {
         $getParams = $this->request->getParams();
         $validateSession = new UserController();
         $validateSession->validateForLoggedUser();
-
         $cartDAO = new CartDAO();
-        $cartDAO->deleteProductFromCart($getParams["product"], $this->session->getSessionParam("logged_user_id"));
+        $cartDAO->deleteProductFromCart(
+            $getParams["product"],
+            $this->session->getSessionParam("logged_user_id")
+        );
         $this->show();
     }
 }
-
-

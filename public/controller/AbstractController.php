@@ -11,7 +11,7 @@ abstract class AbstractController
      * @var Request
      */
     protected $request;
-    
+
     /**
      * @var Session
      */

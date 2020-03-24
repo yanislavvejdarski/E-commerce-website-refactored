@@ -11,9 +11,11 @@ error_reporting(E_ALL);
 
 class SearchController extends AbstractController
 {
+    /**
+     * Search Bar
+     */
     public function render()
     {
-
         $postParams = $this->request->postParams();
         if (isset($postParams["searchProducts"])) {
             $controller = new Search($postParams["search"]);

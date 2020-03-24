@@ -9,6 +9,7 @@ use model\Type;
 use model\DAO\TypeDAO;
 use PHPMailer;
 use helpers\Request;
+use phpmailerException;
 
 include_once "credentials.php";
 ini_set('display_errors', 1);
@@ -17,6 +18,9 @@ error_reporting(E_ALL);
 
 class ProductController extends AbstractController
 {
+    /**
+     * Show Product, Category or Type
+     */
     public function show()
     {
         $getParams = $this->request->getParams();
@@ -26,11 +30,14 @@ class ProductController extends AbstractController
             $product->show();
         }
         if (isset($getParams["ctgId"])) {
-
             $typeDAO = new TypeDAO();
             $types = $typeDAO->getTypesFromCategorieId($getParams["ctgId"]);
             foreach ($types as $type) {
-                $typeObject = new Type($type["id"], $type["name"], $type["categorie_id"]);
+                $typeObject = new Type(
+                    $type["id"],
+                    $type["name"],
+                    $type["categorie_id"]
+                );
                 $typeObject->show();
             }
         }
@@ -38,7 +45,6 @@ class ProductController extends AbstractController
             $typeDAO = new TypeDAO();
             $checkType = $typeDAO->existsType($getParams["typeId"]);
             if ($checkType["count"] > 0) {
-
                 $productDAO = new ProductDAO();
                 $products = $productDAO->getProductsFromTypeId($getParams["typeId"]);
                 $type = $typeDAO->getTypeInformation($getParams["typeId"]);
@@ -49,7 +55,6 @@ class ProductController extends AbstractController
                 $typeDAO = new TypeDAO();
                 $products = $typeDAO->getAllByType($getParams["typeId"]);
                 $filters = $this->getFilters($getParams["typeId"]);
-
             } else {
                 header("Location: /home");
             }
@@ -57,6 +62,11 @@ class ProductController extends AbstractController
         }
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Filter
+     */
     public function getFilters($id)
     {
         $typeDAO = new TypeDAO();
@@ -68,29 +78,27 @@ class ProductController extends AbstractController
         return $filter;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function addProduct()
     {
         UserController::validateForAdmin();
         $postParams = $this->request->postParams();
         $msg = '';
         if (isset($postParams["save"])) {
-
             if (empty($postParams["name"]) || empty($postParams["producer_id"])
                 || empty($postParams["price"]) || empty($postParams["type_id"])
                 || empty($postParams["quantity"])) {
-
                 $msg = "All fields are required!";
             } else {
                 if (!is_numeric($postParams["quantity"]) || $postParams["quantity"] <= 0 || $postParams["quantity"] != round($postParams["quantity"])) {
                     $msg = "Invalid quantity format!";
                 }
-
                 if ($msg == "") {
                     $msg = $this->validatePrice($postParams["price"]);
                 }
-
                 if (!is_uploaded_file($_FILES["file"]["tmp_name"])) {
-
                     $msg = "Image is not uploaded!";
                 } elseif ($msg == "") {
                     $file_name_parts = explode(".", $_FILES["file"]["name"]);
@@ -103,7 +111,14 @@ class ProductController extends AbstractController
                 }
                 if ($msg == "") {
                     $productDAO = new ProductDAO();
-                    $productDAO->add($postParams["name"], $postParams["producer_id"], $postParams["price"], $postParams["type_id"], $postParams["quantity"], $img_url);
+                    $productDAO->add(
+                        $postParams["name"],
+                        $postParams["producer_id"],
+                        $postParams["price"],
+                        $postParams["type_id"],
+                        $postParams["quantity"],
+                        $img_url
+                    );
                     $msg = "Product added successfully!";
                 } else {
                     throw new BadRequestException("$msg");
@@ -113,15 +128,24 @@ class ProductController extends AbstractController
         include_once "view/addProduct.php";
     }
 
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
     public function productNameValidation($name)
     {
         $err = false;
         if (!ctype_alpha($name) || strlen($name) < 2) {
             $err = true;
         }
+
         return $err;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function editProduct()
     {
         $postParams = $this->request->postParams();
@@ -152,8 +176,6 @@ class ProductController extends AbstractController
                 if ($this->validatePrice($postParams["price"])) {
                     throw new BadRequestException("Invalid price!");
                 }
-
-
                 if (!is_uploaded_file($_FILES["file"]["tmp_name"])) {
                     $img_url = $postParams["old_image"];
                 } else {
@@ -195,6 +217,11 @@ class ProductController extends AbstractController
         }
     }
 
+    /**
+     * @param float $price
+     *
+     * @return bool
+     */
     public function validatePrice($price)
     {
         $err = false;
@@ -204,6 +231,11 @@ class ProductController extends AbstractController
         return $err;
     }
 
+    /**
+     * @param int $quantity
+     *
+     * @return bool
+     */
     public function validateQuantity($quantity)
     {
         $err = false;
@@ -214,11 +246,15 @@ class ProductController extends AbstractController
         return $err;
     }
 
+    /**
+     * @param int $product_id
+     *
+     * @return array
+     */
     public function checkIfIsInPromotion($product_id)
     {
         $productDAO = new ProductDAO();
         $product = $productDAO->getById($product_id);
-
         $oldPrice = null;
         $inPromotion = false;
         $discount = null;
@@ -244,7 +280,9 @@ class ProductController extends AbstractController
         return $status;
     }
 
-
+    /**
+     *  Remove Discount From Product
+     */
     public function removeDiscount()
     {
         UserController::validateForAdmin();
@@ -253,7 +291,10 @@ class ProductController extends AbstractController
             if (isset($postParams["product_id"]) && isset($postParams["product_old_price"])) {
                 if ($postParams["product_old_price"] != NULL) {
                     $productDAO = new ProductDAO();
-                    $productDAO->removePromotion($postParams["product_id"], $postParams["product_old_price"]);
+                    $productDAO->removePromotion(
+                        $postParams["product_id"],
+                        $postParams["product_old_price"]
+                    );
                 }
                 $productId = $postParams["product_id"];
                 include_once "view/editProduct.php";
@@ -261,31 +302,50 @@ class ProductController extends AbstractController
         }
     }
 
+    /**
+     * Show addProductPage
+     */
     public function addProductPage()
     {
         UserController::validateForAdmin();
         include_once "view/addProduct.php";
     }
 
+    /**
+     * @return array
+     */
     public function getProducers()
     {
         $productDAO = new ProductDAO();
+
         return $productDAO->getProducers();
     }
 
+    /**
+     * @return array
+     */
     public function getTypes()
     {
         $productDAO = new ProductDAO();
+
         return $productDAO->getTypes();
     }
 
+    /**
+     * @param int $productId
+     *
+     * @return array
+     */
     public function getProductById($productId)
     {
         $productDAO = new ProductDAO();
+
         return $productDAO->getById($productId);
     }
 
-
+    /**
+     *  Show Edit Product Page
+     */
     public function editProductPage()
     {
         UserController::validateForAdmin();
@@ -302,13 +362,18 @@ class ProductController extends AbstractController
         }
     }
 
-
+    /**
+     *  Show Product Page
+     */
     public function showProduct()
     {
         include_once "view/showProduct.php";
 
     }
 
+    /**
+     *  AJAX Filtration Of Products
+     */
     public function filterProducts()
     {
         $counter = 0;
@@ -317,7 +382,6 @@ class ProductController extends AbstractController
         $args = [];
         error_log(json_encode($this->request->postParams()));
         if (!empty($this->request->postParam("checked"))) {
-
             foreach ($this->request->postParam("checked") as $filter) {
                 $name = $filter["name"];
                 $checked = $filter["checkedValues"];
@@ -352,69 +416,86 @@ class ProductController extends AbstractController
                     $args[] .= $name;
                     $args = array_merge($args, $checked);
                 }
-
                 ++$counter;
             }
             $msg .= ";";
             $filter = new ProductDAO();
-            $filter->filterProducts($msg, $args);
+            $filter->filterProducts(
+                $msg,
+                $args
+            );
         }
     }
 
-    public function sendPromotionEmail($productId, $productName)
-    {
+    /**
+     * @param int $productId
+     * @param string $productName
+     */
+    public function sendPromotionEmail(
+        $productId,
+        $productName
+    ) {
         $productDAO = new ProductDAO();
         $emails = $productDAO->getUserEmailsByLikedProduct($productId);
         foreach ($emails as $email) {
-            $this->sendemail($email["email"], $productName, $productId);
+            $this->sendemail(
+                $email["email"],
+                $productName,
+                $productId
+            );
         }
-
     }
 
+    /**
+     * @return array
+     */
     public function getMostCelledProducts()
     {
         $productDAO = new ProductDAO();
+
         return $products = $productDAO->getMostSold();
-
     }
 
-    public function main()
-    {
-
-        include_once "view/main.php";
-
-    }
-
+    /**
+     * @param int $product_id
+     *
+     * @return array
+     */
     public function getAttributes($product_id)
     {
         $productDAO = new ProductDAO();
-        return $attributes = $productDAO->getProductAttributesById($product_id);
 
+        return $attributes = $productDAO->getProductAttributesById($product_id);
     }
 
-    function sendemail($email, $productName, $productId)
-    {
-
+    /**
+     * @param string $email
+     * @param string $productName
+     * @param int $productId
+     * @throws phpmailerException
+     */
+    function sendemail(
+        $email,
+        $productName,
+        $productId
+    ) {
         require_once "PHPMailer-5.2-stable/PHPMailerAutoload.php";
         $mail = new PHPMailer;
-//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+        //$mail->SMTPDebug = 3;                               // Enable verbose debug output
         $mail->isSMTP();
-        $mail->SMTPDebug = 0;// Set mailer to use SMTP
+        $mail->SMTPDebug = 0;                                 // Set mailer to use SMTP
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Host = 'smtp.sendgrid.net';  // Specify main and backup SMTP servers
-        $mail->Username = EMAIL_USERNAME;                 // SMTP username
-        $mail->Password = EMAIL_PASSWORD;                           // SMTP password
+        $mail->Host = 'smtp.sendgrid.net';                    // Specify main and backup SMTP servers
+        $mail->Username = EMAIL_USERNAME;                     // SMTP username
+        $mail->Password = EMAIL_PASSWORD;                     // SMTP password
         $mail->SMTPSecure = 'tsl';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
-
         $mail->setFrom('emag9648@gmail.com');
-        $mail->addAddress($email);     // Add a recipient
-        $mail->isHTML(true);                                  // Set email format to HTML
-
+        $mail->addAddress($email);                            // Add a recipient
+        $mail->isHTML(true);                           // Set email format to HTML
         $mail->Subject = 'Your Product is on Sale !!!';
         $mail->Body = "$productName Product is in Sale Now !!! Go Check it out before the sale expires <a href = http://localhost:8888/It-talents//product/$productId>Open Here</a>";
         $mail->AltBody = 'Click For Register';
-
 
         if (!$mail->send()) {
             echo 'Message could not be sent.';
@@ -424,4 +505,3 @@ class ProductController extends AbstractController
         }
     }
 }
-
