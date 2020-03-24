@@ -19,23 +19,24 @@ class AddressController extends AbstractController
         $postParams = $this->request->postParams();
         $err = false;
         $msg = '';
-        if (isset($postParams["add"])) {
-            if (empty($postParams["city"]) || empty($postParams["street"])) {
+        if (isset($postParams['add'])) {
+            if (empty($postParams['city']) || empty($postParams['street'])) {
                 $msg = 'All fields are required!';
-            } elseif (!$this->validateCity($postParams["city"])) {
-                $msg = "Invalid city!";
+            } elseif (!$this->validateCity($postParams['city'])) {
+                $msg = 'Invalid city!';
             }
-            if ($msg == "") {
+            if ($msg == '') {
                 $address = new Address(
-                    $this->session->getSessionParam("logged_user_id"),
-                    $postParams["city"],
-                    $postParams["street"]
+                    $this->session->getSessionParam('logged_user_id'),
+                    $postParams['city'],
+                    $postParams['street']
                 );
                 $addressDAO = new AddressDAO();
                 $addressDAO->add($address);
-                header("Location: /myAccount");
+                header('Location: /myAccount');
             } else {
-                include_once "view/newAddress.php";
+                include_once 'view/newAddress.php';
+
                 throw new BadRequestException ($msg);
             }
         }
@@ -51,29 +52,29 @@ class AddressController extends AbstractController
         $postParams = $this->request->postParams();
         $err = false;
         $msg = '';
-        if (isset($postParams["save"])) {
-            if (empty($postParams["city"]) || empty($postParams["street"])) {
+        if (isset($postParams['save'])) {
+            if (empty($postParams['city']) || empty($postParams['street'])) {
                 $msg = 'All fields are required!';
-            } elseif (!$this->validateCity($postParams["city"])) {
-                $msg = "Invalid city!";
+            } elseif (!$this->validateCity($postParams['city'])) {
+                $msg = 'Invalid city!';
             }
-            if ($msg == "") {
+            if ($msg == '') {
                 $address = new Address(
-                    $this->session->getSessionParam("logged_user_id"),
-                    $postParams["city"],
-                    $postParams["street"]
+                    $this->session->getSessionParam('logged_user_id'),
+                    $postParams['city'],
+                    $postParams['street']
                 );
-                $address->setId($postParams["address_id"]);
+                $address->setId($postParams['address_id']);
                 $addressDAO = new AddressDAO();
-                $addressDetails = $addressDAO->getById($postParams["address_id"]);
-                if ($addressDetails->user_id === $this->session->getSessionParam("logged_user_id")) {
+                $addressDetails = $addressDAO->getById($postParams['address_id']);
+                if ($addressDetails->user_id === $this->session->getSessionParam('logged_user_id')) {
                     $addressDAO->edit($address);
                 } else {
-                    throw new NotAuthorizedException("Not Authorized for this operation!");
+                    throw new NotAuthorizedException('Not Authorized for this operation!');
                 }
-                header("Location: /myAccount");
+                header('Location: /myAccount');
             } else {
-                throw new BadRequestException("$msg");
+                throw new BadRequestException($msg);
             }
         }
     }
@@ -85,15 +86,15 @@ class AddressController extends AbstractController
     {
         UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
-        if (isset($postParams["deleteAddress"])) {
+        if (isset($postParams['deleteAddress'])) {
             $addressDAO = new AddressDAO();
-            $addressDetails = $addressDAO->getById($postParams["address_id"]);
-            if ($addressDetails->user_id == $this->session->getSessionParam("logged_user_id")) {
-                $addressDAO->delete($postParams["address_id"]);
+            $addressDetails = $addressDAO->getById($postParams['address_id']);
+            if ($addressDetails->user_id == $this->session->getSessionParam('logged_user_id')) {
+                $addressDAO->delete($postParams['address_id']);
             } else {
-                throw new NotAuthorizedException("Not Authorized for this operation!");
+                throw new NotAuthorizedException('Not Authorized for this operation!');
             }
-            header("Location: /myAccount");
+            header('Location: /myAccount');
         }
     }
 
@@ -120,7 +121,7 @@ class AddressController extends AbstractController
     public function newAddress()
     {
         UserController::validateForLoggedUser();
-        include_once "view/newAddress.php";
+        include_once 'view/newAddress.php';
     }
 
     /**
@@ -131,8 +132,8 @@ class AddressController extends AbstractController
         UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         $addressDAO = new AddressDAO;
-        $address = $addressDAO->getById($postParams["address_id"]);
-        include_once "view/editAddress.php";
+        $address = $addressDAO->getById($postParams['address_id']);
+        include_once 'view/editAddress.php';
     }
 
     /**
@@ -153,6 +154,6 @@ class AddressController extends AbstractController
         UserController::validateForLoggedUser();
         $check = new AddressDAO;
 
-        return $check->userAddress($this->session->getSessionParam("logged_user_id"));
+        return $check->userAddress($this->session->getSessionParam('logged_user_id'));
     }
 }

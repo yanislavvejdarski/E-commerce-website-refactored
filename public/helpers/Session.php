@@ -95,7 +95,6 @@ class Session
      */
     public function getSessionParams()
     {
-
         return $this->session;
     }
 }
