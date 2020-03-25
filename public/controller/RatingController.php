@@ -16,7 +16,6 @@ class ratingController extends AbstractController
      */
     public function rate()
     {
-        UserController::validateForLoggedUser();
         $msg = '';
         if (!empty($this->request->postParam('save'))) {
             if (empty($this->request->postParam('comment')) || empty($this->request->postParam('rating'))) {
@@ -53,7 +52,6 @@ class ratingController extends AbstractController
     public function editRate()
     {
         $msg = '';
-        UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         if (!empty($postParams['saveChanges'])) {
             if (empty($postParams['comment']) || empty($postParams['comment'])) {
@@ -142,7 +140,6 @@ class ratingController extends AbstractController
      */
     public function myRated()
     {
-        UserController::validateForLoggedUser();
         $ratingDAO = new RatingDAO();
         $myRatings = $ratingDAO->showMyRated($this->session->getSessionParam('logged_user_id'));
         include_once 'view/myRated.php';
@@ -154,7 +151,6 @@ class ratingController extends AbstractController
     public function rateProduct()
     {
         $getParams = $this->request->getParams();
-        UserController::validateForLoggedUser();
         include_once 'view/rateProduct.php';
     }
 
@@ -163,7 +159,6 @@ class ratingController extends AbstractController
      */
     public function editRatedPage()
     {
-        UserController::validateForLoggedUser();
         include_once 'view/editRatedProduct.php';
     }
 }

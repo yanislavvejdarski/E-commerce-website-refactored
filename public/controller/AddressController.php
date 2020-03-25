@@ -15,7 +15,6 @@ class AddressController extends AbstractController
      */
     public function add()
     {
-        UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         $err = false;
         $msg = '';
@@ -48,7 +47,6 @@ class AddressController extends AbstractController
      */
     public function edit()
     {
-        UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         $err = false;
         $msg = '';
@@ -84,7 +82,6 @@ class AddressController extends AbstractController
      */
     public function delete()
     {
-        UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         if (isset($postParams['deleteAddress'])) {
             $addressDAO = new AddressDAO();
@@ -120,7 +117,6 @@ class AddressController extends AbstractController
      */
     public function newAddress()
     {
-        UserController::validateForLoggedUser();
         include_once 'view/newAddress.php';
     }
 
@@ -129,7 +125,6 @@ class AddressController extends AbstractController
      */
     public function editAddress()
     {
-        UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         $addressDAO = new AddressDAO;
         $address = $addressDAO->getById($postParams['address_id']);
@@ -151,7 +146,6 @@ class AddressController extends AbstractController
      */
     public function checkUserAddress()
     {
-        UserController::validateForLoggedUser();
         $check = new AddressDAO;
 
         return $check->userAddress($this->session->getSessionParam('logged_user_id'));

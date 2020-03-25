@@ -18,8 +18,6 @@ class FavouriteController extends AbstractController
      */
     public function show()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $sessionParams = $this->session->getSessionParams();
         $userController = new UserController();
         $favouriteDAO = new FavouriteDAO();
@@ -39,8 +37,6 @@ class FavouriteController extends AbstractController
      */
     public function add()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $getParams = $this->request->getParams();
         $postParams = $this->request->postParams();
         $sessionParams = $this->session->getSessionParams();
@@ -103,8 +99,6 @@ class FavouriteController extends AbstractController
      */
     public function delete()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $getParams = $this->request->getParams();
         $sessionParams = $this->session->getSessionParams();
         $like = $this->request->postParam('like');

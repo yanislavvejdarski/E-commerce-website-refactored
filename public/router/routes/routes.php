@@ -89,23 +89,3 @@ $routes->route('/admin/removeDiscount', 'ProductController@removeDiscount','admi
 
 // If entered wrong route,this method will execute
 $routes->error404();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

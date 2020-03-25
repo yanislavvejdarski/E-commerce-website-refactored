@@ -249,8 +249,6 @@ class UserController extends AbstractController
      */
     public function account()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $sessionParams = $this->session->getSessionParams();
         $userDAO = new UserDAO();
         $user = $userDAO->getUserByid($sessionParams['logged_user_id']);
@@ -264,7 +262,6 @@ class UserController extends AbstractController
      */
     public function editPage()
     {
-        $this->validateForLoggedUser();
         $userDAO = new UserDAO();
         $user = $userDAO->getUserByid($this->session->getSessionParam('logged_user_id'));
         include_once 'view/editProfile.php';
@@ -353,31 +350,6 @@ class UserController extends AbstractController
             $err = true;
         }
         return $err;
-    }
-
-    /**
-     * Validates If User Is Logged
-     */
-    public static function validateForLoggedUser()
-    {
-        $sessionInstance = Session::getInstance();
-        $sessionParams = $sessionInstance->getSessionParams();
-
-        if (!isset($sessionParams['logged_user_id'])) {
-            header('Location:/loginPage');
-        }
-    }
-
-    /**
-     *  Validates If Role Is Admin
-     */
-    public static function validateForAdmin()
-    {
-        $sessionInstance = Session::getInstance();
-        $sessionParams = $sessionInstance->getSessionParams();
-        if (!isset($sessionParams['logged_user_id']) || $sessionParams['logged_user_role'] != 'admin') {
-            header('Location: /home');
-        }
     }
 
     /**

@@ -83,7 +83,6 @@ class ProductController extends AbstractController
      */
     public function addProduct()
     {
-        UserController::validateForAdmin();
         $postParams = $this->request->postParams();
         $msg = '';
         if (isset($postParams['save'])) {
@@ -285,7 +284,6 @@ class ProductController extends AbstractController
      */
     public function removeDiscount()
     {
-        UserController::validateForAdmin();
         $postParams = $this->request->postParams();
         if (isset($postParams['remove'])) {
             if (isset($postParams['product_id']) && isset($postParams['product_old_price'])) {
@@ -307,7 +305,6 @@ class ProductController extends AbstractController
      */
     public function addProductPage()
     {
-        UserController::validateForAdmin();
         include_once 'view/addProduct.php';
     }
 
@@ -348,7 +345,6 @@ class ProductController extends AbstractController
      */
     public function editProductPage()
     {
-        UserController::validateForAdmin();
         $postParams = $this->request->postParams();
         if (isset($postParams['editProduct'])) {
             if (isset($postParams['product_id'])) {

@@ -2,14 +2,17 @@
 
 namespace router;
 
-class Authenticate
+use helpers\Session;
+
+class Authenticator
 {
     /**
      *  Check If User is logged in
      */
     public static function authenticateLoggedUser()
     {
-        if (!isset($_SESSION["logged_user_id"])) {
+        $loggedUserId = Session::getInstance()->getSessionParam("logged_user_id");
+        if (!isset($loggedUserId)) {
             header("Location: /loginPage");
             die();
         }
@@ -20,7 +23,8 @@ class Authenticate
      */
     public static function authenticateAdmin()
     {
-        if ($_SESSION["logged_user_role"] != "admin") {
+        $loggedRole = Session::getInstance()->getSessionParam("logged_user_role");
+        if ($loggedRole != "admin") {
             header("Location: /home");
             die();
         }
