@@ -1,6 +1,7 @@
 <?php
+namespace router;
 
-
+use router\Authenticate;
 use helpers\Request;
 
 class Router
@@ -31,14 +32,14 @@ class Router
      * @param string $pattern
      * @return NULL
      */
-    public function route($url, $pattern)
+    public function route($url, $pattern,$permission = null)
     {
         $request = $this->request;
 
         $uriParams = explode("/", $request->getUri());
 
         $helperUrl = $this->generateDynamicRoute($uriParams);
-        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern, $request);
+        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern,$permission);
     }
 
     /**
@@ -80,7 +81,8 @@ class Router
         $helperUrl,
         $url,
         $uriParams,
-        $pattern
+        $pattern,
+        $permission
     )
     {
         if ($helperUrl == $url) {
@@ -98,18 +100,18 @@ class Router
             $action = $command[1];
             $object = new $controller();
 
+            if ($permission == "user") {
+                Authenticate::authenticateLoggedUser();
+            }
+            elseif ($permission == "admin"){
+               Authenticate::authenticateAdmin();
+            }
             if (empty($this->request->getParams())) {
-                if (class_exists($controller) && method_exists($object, $action)) {
+
                     return $object->$action();
-                } else {
-                    header("Location:/http");
-                }
             } else {
-                if (class_exists($controller) && method_exists($object, $action)) {
+
                     return $object->$action($this->request->getParams());
-                } else {
-                    header("Location:/http");
-                }
             }
         }
     }

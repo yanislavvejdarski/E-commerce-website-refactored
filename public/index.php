@@ -47,7 +47,9 @@ if (!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_R
 ob_start();
 include_once "view/header.php";
 }
-require "routes/routes.php"; // Routing
+require "router/routes/routes.php"; // Routing
+
+
 ?>
 
 
