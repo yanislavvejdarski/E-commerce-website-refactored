@@ -17,7 +17,6 @@ class OrderController extends AbstractController
      */
     public function order()
     {
-        UserController::validateForLoggedUser();
         $postParams = $this->request->postParams();
         $sessionParams = $this->session->getSessionParams();
         $orderedProducts = new CartDAO();
@@ -40,7 +39,6 @@ class OrderController extends AbstractController
      */
     public function show()
     {
-        UserController::validateForLoggedUser();
         $products = new OrderDAO();
         $products = $products->showOrders($this->session->getSessionParam('logged_user_id'));
         include_once 'view/orders.php';

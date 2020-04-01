@@ -16,8 +16,6 @@ class CartController extends AbstractController
      */
     public function add()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $getParams = $this->request->getParams();
         $sessionParams = $this->session->getSessionParams();
         if (isset($getParams['product']) && is_numeric($getParams['product'])) {
@@ -60,8 +58,6 @@ class CartController extends AbstractController
      */
     public function show()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $cartDAO = new CartDAO();
         $productsInCart = $cartDAO->showCart($this->session->getSessionParam('logged_user_id'));
         $totalprice = 0;
@@ -73,8 +69,6 @@ class CartController extends AbstractController
      */
     public function update()
     {
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $postParams = $this->request->postParams();
         if (isset($postParams['updateQuantity']) && $postParams['quantity'] > 0 && $postParams['quantity'] < 50
             && is_numeric($postParams['quantity']) && (round($postParams['quantity']) == $postParams['quantity'])) {
@@ -104,8 +98,6 @@ class CartController extends AbstractController
     public function delete()
     {
         $getParams = $this->request->getParams();
-        $validateSession = new UserController();
-        $validateSession->validateForLoggedUser();
         $cartDAO = new CartDAO();
         $cartDAO->deleteProductFromCart(
             $getParams['product'],

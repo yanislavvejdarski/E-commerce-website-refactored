@@ -1,6 +1,9 @@
 <?php
 
+namespace router;
 
+use http\Header;
+use router\Authenticator;
 use helpers\Request;
 
 class Router
@@ -8,7 +11,7 @@ class Router
     /**
      * @var bool
      */
-    public $flag = false;
+    public $flag = true;
 
     /**
      * @var instance
@@ -29,22 +32,34 @@ class Router
      *
      * @param string $url
      * @param string $pattern
+     * @param null|string $permission
+     *
      * @return NULL
      */
-    public function route($url, $pattern)
-    {
+    public function route(
+        $url,
+        $pattern,
+        $permission = null
+    ) {
         $request = $this->request;
 
         $uriParams = explode("/", $request->getUri());
 
         $helperUrl = $this->generateDynamicRoute($uriParams);
-        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern, $request);
+
+        return $this->matchRoute(
+            $helperUrl,
+            $url,
+            $uriParams,
+            $pattern,
+            $permission
+        );
     }
 
     /**
-     * generating Dynamic Route
-     *
+     * Generating Dynamic Route
      * @param string $uriParams
+     *
      * @return NULL
      */
     public function generateDynamicRoute($uriParams)
@@ -64,6 +79,7 @@ class Router
             $helperUrl .= '/' . $item;
 
         }
+
         return $helperUrl;
     }
 
@@ -74,42 +90,47 @@ class Router
      * @param string $url
      * @param array $uriParams
      * @param string $pattern
+     * @param string $permission
+     *
      * @return NULL
      */
     public function matchRoute(
         $helperUrl,
         $url,
         $uriParams,
-        $pattern
-    )
-    {
+        $pattern,
+        $permission
+    ) {
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
             $this->flag = true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
 
-                    $this->request->setGetParam($explodedUrl[$i - 1], $uriParams[$i]);
+                    $this->request->setGetParam(
+                        $explodedUrl[$i - 1],
+                        $uriParams[$i]
+                    );
                 }
             }
+
             $command = explode("@", $pattern);
             $controller = "controller\\" . $command[0];
-
             $action = $command[1];
-            $object = new $controller();
+            $object = new $controller;
 
-            if (empty($this->request->getParams())) {
-                if (class_exists($controller) && method_exists($object, $action)) {
-                    return $object->$action();
-                } else {
-                    header("Location:/http");
-                }
-            } else {
-                if (class_exists($controller) && method_exists($object, $action)) {
-                    return $object->$action($this->request->getParams());
-                } else {
-                    header("Location:/http");
-                }
+            if ($permission == "user") {
+                Authenticator::authenticateLoggedUser();
+            } elseif ($permission == "admin") {
+                Authenticator::authenticateAdmin();
+            }
+
+            if (class_exists($controller) && method_exists($object, $action)) {
+
+                return $object->$action();
+            }
+            else{
+                header("Location: /home");
             }
         }
     }
