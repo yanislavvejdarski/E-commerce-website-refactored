@@ -2,6 +2,7 @@
 
 namespace router;
 
+use http\Header;
 use router\Authenticator;
 use helpers\Request;
 
@@ -32,17 +33,27 @@ class Router
      * @param string $url
      * @param string $pattern
      * @param null|string $permission
+     *
      * @return NULL
      */
-    public function route($url, $pattern, $permission = null)
-    {
+    public function route(
+        $url,
+        $pattern,
+        $permission = null
+    ) {
         $request = $this->request;
 
         $uriParams = explode("/", $request->getUri());
 
         $helperUrl = $this->generateDynamicRoute($uriParams);
 
-        return $this->matchRoute($helperUrl, $url, $uriParams, $pattern, $permission);
+        return $this->matchRoute(
+            $helperUrl,
+            $url,
+            $uriParams,
+            $pattern,
+            $permission
+        );
     }
 
     /**
@@ -89,15 +100,17 @@ class Router
         $uriParams,
         $pattern,
         $permission
-    )
-    {
+    ) {
         if ($helperUrl == $url) {
             $explodedUrl = explode('/', $url);
             $this->flag = true;
             for ($i = 0; $i < count($uriParams); $i++) {
                 if (is_numeric($uriParams[$i])) {
 
-                    $this->request->setGetParam($explodedUrl[$i - 1], $uriParams[$i]);
+                    $this->request->setGetParam(
+                        $explodedUrl[$i - 1],
+                        $uriParams[$i]
+                    );
                 }
             }
 
@@ -115,6 +128,9 @@ class Router
             if (class_exists($controller) && method_exists($object, $action)) {
 
                 return $object->$action();
+            }
+            else{
+                header("Location: /home");
             }
         }
     }
