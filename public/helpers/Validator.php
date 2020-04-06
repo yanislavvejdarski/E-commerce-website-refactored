@@ -38,7 +38,7 @@ class Validator
             foreach ($seperatedRules as $rule) {
                 $additionalParam = explode(":", $rule);
                 $method = $additionalParam[0];
-                if (method_exists(new Validator(), $method)) {
+                if (method_exists($this, $method)) {
                     if (isset($additionalParam[1])) {
                         if (!$this->$method($param, $additionalParam[1])) {
 
