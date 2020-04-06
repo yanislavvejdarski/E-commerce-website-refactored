@@ -96,4 +96,24 @@ class Validator
     {
         return $variable == $number ? true : false;
     }
+
+    /**
+     * @param mixed $variable
+     *
+     * @return bool
+     */
+    public function roundToSelf ($variable)
+    {
+        return round($variable) == $variable ? true : false;
+    }
+
+    /**
+     * @param string $variable
+     *
+     * @return bool
+     */
+    public function isAlphabetic ($variable)
+    {
+        return ctype_alpha($variable) ? true : false;
+    }
 }
