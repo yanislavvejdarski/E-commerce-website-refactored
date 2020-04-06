@@ -7,29 +7,11 @@ use model\DAO\AddressDAO;
 
 class Validator
 {
-    const MIN_LENGTH_OF_PASSWORD = 8;
-    /**
-     * @var Validator
-     */
-    private static $instance;
-
-    /**
-     * @return Validator
-     */
-    public static function getInstance()
-    {
-        if (Validator::$instance == null) {
-            Validator::$instance = new Validator;
-        }
-
-        return Validator::$instance;
-    }
-
     /**
      * @param array $paramsAndRules
      *
      * @return bool
-     * 
+     *
      * @throws BadRequestException
      */
     public function validate($paramsAndRules)
@@ -40,16 +22,12 @@ class Validator
                 $additionalParam = explode(":", $rule);
                 $method = $additionalParam[0];
                 if (method_exists($this, $method)) {
-                    if (isset($additionalParam[1])) {
-                        if (!$this->$method($param, $additionalParam[1])) {
+                    if (isset($additionalParam[1]) && !$this->$method($param, $additionalParam[1])) {
 
-                            return false;
-                        }
-                    } else {
-                        if (!$this->$method($param, $additionalParam = null)) {
+                        return false;
+                    } elseif(!$this->$method($param, $additionalParam = null)) {
 
-                            return false;
-                        }
+                       return false;
                     }
                 } else {
                     throw new BadRequestException();
@@ -127,29 +105,12 @@ class Validator
      *
      * @return bool
      */
-    public function validatePassword($password)
+    public function validatePassword($password ,$maximumLength)
     {
         if (
-            strlen($password) < self::MIN_LENGTH_OF_PASSWORD
-            || !preg_match('#[0-9]+#', $password)
-            || !preg_match('#[A-Z]+#', $password) && !preg_match('#[a-z]+#', $password)
+            strlen($password) < $maximumLength
+            || !preg_match('#[a-zA-Z0-9]+#', $password)
         ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param int $cityId
-     *
-     * @return bool
-     */
-    public function validateCity($cityId)
-    {
-        $addressDAO = new AddressDAO();
-        $addresses = $addressDAO->getCities();
-        if (!in_array($cityId, $addresses)) {
 
             return false;
         }
