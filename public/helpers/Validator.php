@@ -29,6 +29,7 @@ class Validator
      * @param array $paramsAndRules
      *
      * @return bool
+     * 
      * @throws BadRequestException
      */
     public function validate($paramsAndRules)
@@ -128,15 +129,11 @@ class Validator
      */
     public function validatePassword($password)
     {
-
-        if (strlen($password) < self::MIN_LENGTH_OF_PASSWORD) {
-
-            return false;
-        } elseif (!preg_match('#[0-9]+#', $password)) {
-
-            return false;
-        } elseif (!preg_match('#[A-Z]+#', $password) && !preg_match('#[a-z]+#', $password)) {
-
+        if (
+            strlen($password) < self::MIN_LENGTH_OF_PASSWORD
+            || !preg_match('#[0-9]+#', $password)
+            || !preg_match('#[A-Z]+#', $password) && !preg_match('#[a-z]+#', $password)
+        ) {
             return false;
         }
 
