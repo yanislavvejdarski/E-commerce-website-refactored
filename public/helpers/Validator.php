@@ -89,4 +89,15 @@ class Validator
     {
         return $variable < (int)$number ? true : false;
     }
+
+    /**
+     * @param mixed $variable
+     * @param mixed $number
+     *
+     * @return bool
+     */
+    public function equalTo($variable, $number)
+    {
+        return $variable == $number ? true : false;
+    }
 }
