@@ -22,9 +22,7 @@ class Validator
                 $additionalParam = explode(":", $rule);
                 $method = $additionalParam[0];
                 if (method_exists($this, $method)) {
-                    $additionalParam[1] = $additionalParam[1] ?? null;
-                    if (!$this->$method($param, $additionalParam[1])) {
-
+                    if (!$this->$method($param, $additionalParam[1] ?? null)) {
                         return false;
                     }
                 } else {
