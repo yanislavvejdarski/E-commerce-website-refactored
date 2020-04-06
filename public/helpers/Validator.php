@@ -89,42 +89,4 @@ class Validator
     {
         return $variable < (int)$number ? true : false;
     }
-
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    public function validateEmail($email)
-    {
-        return !preg_match('#[a-zA-Z0-9-_.+]+@[a-zA-Z0-9-]+.[a-zA-Z]+#', $email) ? true : false;
-    }
-
-    /**
-     * @param string $password
-     *
-     * @return bool
-     */
-    public function validatePassword($password ,$maximumLength)
-    {
-        if (
-            strlen($password) < $maximumLength
-            || !preg_match('#[a-zA-Z0-9]+#', $password)
-        ) {
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param float $price
-     *
-     * @return bool
-     */
-    public function validateProductPrice($price)
-    {
-        return !preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $price) ? true : false;
-    }
 }
