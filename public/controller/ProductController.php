@@ -50,7 +50,7 @@ class ProductController extends AbstractController
                 $typeObject = new Type(
                     $type['id'],
                     $type['name'],
-                    $type['categorie_id']
+                    $type['categorieId']
                 );
                 $typeObject->show();
             }
@@ -122,11 +122,11 @@ class ProductController extends AbstractController
             if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
                 $msg = 'Image is not uploaded!';
             } elseif ($msg == '') {
-                $file_name_parts = explode('.', $_FILES['file']['name']);
-                $extension = $file_name_parts[count($file_name_parts) - 1];
+                $fileNameParts = explode('.', $_FILES['file']['name']);
+                $extension = $fileNameParts[count($fileNameParts) - 1];
                 $filename = time() . '.' . $extension;
-                $img_url = 'images' . DIRECTORY_SEPARATOR . $filename;
-                if (!move_uploaded_file($_FILES['file']['tmp_name'], $img_url)) {
+                $imgUrl = 'images' . DIRECTORY_SEPARATOR . $filename;
+                if (!move_uploaded_file($_FILES['file']['tmp_name'], $imgUrl)) {
                     $msg = 'Image error!';
                 }
             }
@@ -138,7 +138,7 @@ class ProductController extends AbstractController
                     $postParams['price'],
                     $postParams['typeId'],
                     $postParams['quantity'],
-                    $img_url
+                    $imgUrl
                 );
                 $msg = 'Product added successfully!';
             } else {
@@ -194,22 +194,22 @@ class ProductController extends AbstractController
         ];
         if ($this->validator->validate($paramsAndRules)) {
             $price = $postParams['price'];
-            $old_price = NULL;
+            $oldPrice = NULL;
             if ($postParams['newPrice'] >= $postParams['price']) {
                 $msg = 'New price of product must be lower than price !';
             } else {
                 $price = $postParams['newPrice'];
-                $old_price = $postParams['price'];
+                $oldPrice = $postParams['price'];
             }
             if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
-                $img_url = $postParams['oldImage'];
+                $imgUrl = $postParams['oldImage'];
             } else {
-                $file_name_parts = explode('.', $_FILES['file']['name']);
-                $extension = $file_name_parts[count($file_name_parts) - 1];
+                $fileNameParts = explode('.', $_FILES['file']['name']);
+                $extension = $fileNameParts[count($fileNameParts) - 1];
                 $filename = time() . '.' . $extension;
-                $img_url = 'images' . DIRECTORY_SEPARATOR . $filename;
-                if (move_uploaded_file($_FILES['file']['tmp_name'], $img_url)) {
-                    unlink($postParams['old_image']);
+                $imgUrl = 'images' . DIRECTORY_SEPARATOR . $filename;
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $imgUrl)) {
+                    unlink($postParams['oldImage']);
                 } else {
                     $msg = 'Image error!';
                 }
@@ -220,10 +220,10 @@ class ProductController extends AbstractController
                 $product['name'] = $postParams['name'];
                 $product['producerId'] = $postParams['producerId'];
                 $product['price'] = $price;
-                $product['oldPrice'] = $old_price;
+                $product['oldPrice'] = $oldPrice;
                 $product['typeId'] = $postParams['typeId'];
                 $product['quantity'] = $postParams['quantity'];
-                $product['imageUrl'] = $img_url;
+                $product['imageUrl'] = $imgUrl;
                 $productDAO = new ProductDAO();
                 $productDAO->edit($product);
                 if (!empty($postParams['newPrice'])) {
@@ -240,14 +240,14 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @param int $product_id
+     * @param int $productId
      *
      * @return array
      */
-    public function checkIfIsInPromotion($product_id)
+    public function checkIfIsInPromotion($productId)
     {
         $productDAO = new ProductDAO();
-        $product = $productDAO->getById($product_id);
+        $product = $productDAO->getById($productId);
         $oldPrice = null;
         $inPromotion = false;
         $discount = null;
@@ -265,10 +265,10 @@ class ProductController extends AbstractController
             $isInStock = 'In stock';
         }
         $status = [];
-        $status['in_promotion'] = $inPromotion;
-        $status['old_price'] = $oldPrice;
+        $status['inPromotion'] = $inPromotion;
+        $status['oldPrice'] = $oldPrice;
         $status['discount'] = $discount;
-        $status['is_in_stock'] = $isInStock;
+        $status['isInStock'] = $isInStock;
 
         return $status;
     }
@@ -417,7 +417,8 @@ class ProductController extends AbstractController
     public function sendPromotionEmail(
         $productId,
         $productName
-    ) {
+    )
+    {
         $productDAO = new ProductDAO();
         $emails = $productDAO->getUserEmailsByLikedProduct($productId);
         foreach ($emails as $email) {
@@ -444,11 +445,11 @@ class ProductController extends AbstractController
      *
      * @return array
      */
-    public function getAttributes($product_id)
+    public function getAttributes($productId)
     {
         $productDAO = new ProductDAO();
 
-        return $attributes = $productDAO->getProductAttributesById($product_id);
+        return $attributes = $productDAO->getProductAttributesById($productId);
     }
 
     /**
@@ -462,7 +463,8 @@ class ProductController extends AbstractController
         $email,
         $productName,
         $productId
-    ) {
+    )
+    {
         require_once 'PHPMailer-5.2-stable/PHPMailerAutoload.php';
         $mail = new PHPMailer;
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output

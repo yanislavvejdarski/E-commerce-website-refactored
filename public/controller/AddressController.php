@@ -72,7 +72,7 @@ class AddressController extends AbstractController
             $address->setId($postParams['addressId']);
             $addressDAO = new AddressDAO();
             $addressDetails = $addressDAO->getById($postParams['addressId']);
-            if ($addressDetails->user_id === $this->session->getSessionParam('loggedUserId')) {
+            if ($addressDetails->userId === $this->session->getSessionParam('loggedUserId')) {
                 $addressDAO->edit($address);
             } else {
                 throw new NotAuthorizedException('Not Authorized for this operation!');
@@ -95,7 +95,7 @@ class AddressController extends AbstractController
         if ($this->validator->validate($params)) {
             $addressDAO = new AddressDAO();
             $addressDetails = $addressDAO->getById($postParams['addressId']);
-            if ($addressDetails->user_id == $this->session->getSessionParam('loggedUserId')) {
+            if ($addressDetails->userId == $this->session->getSessionParam('loggedUserId')) {
                 $addressDAO->delete($postParams['addressId']);
             } else {
                 throw new NotAuthorizedException('Not Authorized for this operation!');

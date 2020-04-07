@@ -18,7 +18,7 @@ class SearchController extends AbstractController
     {
         $postParams = $this->request->postParams();
         $paramsAndRules = [
-          $postParams['searchProducts'] => 'isVariableSet'
+            $postParams['searchProducts'] => 'isVariableSet'
         ];
         if ($this->validator->validate($paramsAndRules)) {
             $controller = new Search($postParams['search']);

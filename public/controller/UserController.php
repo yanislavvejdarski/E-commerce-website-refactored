@@ -34,7 +34,7 @@ class UserController extends AbstractController
         if ($this->validator->validate($paramsAndRules)) {
             if ($this->validateEmail($postParams['email'])) {
                 $msg = 'Invalid email format!';
-            } elseif ($this->validatePassword($postParams['password'],self::MIN_LENGTH)) {
+            } elseif ($this->validatePassword($postParams['password'], self::MIN_LENGTH)) {
                 $msg = 'Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!';
             }
             if ($msg == '') {
@@ -43,9 +43,9 @@ class UserController extends AbstractController
                 if ($user) {
                     if (password_verify($postParams['password'], $user->password)) {
                         $this->session->setSessionParam('loggedUserId', $user->id);
-                        $this->session->setSessionParam('logged_user_role', $user->role);
-                        $this->session->setSessionParam('logged_user_first_name', $user->first_name);
-                        $this->session->setSessionParam('logged_user_last_name', $user->last_name);
+                        $this->session->setSessionParam('loggedUserRole', $user->role);
+                        $this->session->setSessionParam('loggedUserFirstName', $user->firstName);
+                        $this->session->setSessionParam('loggedUserLastName', $user->lastName);
                     } else {
                         include_once 'view/login.php';
                         throw new NotAuthorizedException('Invalid username or password!');
@@ -72,24 +72,24 @@ class UserController extends AbstractController
             $postParams['email'] => 'isEmpty',
             $postParams['password'] => 'isEmpty',
             $postParams['confirmPassword'] => 'isEmpty',
-            $postParams['first_name'] => 'isEmpty',
-            $postParams['last_name'] => 'isEmpty',
-            $postParams['phone_number'] => 'isEmpty',
+            $postParams['firstName'] => 'isEmpty',
+            $postParams['lastName'] => 'isEmpty',
+            $postParams['phoneNumber'] => 'isEmpty',
             $postParams['age'] => 'isEmpty'
         ];
         if ($this->validator->validate($paramsAndRules)) {
             $msg = '';
             if ($this->validateEmail($postParams['email'])) {
                 $msg = 'Invalid email format!';
-            } elseif ($this->validatePassword($postParams['password'],self::MIN_LENGTH)) {
+            } elseif ($this->validatePassword($postParams['password'], self::MIN_LENGTH)) {
                 $msg = 'Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!';
-            } elseif ($this->validatePassword($postParams['confirmPassword'],self::MIN_LENGTH)) {
+            } elseif ($this->validatePassword($postParams['confirmPassword'], self::MIN_LENGTH)) {
                 $msg = 'Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!';
-            } elseif ($this->nameValidation($postParams['first_name'])) {
+            } elseif ($this->nameValidation($postParams['firstName'])) {
                 $msg = 'Invalid name format!';
-            } elseif ($this->nameValidation($postParams['last_name'])) {
+            } elseif ($this->nameValidation($postParams['lastName'])) {
                 $msg = 'Invalid name format!';
-            } elseif ($this->phoneNumberValidation($postParams['phone_number'])) {
+            } elseif ($this->phoneNumberValidation($postParams['phoneNumber'])) {
                 $msg = 'Invalid Number format!';
             } elseif ($this->ageValidation($postParams['age'])) {
                 $msg = 'Invalid age format!';
@@ -110,15 +110,15 @@ class UserController extends AbstractController
             if ($msg == '') {
                 $role = 'user';
                 $password = password_hash($postParams['password'], PASSWORD_BCRYPT);
-                $firstName = ucfirst($postParams['first_name']);
-                $lastName = ucfirst($postParams['last_name']);
+                $firstName = ucfirst($postParams['firstName']);
+                $lastName = ucfirst($postParams['lastName']);
                 $newUser = new User(
                     $postParams['email'],
                     $password,
                     $firstName,
                     $lastName,
                     $postParams['age'],
-                    $postParams['phone_number'],
+                    $postParams['phoneNumber'],
                     $role,
                     $subscription
                 );
@@ -129,15 +129,15 @@ class UserController extends AbstractController
                     $newUser->getId()
                 );
                 $this->session->setSessionParam(
-                    'logged_user_role',
+                    'loggedUserRole',
                     $newUser->getRole()
                 );
                 $this->session->setSessionParam(
-                    'logged_user_first_name',
+                    'loggedUserFirstName',
                     $newUser->getFirstName()
                 );
                 $this->session->setSessionParam(
-                    'logged_user_last_name',
+                    'loggedUserLastName',
                     $newUser->getLastName()
                 );
                 header('Location: /home');
@@ -155,24 +155,24 @@ class UserController extends AbstractController
     {
         $postParams = $this->request->postParams();
         $paramsAndRules = [
-          $postParams['edit'] => 'isVariableSet',
-          $postParams['accountPassword'] => 'isEmpty',
-          $postParams['first_name'] => 'isEmpty',
-          $postParams['last_name'] => 'isEmpty',
-          $postParams['phone_number'] => 'isEmpty',
-          $postParams['age'] => 'isEmpty'
+            $postParams['edit'] => 'isVariableSet',
+            $postParams['accountPassword'] => 'isEmpty',
+            $postParams['firstName'] => 'isEmpty',
+            $postParams['lastName'] => 'isEmpty',
+            $postParams['phoneNumber'] => 'isEmpty',
+            $postParams['age'] => 'isEmpty'
         ];
         if ($this->validator->validate($paramsAndRules)) {
             $msg = '';
             if ($this->validateEmail($postParams['email'])) {
                 $msg = 'Invalid email format!';
-            } elseif ($this->validatePassword($postParams['accountPassword'],self::MIN_LENGTH)) {
+            } elseif ($this->validatePassword($postParams['accountPassword'], self::MIN_LENGTH)) {
                 $msg = 'Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!';
-            } elseif ($this->nameValidation($postParams['first_name'])) {
+            } elseif ($this->nameValidation($postParams['firstName'])) {
                 $msg = 'Invalid name format!';
-            } elseif ($this->nameValidation($postParams['last_name'])) {
+            } elseif ($this->nameValidation($postParams['lastName'])) {
                 $msg = 'Invalid name format!';
-            } elseif ($this->phoneNumberValidation($postParams['phone_number'])) {
+            } elseif ($this->phoneNumberValidation($postParams['phoneNumber'])) {
                 $msg = 'Invalid Number format!';
             } elseif ($this->ageValidation($postParams['age'])) {
                 $msg = 'Invalid age format!';
@@ -186,7 +186,7 @@ class UserController extends AbstractController
                 if (empty($postParams['newPassword'])) {
                     $password = $user->password;
                 } else {
-                    if ($this->validatePassword($postParams['newPassword'],8)) {
+                    if ($this->validatePassword($postParams['newPassword'], 8)) {
                         $msg = 'Your Password Must Contain At Least 8 Characters, At Least 1 Number And At Least 1  Letter!';
                         throw new BadRequestException ('$msg');
                     } else {
@@ -206,15 +206,15 @@ class UserController extends AbstractController
             }
             if ($msg == '') {
                 $role = 'user';
-                $firstName = ucfirst($postParams['first_name']);
-                $last_name = ucfirst($postParams['last_name']);
+                $firstName = ucfirst($postParams['firstName']);
+                $lastName = ucfirst($postParams['lastName']);
                 $user = new User(
                     $postParams['email'],
                     $password,
                     $firstName,
-                    $last_name,
+                    $lastName,
                     $postParams['age'],
-                    $postParams['phone_number'],
+                    $postParams['phoneNumber'],
                     $role,
                     $subscription
                 );
@@ -334,16 +334,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param int $phone_number
+     * @param int $phoneNumber
      *
      * @return bool
      */
-    public function phoneNumberValidation($phone_number)
+    public function phoneNumberValidation($phoneNumber)
     {
         $paramsAndRules = [
-            $phone_number => 'isNumeric|roundToSelf'
+            $phoneNumber => 'isNumeric|roundToSelf'
         ];
-        if (!$this->validator->validate($paramsAndRules) || !preg_match('/^[8][0-9]{8}$/', $phone_number)) {
+        if (!$this->validator->validate($paramsAndRules) || !preg_match('/^[8][0-9]{8}$/', $phoneNumber)) {
             return true;
         }
         return true;
