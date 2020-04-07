@@ -417,8 +417,7 @@ class ProductController extends AbstractController
     public function sendPromotionEmail(
         $productId,
         $productName
-    )
-    {
+    ) {
         $productDAO = new ProductDAO();
         $emails = $productDAO->getUserEmailsByLikedProduct($productId);
         foreach ($emails as $email) {
@@ -463,8 +462,7 @@ class ProductController extends AbstractController
         $email,
         $productName,
         $productId
-    )
-    {
+    ) {
         require_once 'PHPMailer-5.2-stable/PHPMailerAutoload.php';
         $mail = new PHPMailer;
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output
