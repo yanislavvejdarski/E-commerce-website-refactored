@@ -19,17 +19,31 @@ error_reporting(E_ALL);
 class ProductController extends AbstractController
 {
     /**
-     * Show Product, Category or Type
+     * Show Product
      */
-    public function show()
+    public function showProduct()
     {
         $getParams = $this->request->getParams();
-        if (isset($getParams['product'])) {
+        $paramsAndRules = [
+            $getParams['product'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
             $productDAO = new ProductDAO();
             $product = $productDAO->findProduct($getParams['product']);
             $product->show();
         }
-        if (isset($getParams['ctgId'])) {
+    }
+
+    /**
+     * Show Category
+     */
+    public function showCategory()
+    {
+        $getParams = $this->request->getParams();
+        $paramsAndRules = [
+            $getParams['ctgId'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
             $typeDAO = new TypeDAO();
             $types = $typeDAO->getTypesFromCategorieId($getParams['ctgId']);
             foreach ($types as $type) {
@@ -41,7 +55,18 @@ class ProductController extends AbstractController
                 $typeObject->show();
             }
         }
-        if (isset($getParams['typeId'])) {
+    }
+
+    /**
+     * Show Type
+     */
+    public function showType()
+    {
+        $getParams = $this->request->getParams();
+        $paramsAndRules = [
+            $getParams['typeId'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
             $typeDAO = new TypeDAO();
             $checkType = $typeDAO->existsType($getParams['typeId']);
             if ($checkType['count'] > 0) {
@@ -84,47 +109,54 @@ class ProductController extends AbstractController
     public function addProduct()
     {
         $postParams = $this->request->postParams();
-        $msg = '';
-        if (isset($postParams['save'])) {
-            if (empty($postParams['name']) || empty($postParams['producer_id'])
-                || empty($postParams['price']) || empty($postParams['type_id'])
-                || empty($postParams['quantity'])) {
-                $msg = 'All fields are required!';
-            } else {
-                if (!is_numeric($postParams['quantity']) || $postParams['quantity'] <= 0 || $postParams['quantity'] != round($postParams['quantity'])) {
-                    $msg = 'Invalid quantity format!';
-                }
-                if ($msg == '') {
-                    $msg = $this->validatePrice($postParams['price']);
-                }
-                if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
-                    $msg = 'Image is not uploaded!';
-                } elseif ($msg == '') {
-                    $file_name_parts = explode('.', $_FILES['file']['name']);
-                    $extension = $file_name_parts[count($file_name_parts) - 1];
-                    $filename = time() . '.' . $extension;
-                    $img_url = 'images' . DIRECTORY_SEPARATOR . $filename;
-                    if (!move_uploaded_file($_FILES['file']['tmp_name'], $img_url)) {
-                        $msg = 'Image error!';
-                    }
-                }
-                if ($msg == '') {
-                    $productDAO = new ProductDAO();
-                    $productDAO->add(
-                        $postParams['name'],
-                        $postParams['producer_id'],
-                        $postParams['price'],
-                        $postParams['type_id'],
-                        $postParams['quantity'],
-                        $img_url
-                    );
-                    $msg = 'Product added successfully!';
-                } else {
-                    throw new BadRequestException('$msg');
+        $paramsAndRules = [
+            $postParams['save'] => 'isVariableSet',
+            $postParams['name'] => 'isEmpty',
+            $postParams['producerId'] => 'isEmpty',
+            $postParams['price'] => 'isEmpty',
+            $postParams['typeId'] => 'isEmpty',
+            $postParams['quantity'] => 'isEmpty|isNumeric|biggerThan:0'
+        ];
+        if ($this->validator->validate($paramsAndRules) && $this->validateProductPrice($postParams['price'])) {
+            $msg = '';
+            if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
+                $msg = 'Image is not uploaded!';
+            } elseif ($msg == '') {
+                $file_name_parts = explode('.', $_FILES['file']['name']);
+                $extension = $file_name_parts[count($file_name_parts) - 1];
+                $filename = time() . '.' . $extension;
+                $img_url = 'images' . DIRECTORY_SEPARATOR . $filename;
+                if (!move_uploaded_file($_FILES['file']['tmp_name'], $img_url)) {
+                    $msg = 'Image error!';
                 }
             }
+            if ($msg == '') {
+                $productDAO = new ProductDAO();
+                $productDAO->add(
+                    $postParams['name'],
+                    $postParams['producerId'],
+                    $postParams['price'],
+                    $postParams['typeId'],
+                    $postParams['quantity'],
+                    $img_url
+                );
+                $msg = 'Product added successfully!';
+            } else {
+                throw new BadRequestException("Couldn't add product");
+            }
+
         }
         include_once 'view/addProduct.php';
+    }
+
+    /**
+     * @param float $price
+     *
+     * @return bool
+     */
+    public function validateProductPrice($price)
+    {
+        return !preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $price) ? true : false;
     }
 
     /**
@@ -134,12 +166,13 @@ class ProductController extends AbstractController
      */
     public function productNameValidation($name)
     {
-        $err = false;
-        if (!ctype_alpha($name) || strlen($name) < 2) {
-            $err = true;
+        $paramsAndRules = [
+            $name => 'isAlphabetic|biggerThan:2'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            return true;
         }
-
-        return $err;
+        return false;
     }
 
     /**
@@ -147,102 +180,63 @@ class ProductController extends AbstractController
      */
     public function editProduct()
     {
+        $msg = '';
         $postParams = $this->request->postParams();
-        if (isset($postParams['saveChanges'])) {
-            $msg = '';
-            if (empty($postParams['name']) || empty($postParams['producer_id'])
-                || empty($postParams['price']) || empty($postParams['type_id'])
-                || empty($postParams['quantity'])) {
-                $msg = 'All fields are required!';
-            } elseif ($this->validateQuantity($postParams['quantity'])) {
-                $msg = 'Invalid quantity format!';
+        $paramsAndRules = [
+            $postParams['saveChanges'] => 'isVariableSet',
+            $postParams['name'] => 'isEmpty',
+            $postParams['producerId'] => 'isEmpty',
+            $postParams['price'] => 'isEmpty',
+            $postParams['typeId'] => 'isEmpty',
+            $postParams['quantity'] => 'isEmpty|isNumeric|biggerThan:0',
+            $postParams['newPrice'] => 'isVariableSet',
+            $postParams['productId'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            $price = $postParams['price'];
+            $old_price = NULL;
+            if ($postParams['newPrice'] >= $postParams['price']) {
+                $msg = 'New price of product must be lower than price !';
             } else {
-                if ($msg == '') {
-                    $price = $postParams['price'];
-                    $old_price = NULL;
-                    if (isset($postParams['newPrice']) && !$this->validatePrice($postParams['newPrice'])) {
-                        if ($postParams['newPrice'] >= $postParams['price']) {
-                            $msg = 'New price of product must be lower than price !';
-                        } else {
-                            $price = $postParams['newPrice'];
-                            $old_price = $postParams['price'];
-                        }
-                    }
+                $price = $postParams['newPrice'];
+                $old_price = $postParams['price'];
+            }
+            if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
+                $img_url = $postParams['oldImage'];
+            } else {
+                $file_name_parts = explode('.', $_FILES['file']['name']);
+                $extension = $file_name_parts[count($file_name_parts) - 1];
+                $filename = time() . '.' . $extension;
+                $img_url = 'images' . DIRECTORY_SEPARATOR . $filename;
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $img_url)) {
+                    unlink($postParams['old_image']);
                 } else {
-                    throw new BadRequestException('$msg');
-                }
-
-                if ($this->validatePrice($postParams['price'])) {
-                    throw new BadRequestException('Invalid price!');
-                }
-                if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
-                    $img_url = $postParams['old_image'];
-                } else {
-                    $file_name_parts = explode('.', $_FILES['file']['name']);
-                    $extension = $file_name_parts[count($file_name_parts) - 1];
-                    $filename = time() . '.' . $extension;
-                    $img_url = 'images' . DIRECTORY_SEPARATOR . $filename;
-                    if (move_uploaded_file($_FILES['file']['tmp_name'], $img_url)) {
-                        unlink($postParams['old_image']);
-                    } else {
-                        $msg = 'Image error!';
-                    }
-                }
-                if ($msg == '') {
-                    $product = [];
-                    $product['product_id'] = $postParams['product_id'];
-                    $product['name'] = $postParams['name'];
-                    $product['producer_id'] = $postParams['producer_id'];
-                    $product['price'] = $price;
-                    $product['old_price'] = $old_price;
-                    $product['type_id'] = $postParams['type_id'];
-                    $product['quantity'] = $postParams['quantity'];
-                    $product['image_url'] = $img_url;
-                    $productDAO = new ProductDAO();
-                    $productDAO->edit($product);
-                    if (!empty($postParams['newPrice'])) {
-                        $this->sendPromotionEmail($product['product_id'], $product['name']);
-                    }
-                } else {
-                    throw new BadRequestException('$msg');
+                    $msg = 'Image error!';
                 }
             }
-        }
-        if (isset($postParams['product_id'])) {
-            $productId = $postParams['product_id'];
-            include_once 'view/editProduct.php';
+            if ($msg == '') {
+                $product = [];
+                $product['productId'] = $postParams['productId'];
+                $product['name'] = $postParams['name'];
+                $product['producerId'] = $postParams['producerId'];
+                $product['price'] = $price;
+                $product['oldPrice'] = $old_price;
+                $product['typeId'] = $postParams['typeId'];
+                $product['quantity'] = $postParams['quantity'];
+                $product['imageUrl'] = $img_url;
+                $productDAO = new ProductDAO();
+                $productDAO->edit($product);
+                if (!empty($postParams['newPrice'])) {
+                    $this->sendPromotionEmail($product['productId'], $product['name']);
+                }
+                $productId = $postParams['productId'];
+                include_once 'view/editProduct.php';
+            } else {
+                throw new BadRequestException('$msg');
+            }
         } else {
             header('Location:/home');
         }
-    }
-
-    /**
-     * @param float $price
-     *
-     * @return bool
-     */
-    public function validatePrice($price)
-    {
-        $err = false;
-        if (!preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $price) || !is_numeric($price)) {
-            $err = true;
-        }
-        return $err;
-    }
-
-    /**
-     * @param int $quantity
-     *
-     * @return bool
-     */
-    public function validateQuantity($quantity)
-    {
-        $err = false;
-        if (!is_numeric($quantity) || $quantity <= 0 || $quantity != round($quantity)) {
-            $err = true;
-        }
-
-        return $err;
     }
 
     /**
@@ -257,10 +251,10 @@ class ProductController extends AbstractController
         $oldPrice = null;
         $inPromotion = false;
         $discount = null;
-        if ($product['old_price'] != NULL) {
+        if ($product['oldPrice'] != NULL) {
             $inPromotion = true;
-            $oldPrice = $product['old_price'];
-            $discount = round((($product['old_price'] - $product['price']) / $product['old_price']) * 100, 0);
+            $oldPrice = $product['oldPrice'];
+            $discount = round((($product['oldPrice'] - $product['price']) / $product['oldPrice']) * 100, 0);
         }
         $isInStock = null;
         if ($product['quantity'] == 0) {
@@ -285,18 +279,19 @@ class ProductController extends AbstractController
     public function removeDiscount()
     {
         $postParams = $this->request->postParams();
-        if (isset($postParams['remove'])) {
-            if (isset($postParams['product_id']) && isset($postParams['product_old_price'])) {
-                if ($postParams['product_old_price'] != NULL) {
-                    $productDAO = new ProductDAO();
-                    $productDAO->removePromotion(
-                        $postParams['product_id'],
-                        $postParams['product_old_price']
-                    );
-                }
-                $productId = $postParams['product_id'];
-                include_once 'view/editProduct.php';
-            }
+        $paramsAndRules = [
+            $postParams['remove'] => 'isVariableSet',
+            $postParams['productOldPrice'] => 'isVariableSet|biggerThan:0',
+            $postParams['productId'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            $productDAO = new ProductDAO();
+            $productDAO->removePromotion(
+                $postParams['productId'],
+                $postParams['productOldPrice']
+            );
+            $productId = $postParams['productId'];
+            include_once 'view/editProduct.php';
         }
     }
 
@@ -346,24 +341,16 @@ class ProductController extends AbstractController
     public function editProductPage()
     {
         $postParams = $this->request->postParams();
-        if (isset($postParams['editProduct'])) {
-            if (isset($postParams['product_id'])) {
-                $productId = $postParams['product_id'];
-                include_once 'view/editProduct.php';
-            } else {
-                include_once 'view/main.php';
-            }
+        $paramsAndRules = [
+            $postParams['editProduct'] => 'isVariableSet',
+            $postParams['productId'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            $productId = $postParams['productId'];
+            include_once 'view/editProduct.php';
         } else {
             include_once 'view/main.php';
         }
-    }
-
-    /**
-     *  Show Product Page
-     */
-    public function showProduct()
-    {
-        include_once 'view/showProduct.php';
 
     }
 
@@ -377,7 +364,7 @@ class ProductController extends AbstractController
         $msg = '';
         $args = [];
         error_log(json_encode($this->request->postParams()));
-        if (!empty($this->request->postParam('checked'))) {
+        if (is_array($this->request->postParam('checked'))) {
             foreach ($this->request->postParam('checked') as $filter) {
                 $name = $filter['name'];
                 $checked = $filter['checkedValues'];
@@ -430,7 +417,8 @@ class ProductController extends AbstractController
     public function sendPromotionEmail(
         $productId,
         $productName
-    ) {
+    )
+    {
         $productDAO = new ProductDAO();
         $emails = $productDAO->getUserEmailsByLikedProduct($productId);
         foreach ($emails as $email) {
@@ -471,11 +459,12 @@ class ProductController extends AbstractController
      *
      * @throws phpmailerException
      */
-    function sendemail(
+    public function sendemail(
         $email,
         $productName,
         $productId
-    ) {
+    )
+    {
         require_once 'PHPMailer-5.2-stable/PHPMailerAutoload.php';
         $mail = new PHPMailer;
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output

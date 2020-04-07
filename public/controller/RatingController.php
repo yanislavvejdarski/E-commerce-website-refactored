@@ -17,10 +17,16 @@ class ratingController extends AbstractController
     public function rate()
     {
         $msg = '';
-        if (!empty($this->request->postParam('save'))) {
-            if (empty($this->request->postParam('comment')) || empty($this->request->postParam('rating'))) {
-                $msg = 'All fields are required!';
-            } elseif ($this->commentValidation($this->request->postParam('comment'))) {
+        $postParams = $this->request->postParams();
+
+        $paramsAndRules = [
+            $postParams['save'] => 'isVariableSet|isEmpty',
+            $postParams['comment'] => 'isEmpty',
+            $postParams['rating'] => 'isEmpty',
+
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            if ($this->commentValidation($this->request->postParam('comment'))) {
                 $msg = 'Invalid comment!';
             } elseif ($this->ratingValidation($this->request->postParam('rating'))) {
                 $msg = 'Invalid rating!';
@@ -30,7 +36,7 @@ class ratingController extends AbstractController
                 if ($msg == '') {
                     $ratingDAO = new RatingDAO();
                     $ratingDAO->addRating(
-                        $this->session->getSessionParam('logged_user_id'),
+                        $this->session->getSessionParam('loggedUserId'),
                         $this->request->postParam('product_id'),
                         $this->request->postParam('rating'),
                         $this->request->postParam('comment')
@@ -53,17 +59,19 @@ class ratingController extends AbstractController
     {
         $msg = '';
         $postParams = $this->request->postParams();
-        if (!empty($postParams['saveChanges'])) {
-            if (empty($postParams['comment']) || empty($postParams['comment'])) {
-                $msg = 'All fields are required!';
-            } elseif ($this->commentValidation($postParams['comment'])) {
+        $paramsAndRules = [
+            $postParams['saveChanges'] => 'isEmpty',
+            $postParams['comment'] => 'isEmpty'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            if ($this->commentValidation($postParams['comment'])) {
                 $msg = 'Invalid comment!';
             } elseif ($this->ratingValidation($postParams['rating'])) {
                 $msg = 'Invalid rating!';
             }
             $ratingDAO = new RatingDAO();
             $rating = $ratingDAO->getRatingById($postParams['rating_id']);
-            if ($rating->user_id !== $this->session->getSessionParam('logged_user_id')) {
+            if ($rating->user_id !== $this->session->getSessionParam('loggedUserId')) {
                 throw new NotAuthorizedException('Not authorized for this operation!');
             } elseif ($msg == '') {
                 $ratingDAO = new RatingDAO();
@@ -112,12 +120,14 @@ class ratingController extends AbstractController
      */
     public function commentValidation($comment)
     {
-        $err = false;
-        if (strlen($comment) < 4 || strlen($comment) > 200) {
-            $err = true;
+        $paramsAndRules = [
+            $comment => 'lessThan:4|biggerThan:200'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            return true;
         }
 
-        return $err;
+        return false;
     }
 
     /**
@@ -127,12 +137,14 @@ class ratingController extends AbstractController
      */
     public function ratingValidation($rating)
     {
-        $err = false;
-        if (!is_numeric($rating) || !preg_match('/^[1-5]+$/', $rating)) {
-            $err = true;
+        $paramsAndRules = [
+            $rating => 'isNumeric'
+        ];
+        if (!$this->validator->validate($paramsAndRules) || !preg_match('/^[1-5]+$/', $rating)) {
+            return true;
         }
 
-        return $err;
+        return false;
     }
 
     /**
@@ -141,7 +153,7 @@ class ratingController extends AbstractController
     public function myRated()
     {
         $ratingDAO = new RatingDAO();
-        $myRatings = $ratingDAO->showMyRated($this->session->getSessionParam('logged_user_id'));
+        $myRatings = $ratingDAO->showMyRated($this->session->getSessionParam('loggedUserId'));
         include_once 'view/myRated.php';
     }
 

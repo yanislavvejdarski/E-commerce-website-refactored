@@ -20,18 +20,20 @@ class OrderController extends AbstractController
         $postParams = $this->request->postParams();
         $sessionParams = $this->session->getSessionParams();
         $orderedProducts = new CartDAO();
-        if (isset($postParams['order'])) {
-            $orderedProductsa = $orderedProducts->showCart($sessionParams['logged_user_id']);
+        $paramsAndRules = [
+            $postParams['order'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            $orderedProducts = $orderedProducts->showCart($sessionParams['loggedUserId']);
             $order = new OrderDAO();
             $order->finishOrder(
-                $orderedProductsa,
+                $orderedProducts,
                 $postParams['totalPrice'],
-                $sessionParams['logged_user_id']
+                $sessionParams['loggedUserId']
             );
             $cart = new CartController;
             $cart->show();
         }
-        $msg = 'Order received!';
     }
 
     /**
@@ -40,7 +42,7 @@ class OrderController extends AbstractController
     public function show()
     {
         $products = new OrderDAO();
-        $products = $products->showOrders($this->session->getSessionParam('logged_user_id'));
+        $products = $products->showOrders($this->session->getSessionParam('loggedUserId'));
         include_once 'view/orders.php';
     }
 }
