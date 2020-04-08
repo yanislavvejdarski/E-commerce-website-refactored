@@ -18,19 +18,22 @@ class CartController extends AbstractController
     {
         $getParams = $this->request->getParams();
         $sessionParams = $this->session->getSessionParams();
-        if (isset($getParams['product']) && is_numeric($getParams['product'])) {
+        $paramsAndRules = [
+            $getParams['product'] => 'isVariableSet|isNumeric'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
             $cartDAO = new CartDAO();
-            $productDAO = new ProductDAO();
-            $quantity = $productDAO->checkQuantity($getParams['product']);
             $check = $cartDAO->checkIfInCart(
                 $getParams['product'],
-                $sessionParams['logged_user_id']
+                $sessionParams['loggedUserId']
             );
+            $productDAO = new ProductDAO();
+            $quantity = $productDAO->checkQuantity($getParams['product']);
             if ($check) {
                 if ($check['quantity'] < $quantity['quantity'] && $quantity['quantity'] > 0) {
                     $cartDAO->updateQuantityOfProductInCart(
                         $getParams['product'],
-                        $sessionParams['logged_user_id']
+                        $sessionParams['loggedUserId']
                     );
                     $this->show();
                 } else {
@@ -40,7 +43,7 @@ class CartController extends AbstractController
             } elseif ($quantity['quantity'] > 0) {
                 $cartDAO->putInCart(
                     $getParams['product'],
-                    $sessionParams['logged_user_id']
+                    $sessionParams['loggedUserId']
                 );
                 $this->show();
             } else {
@@ -49,7 +52,6 @@ class CartController extends AbstractController
             }
         } else {
             $this->show();
-            include_once 'view/cart.php';
         }
     }
 
@@ -59,7 +61,7 @@ class CartController extends AbstractController
     public function show()
     {
         $cartDAO = new CartDAO();
-        $productsInCart = $cartDAO->showCart($this->session->getSessionParam('logged_user_id'));
+        $productsInCart = $cartDAO->showCart($this->session->getSessionParam('loggedUserId'));
         $totalprice = 0;
         include_once 'view/cart.php';
     }
@@ -70,8 +72,11 @@ class CartController extends AbstractController
     public function update()
     {
         $postParams = $this->request->postParams();
-        if (isset($postParams['updateQuantity']) && $postParams['quantity'] > 0 && $postParams['quantity'] < 50
-            && is_numeric($postParams['quantity']) && (round($postParams['quantity']) == $postParams['quantity'])) {
+        $paramsAndRules = [
+            $postParams['updateQuantity'] => 'isVariableSet',
+            $postParams['quantity'] => 'biggerThan:0|lessThan:50|isNumeric|roundToSelf'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
             $productDAO = new ProductDAO();
             $productQuantity = $productDAO->checkQuantity($postParams['productId']);
             if ($productQuantity['quantity'] >= $postParams['quantity']) {
@@ -79,7 +84,7 @@ class CartController extends AbstractController
                 $cartDAO->updateCartQuantity(
                     $postParams['productId'],
                     $postParams['quantity'],
-                    $this->session->getSessionParam('logged_user_id')
+                    $this->session->getSessionParam('loggedUserId')
                 );
                 $this->show();
             } else {
@@ -101,7 +106,7 @@ class CartController extends AbstractController
         $cartDAO = new CartDAO();
         $cartDAO->deleteProductFromCart(
             $getParams['product'],
-            $this->session->getSessionParam('logged_user_id')
+            $this->session->getSessionParam('loggedUserId')
         );
         $this->show();
     }
