@@ -51,12 +51,12 @@ $user = $userController->getUserById();
 
         <div class="form-group">
             <label for="exampleInputEmail1">First Name</label>
-            <input type="text" name="first_name" value="<?php echo $user->first_name ?>" class="form-control">
+            <input type="text" name="firstName" value="<?php echo $user->firstName ?>" class="form-control">
 
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input type="text" name="last_name" value="<?php echo $user->last_name ?>" class="form-control">
+            <input type="text" name="lastName" value="<?php echo $user->lastName ?>" class="form-control">
 
         </div>
         <div class="form-group">
@@ -66,7 +66,7 @@ $user = $userController->getUserById();
         </div>
         <div class="form-group">
             <label>Phone number</label>
-            +359 <input type="number" name="phone_number" value="<?php echo $user->phone_number ?>" class="form-control"
+            +359 <input type="number" name="phoneNumber" value="<?php echo $user->phoneNumber ?>" class="form-control"
                         placeholder="8**-***-***">
 
         </div>

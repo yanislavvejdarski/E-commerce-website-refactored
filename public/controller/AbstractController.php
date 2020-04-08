@@ -4,6 +4,7 @@ namespace controller;
 
 use helpers\Request;
 use helpers\Session;
+use helpers\Validator;
 
 abstract class AbstractController
 {
@@ -18,11 +19,17 @@ abstract class AbstractController
     protected $session;
 
     /**
+     * @var Validator
+     */
+    protected $validator;
+
+    /**
      * AbstractController constructor.
      */
     public function __construct()
     {
         $this->request = Request::getInstance();
         $this->session = Session::getInstance();
+        $this->validator = new Validator();
     }
 }

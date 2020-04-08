@@ -7,13 +7,13 @@ use PDO;
 class RatingDAO extends AbstractDAO
 {
     /**
-     * @param int $rating_id
+     * @param int $ratingId
      *
      * @return array
      */
-    public function getRatingById($rating_id)
+    public function getRatingById($ratingId)
     {
-        $params = ['ratingId' => $rating_id];
+        $params = ['ratingId' => $ratingId];
         $sql = '
             SELECT 
                 *
@@ -31,19 +31,19 @@ class RatingDAO extends AbstractDAO
 
     /**
      * @param int $userId
-     * @param int $product_id
+     * @param int $productId
      * @param int $rating
      * @param string $comment
      */
     public function addRating(
         $userId,
-        $product_id,
+        $productId,
         $rating,
         $comment
     ) {
         $params = [
             'userId' => $userId,
-            'productId' => $product_id,
+            'productId' => $productId,
             'rating' => $rating,
             'comment' => $comment
         ];
@@ -112,10 +112,10 @@ class RatingDAO extends AbstractDAO
         $params = ['userId' => $userId];
         $sql = '
             SELECT 
-                p.id AS product_id,
+                p.id AS productId,
                 p.name AS product_name,
                 p.image_url,
-                urp.id AS rating_id,
+                urp.id AS ratingId,
                 urp.stars,
                 urp.text
             FROM 
@@ -123,6 +123,8 @@ class RatingDAO extends AbstractDAO
                 JOIN products AS p ON (p.id = urp.product_id)
             WHERE
                 urp.user_id = :userId
+            ORDER BY 
+                urp.date_created DESC
         ';
 
         return $this->fetchAllObject(
@@ -141,8 +143,8 @@ class RatingDAO extends AbstractDAO
         $params = ['productId' => $productId];
         $sql = '
             SELECT 
-                round(avg(stars),2) AS avg_stars,
-                count(id) AS reviews_count 
+                round(avg(stars),2) AS avgStars,
+                count(id) AS reviewsCount 
             FROM 
                 user_rate_products 
             WHERE 
@@ -166,7 +168,7 @@ class RatingDAO extends AbstractDAO
         $sql = '
             SELECT 
                 stars,
-                count(stars) AS stars_count 
+                count(stars) AS starsCount 
             FROM 
                 user_rate_products 
             WHERE 
@@ -198,7 +200,7 @@ class RatingDAO extends AbstractDAO
                     u.first_name,
                      " ",
                     u.last_name
-                 ) AS full_name,
+                 ) AS fullName,
                  urp.stars,
                  urp.text,
                 cast(urp.date_created AS date) AS date 

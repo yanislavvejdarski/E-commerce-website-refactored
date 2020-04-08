@@ -27,7 +27,7 @@ namespace view;
             <div class="card">
                 <div class="card-body">
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
-                        <h3> <?= $_SESSION["logged_user_first_name"] . " " . $_SESSION["logged_user_last_name"] ?></h3>
+                        <h3> <?= $_SESSION["loggedUserFirstName"] . " " . $_SESSION["loggedUserLastName"] ?></h3>
                     </div>
                     <hr>
                     <div class="row" style="width: 100%; margin-top: 5px; margin-left: 0px; margin-right: 0px;">
@@ -68,11 +68,11 @@ namespace view;
                     About Me
                 </div>
                 <div class="card-body">
-                    <p class="card-text"> First Name: <?php echo $user->first_name ?> </p>
-                    <p class="card-text"> Last Name: <?php echo $user->last_name ?></p>
+                    <p class="card-text"> First Name: <?php echo $user->firstName ?> </p>
+                    <p class="card-text"> Last Name: <?php echo $user->lastName ?></p>
                     <p class="card-text"> Email: <?php echo $user->email; ?></p>
                     <p class="card-text"> Age: <?php echo $user->age ?></p>
-                    <p class="card-text"> Phone Number: <?php echo "+359" . $user->phone_number ?></p>
+                    <p class="card-text"> Phone Number: <?php echo "+359" . $user->phoneNumber ?></p>
                     <a href="/myAccount/editPage" class="btn btn-primary">Edit Profile</a>
                 </div>
             </div>
@@ -90,12 +90,12 @@ namespace view;
                                 <p class="card-text"><?php echo $address->street_name . ', ' . $address->city_name; ?></p>
                                 <div class="row">
                                     <form action='/editAddressPage' method="post" style="margin-left: 15px;">
-                                        <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
+                                        <input type='hidden' name='addressId' value="<?php echo $address->id; ?>">
                                         <input type="submit" class="btn btn-primary" name="address/edit" value="Edit">
                                     </form>
 
                                     <form action='/address/delete' method="post" style="margin-left: 15px;">
-                                        <input type='hidden' name='address_id' value="<?php echo $address->id; ?>">
+                                        <input type='hidden' name='addressId' value="<?php echo $address->id; ?>">
                                         <input type="submit" class="btn btn-primary" name="deleteAddress"
                                                value="Delete">
                                     </form>

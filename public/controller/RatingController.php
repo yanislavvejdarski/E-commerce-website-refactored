@@ -17,25 +17,31 @@ class ratingController extends AbstractController
     public function rate()
     {
         $msg = '';
-        if (!empty($this->request->postParam('save'))) {
-            if (empty($this->request->postParam('comment')) || empty($this->request->postParam('rating'))) {
-                $msg = 'All fields are required!';
-            } elseif ($this->commentValidation($this->request->postParam('comment'))) {
+        $postParams = $this->request->postParams();
+
+        $paramsAndRules = [
+            $postParams['save'] => 'isVariableSet|isEmpty',
+            $postParams['comment'] => 'isEmpty',
+            $postParams['rating'] => 'isEmpty',
+
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            if ($this->commentValidation($this->request->postParam('comment'))) {
                 $msg = 'Invalid comment!';
             } elseif ($this->ratingValidation($this->request->postParam('rating'))) {
                 $msg = 'Invalid rating!';
             }
             $productDAO = new ProductDAO();
-            if ($productDAO->findProduct($this->request->postParam('product_id'))) {
+            if ($productDAO->findProduct($this->request->postParam('productId'))) {
                 if ($msg == '') {
                     $ratingDAO = new RatingDAO();
                     $ratingDAO->addRating(
-                        $this->session->getSessionParam('logged_user_id'),
-                        $this->request->postParam('product_id'),
+                        $this->session->getSessionParam('loggedUserId'),
+                        $this->request->postParam('productId'),
                         $this->request->postParam('rating'),
                         $this->request->postParam('comment')
                     );
-                    header('Location: product/' . $this->request->postParam('product_id'));
+                    header('Location: product/' . $this->request->postParam('productId'));
                 } else {
                     throw new BadRequestException($msg);
                 }
@@ -53,22 +59,24 @@ class ratingController extends AbstractController
     {
         $msg = '';
         $postParams = $this->request->postParams();
-        if (!empty($postParams['saveChanges'])) {
-            if (empty($postParams['comment']) || empty($postParams['comment'])) {
-                $msg = 'All fields are required!';
-            } elseif ($this->commentValidation($postParams['comment'])) {
+        $paramsAndRules = [
+            $postParams['saveChanges'] => 'isEmpty',
+            $postParams['comment'] => 'isEmpty'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            if ($this->commentValidation($postParams['comment'])) {
                 $msg = 'Invalid comment!';
             } elseif ($this->ratingValidation($postParams['rating'])) {
                 $msg = 'Invalid rating!';
             }
             $ratingDAO = new RatingDAO();
-            $rating = $ratingDAO->getRatingById($postParams['rating_id']);
-            if ($rating->user_id !== $this->session->getSessionParam('logged_user_id')) {
+            $rating = $ratingDAO->getRatingById($postParams['ratingId']);
+            if ($rating->userId !== $this->session->getSessionParam('loggedUserId')) {
                 throw new NotAuthorizedException('Not authorized for this operation!');
             } elseif ($msg == '') {
                 $ratingDAO = new RatingDAO();
                 $ratingDAO->editRating(
-                    $postParams['rating_id'],
+                    $postParams['ratingId'],
                     $postParams['rating'],
                     $postParams['comment']
                 );
@@ -80,20 +88,20 @@ class ratingController extends AbstractController
     }
 
     /**
-     * @param int $product_id
+     * @param int $productId
      *
      * @return array
      */
-    public function showStars($product_id)
+    public function showStars($productId)
     {
         $ratingDAO = new RatingDAO();
-        $product_stars = $ratingDAO->getStarsCount($product_id);
+        $productStars = $ratingDAO->getStarsCount($productId);
         $starsCountArr = [];
         for ($i = 1; $i <= 5; $i++) {
             $isZero = true;
-            foreach ($product_stars as $product_star) {
-                if ($product_star['stars'] == $i) {
-                    $starsCountArr[$i] = $product_star['stars_count'];
+            foreach ($productStars as $productStar) {
+                if ($productStar['stars'] == $i) {
+                    $starsCountArr[$i] = $productStar['starsCount'];
                     $isZero = false;
                 }
             }
@@ -112,12 +120,14 @@ class ratingController extends AbstractController
      */
     public function commentValidation($comment)
     {
-        $err = false;
-        if (strlen($comment) < 4 || strlen($comment) > 200) {
-            $err = true;
+        $paramsAndRules = [
+            $comment => 'lessThan:4|biggerThan:200'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
+            return true;
         }
 
-        return $err;
+        return false;
     }
 
     /**
@@ -127,12 +137,14 @@ class ratingController extends AbstractController
      */
     public function ratingValidation($rating)
     {
-        $err = false;
-        if (!is_numeric($rating) || !preg_match('/^[1-5]+$/', $rating)) {
-            $err = true;
+        $paramsAndRules = [
+            $rating => 'isNumeric'
+        ];
+        if (!$this->validator->validate($paramsAndRules) || !preg_match('/^[1-5]+$/', $rating)) {
+            return true;
         }
 
-        return $err;
+        return false;
     }
 
     /**
@@ -141,7 +153,7 @@ class ratingController extends AbstractController
     public function myRated()
     {
         $ratingDAO = new RatingDAO();
-        $myRatings = $ratingDAO->showMyRated($this->session->getSessionParam('logged_user_id'));
+        $myRatings = $ratingDAO->showMyRated($this->session->getSessionParam('loggedUserId'));
         include_once 'view/myRated.php';
     }
 

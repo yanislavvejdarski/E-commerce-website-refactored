@@ -18,7 +18,7 @@ class TypeDAO extends AbstractDAO
             SELECT
                 id,
                 name,
-                categorie_id
+                categorie_id AS categorieId
             FROM 
                 types 
             WHERE
@@ -31,7 +31,7 @@ class TypeDAO extends AbstractDAO
         $type = new Type(
             $rows['id'],
             $rows['name'],
-            $rows['categorie_id']
+            $rows['categorieId']
         );
 
         return $type;
@@ -49,7 +49,7 @@ class TypeDAO extends AbstractDAO
             SELECT 
                 id,
                 name,
-                categorie_id 
+                categorie_id AS categorieId
             FROM 
                 types 
             WHERE
@@ -138,7 +138,9 @@ class TypeDAO extends AbstractDAO
     {
         $sql = '
             SELECT 
-                * 
+                id,
+                name,
+                categorie_id as categorieId 
             FROM 
                 emag.types
         ';

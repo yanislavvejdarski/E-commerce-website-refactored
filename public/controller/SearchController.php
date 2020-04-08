@@ -17,11 +17,13 @@ class SearchController extends AbstractController
     public function render()
     {
         $postParams = $this->request->postParams();
-        if (isset($postParams['searchProducts'])) {
+        $paramsAndRules = [
+            $postParams['searchProducts'] => 'isVariableSet'
+        ];
+        if ($this->validator->validate($paramsAndRules)) {
             $controller = new Search($postParams['search']);
             $controller->render();
             exit();
         }
     }
 }
-
