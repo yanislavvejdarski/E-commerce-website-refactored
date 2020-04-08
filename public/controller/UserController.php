@@ -223,7 +223,7 @@ class UserController extends AbstractController
                 $userDAO->update($user);
                 $msg = 'success';
             } else {
-                throw new BadRequestException('$msg');
+                throw new BadRequestException($msg);
             }
             include_once 'view/editProfile.php';
         }
@@ -346,7 +346,7 @@ class UserController extends AbstractController
         if (!$this->validator->validate($paramsAndRules) || !preg_match('/^[8][0-9]{8}$/', $phoneNumber)) {
             return true;
         }
-        return true;
+        return false;
     }
 
     /**
