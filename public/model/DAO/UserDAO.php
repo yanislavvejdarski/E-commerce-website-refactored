@@ -2,6 +2,8 @@
 
 namespace model\DAO;
 
+use model\User;
+
 class UserDAO extends AbstractDAO
 {
     /**
@@ -37,7 +39,15 @@ class UserDAO extends AbstractDAO
         $params = ['id' => $id];
         $sql = '
             SELECT
-                *
+                id,
+                email,
+                first_name as firstName,
+                password,
+                last_name as lastName,
+                age,
+                phone_number as phoneNumber,
+                role,
+                subscription
             FROM 
                 users 
             WHERE

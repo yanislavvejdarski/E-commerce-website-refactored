@@ -18,7 +18,7 @@ use model\DAO\ProductDAO;
             <?php
             foreach ($productsInCart as $product) {
                 $productDAO = new ProductDAO();
-                $productInfo = $productDAO->findProduct($product["product_id"]);
+                $productInfo = $productDAO->findProduct($product["productId"]);
                 $totalprice += $product["quantity"] * $productInfo->price;
                 ?>
                 <div class="card mb-3" style="width: 100%;">
@@ -35,7 +35,7 @@ use model\DAO\ProductDAO;
                                 <h5 class="card-title"><?= $productInfo->name ?></h5>
                                 <div class="row">
                                     <form action="/cart/update/" method="post">
-                                        <input type="hidden" value="<?= $product["product_id"] ?>" name="productId">
+                                        <input type="hidden" value="<?= $product["productId"] ?>" name="productId">
                                         <input type="number" value="<?= $product["quantity"] ?>" name="quantity" min="1"
                                                class="form-control" placeholder="Quantity:"
                                                aria-label="Input group example" style="width: auto; margin-left: 5px;">
@@ -45,11 +45,11 @@ use model\DAO\ProductDAO;
                                 </div>
                                 <h5 class="card-title"><?= $productInfo->price ?> Euro</h5>
                                 <div class="row">
-                                    <a class="btn btn-primary" href="/cart/remove/product/<?= $product["product_id"] ?>"
+                                    <a class="btn btn-primary" href="/cart/remove/product/<?= $product["productId"] ?>"
                                        role="button" style="margin-left: 5px;">Remove From Cart</a>
                                     <?php
                                     $favoriteDAO = new FavouriteDAO();
-                                    if ($favoriteDAO->checkIfInFavourites($productInfo->id, $_SESSION["logged_user_id"])) { ?>
+                                    if ($favoriteDAO->checkIfInFavourites($productInfo->id, $_SESSION["loggedUserId"])) { ?>
                                         <a class="btn btn-primary"
                                            href=/favourites/remove/product/<?= $productInfo->id ?>
  role="button" style="margin-left: 5px;">Remove From Favourite</a>
@@ -86,7 +86,7 @@ use model\DAO\ProductDAO;
                     </div>
                     <?php
                     $addressDAO = new AddressDAO();
-                    $myAddresses = $addressDAO->getAll($_SESSION["logged_user_id"]);
+                    $myAddresses = $addressDAO->getAll($_SESSION["loggedUserId"]);
 
                     $addressController = new AddressController();
                     if ($addressController->checkUserAddress()) {

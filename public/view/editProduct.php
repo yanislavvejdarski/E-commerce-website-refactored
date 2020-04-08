@@ -19,7 +19,7 @@ $product = $productController->getProductById($productId);
 $types = $productController->getTypes();
 
 $isInPromotion = false;
-if ($product["old_price"] != NULL) {
+if ($product["oldPrice"] != NULL) {
     $isInPromotion = true;
     echo "In Promotion!";
 } ?> <br>
@@ -30,15 +30,15 @@ if ($product["old_price"] != NULL) {
         <td><?= $product["name"] ?></td>
     </tr>
     <tr>
-        <td><img src="<?= $product["image_url"] ?>" width="150"></td>
+        <td><img src="<?= "../".$product["imageUrl"] ?>" width="150"></td>
     </tr>
     <tr>
         <td>Producer:</td>
-        <td><?= $product["producer_name"] ?></td>
+        <td><?= $product["producerName"] ?></td>
     </tr>
     <tr>
         <td>Type:</td>
-        <td><?= $product["type_name"] ?></td>
+        <td><?= $product["typeName"] ?></td>
     </tr>
     <tr>
         <td>Quantity:</td>
@@ -49,7 +49,7 @@ if ($product["old_price"] != NULL) {
         ?>
         <tr>
             <td>Old Price:</td>
-            <td><?= $product["old_price"] ?> EURO</td>
+            <td><?= $product["oldPrice"] ?> EURO</td>
         </tr>
         <tr>
             <td>New Price:</td>
@@ -70,20 +70,20 @@ if ($product["old_price"] != NULL) {
 <hr>
 
 <h3>Edit this product:</h3>
-<form action="admin/editProduct" method="post" enctype="multipart/form-data">
+<form action="/admin/editProduct" method="post" enctype="multipart/form-data">
     <table>
         <tr>
             <td>Name</td>
             <td><input type="text" name="name" value="<?= $product["name"] ?>" required></td>
-            <td><input type="hidden" name="product_id" value="<?= $productId ?>"></td>
+            <td><input type="hidden" name="productId" value="<?= $productId ?>"></td>
 
 
         </tr>
         <tr>
             <td>Producer</td>
             <td>
-                <select name="producer_id" required>
-                    <option value="<?= $product["producer_id"] ?>"><?= $product["producer_name"] ?></option>
+                <select name="producerId" required>
+                    <option value="<?= $product["producerId"] ?>"><?= $product["producerName"] ?></option>
                     <?php foreach ($producers as $producer) {
                         echo "<option value='$producer->id'>$producer->name</option>";
                     } ?>
@@ -93,8 +93,8 @@ if ($product["old_price"] != NULL) {
         <tr>
             <td>Type</td>
             <td>
-                <select name="type_id" required>
-                    <option value="<?= $product["type_id"] ?>"><?= $product["type_name"] ?></option>
+                <select name="typeId" required>
+                    <option value="<?= $product["typeId"] ?>"><?= $product["typeName"] ?></option>
                     <?php foreach ($types as $type) {
                         echo "<option value='$type->id'>$type->name</option>";
 
@@ -121,7 +121,7 @@ if ($product["old_price"] != NULL) {
         <tr>
             <td>Upload image</td>
             <td><input type="file" name="file"></td>
-        <tr><input type="hidden" name="old_image" value="<?= $product["image_url"] ?>"></tr>
+        <tr><input type="hidden" name="oldImage" value="<?= $product["imageUrl"] ?>"></tr>
         </tr>
 
 
@@ -132,7 +132,7 @@ if ($product["old_price"] != NULL) {
 </form>
 
 <form action="/admin/removeDiscount" method="post">
-    <input type="hidden" name="product_id" value="<?= $productId ?>">
-    <input type="hidden" name="product_old_price" value="<?= $product["old_price"] ?>">
+    <input type="hidden" name="productId" value="<?= $productId ?>">
+    <input type="hidden" name="productOldPrice" value="<?= $product["oldPrice"] ?>">
     <input type="submit" name="remove" value="Remove Promotion">
 </form>

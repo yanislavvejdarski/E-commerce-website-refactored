@@ -11,7 +11,7 @@ class Authenticator
      */
     public static function authenticateLoggedUser()
     {
-        $loggedUserId = Session::getInstance()->getSessionParam("logged_user_id");
+        $loggedUserId = Session::getInstance()->getSessionParam("loggedUserId");
         if (!isset($loggedUserId)) {
             header("Location: /loginPage");
             die();
@@ -23,7 +23,7 @@ class Authenticator
      */
     public static function authenticateAdmin()
     {
-        $loggedRole = Session::getInstance()->getSessionParam("logged_user_role");
+        $loggedRole = Session::getInstance()->getSessionParam("loggedUserRole");
         if ($loggedRole != "admin") {
             header("Location: /home");
             die();

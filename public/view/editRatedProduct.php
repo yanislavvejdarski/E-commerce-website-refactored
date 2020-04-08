@@ -22,7 +22,7 @@ namespace view;
         <tr>
             <td><img src="<?= $_POST['image_url'] ?>" width="150"></td>
         </tr>
-        <tr><input type="hidden" name="rating_id" value="<?= $_POST['rating_id'] ?>"></tr>
+        <tr><input type="hidden" name="ratingId" value="<?= $_POST['ratingId'] ?>"></tr>
         <tr>
             <td>Give your vote from 1 to 5 for this product</td>
             <td><input type="number" name="rating" min="1" max="5" value="<?= $_POST['stars'] ?>"></td>

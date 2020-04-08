@@ -18,7 +18,7 @@ class AddressDAO extends AbstractDAO
             SELECT 
                 a.id,
                 a.city_id,
-                a.user_id,
+                a.user_id AS userId,
                 c.NAME AS city_name,
                 a.street_name
             FROM   

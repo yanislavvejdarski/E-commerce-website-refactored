@@ -9,7 +9,7 @@ $routes->route('/home', 'MainController@render');
 // Home Page
 $routes->route('', 'MainController@render');
 // Single Product Page
-$routes->route('/product/{:id}', 'ProductController@show');
+$routes->route('/product/{:id}', 'ProductController@showProduct');
 // Cart Page
 $routes->route('/cart', 'CartController@show','user');
 // Update Cart
@@ -69,9 +69,9 @@ $routes->route('/password/new', 'UserController@sendNewPassword');
 // Search Bar
 $routes->route('/render', 'SearchController@render');
 // Show Types From Categorie Id
-$routes->route('/ctgId/{:id}', 'ProductController@show');
+$routes->route('/ctgId/{:id}', 'ProductController@showCategory');
 // Show Products From Type Id
-$routes->route('/typeId/{:id}', 'ProductController@show');
+$routes->route('/typeId/{:id}', 'ProductController@showType');
 // Make a Order
 $routes->route('/order', 'OrderController@order');
 // VueJS Product Filtration

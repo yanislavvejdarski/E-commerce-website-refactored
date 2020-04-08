@@ -96,7 +96,7 @@ if (isset($filters) && isset($products)) {
                                         <p class="btn btn-danger btn-block">{{p.price}} Euro</p>
                                     </div>
                                     <div class="col">
-                                        <a :href="'/cart/add/product' + p.id" class="btn btn-success btn-block">Add to
+                                        <a :href="'/cart/add/product/' + p.id" class="btn btn-success btn-block">Add to
                                             cart</a>
                                     </div>
                                 </div>

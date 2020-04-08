@@ -48,14 +48,14 @@ class ProductDAO extends AbstractDAO
         $sql = '
             SELECT
                 p.name,
-                p.producer_id,
-                pr.name AS producer_name,
+                p.producer_id as producerId,
+                pr.name AS producerName,
                 p.price,
-                p.old_price,
-                p.type_id,
-                t.name AS type_name,
+                p.old_price AS oldPrice,
+                p.type_id AS typeId,
+                t.name AS typeName,
                 p.quantity,
-                p.image_url
+                p.image_url AS imageUrl
             FROM 
                 products AS p 
                 JOIN producers AS pr ON (p.producer_id=pr.id)
@@ -141,13 +141,13 @@ class ProductDAO extends AbstractDAO
     {
         $params = [
             'name' => $product['name'],
-            'producerId' => $product['producer_id'],
+            'producerId' => $product['producerId'],
             'price' => $product['price'],
-            'oldPrice' => $product['old_price'],
-            'typeId' => $product['type_id'],
+            'oldPrice' => $product['oldPrice'],
+            'typeId' => $product['typeId'],
             'quantity' => $product['quantity'],
-            'imageUrl' => $product['image_url'],
-            'productId' => $product['product_id'],
+            'imageUrl' => $product['imageUrl'],
+            'productId' => $product['productId'],
         ];
         $sql = '
             UPDATE
@@ -280,11 +280,11 @@ class ProductDAO extends AbstractDAO
             SELECT 
                 id,
                 name,
-                producer_id,
+                producer_id AS producerId,
                 price,
-                type_id,
+                type_id AS typeId,
                 quantity,
-                image_url 
+                image_url AS imageUrl
             FROM
                 products 
             WHERE
@@ -297,14 +297,15 @@ class ProductDAO extends AbstractDAO
         $product = new Product(
             $rows['id'],
             $rows['name'],
-            $rows['producer_id'],
+            $rows['producerId'],
             $rows['price'],
-            $rows['type_id'],
+            $rows['typeId'],
             $rows['quantity'],
-            $rows['image_url']
+            $rows['imageUrl']
         );
 
         return $product;
+
     }
 
     /**
@@ -316,7 +317,7 @@ class ProductDAO extends AbstractDAO
         {
             $params = [
                 'quantity' => $product['quantity'],
-                'productId' => $product['product_id']
+                'productId' => $product['productId']
             ];
             $sql = '
                 UPDATE
@@ -387,16 +388,16 @@ class ProductDAO extends AbstractDAO
     }
 
     /**
-     * @param int $product_id
+     * @param int $productId
      * @param float $price
      */
     public function removePromotion(
-        $product_id,
+        $productId,
         $price
     ) {
         $params = [
             'price' => $price,
-            'productId' => $product_id
+            'productId' => $productId
         ];
         $sql = '
             UPDATE 
@@ -465,7 +466,7 @@ class ProductDAO extends AbstractDAO
                 p.name,
                 p.producer_id,
                 p.price,
-                p.old_price,
+                p.old_price AS oldPrice,
                 p.image_url,
                 count(ohp.product_id) as ordered_count 
             FROM 

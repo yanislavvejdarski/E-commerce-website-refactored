@@ -45,7 +45,7 @@ namespace view;
                     <td>
                         <form action="/editRatedPage" method="post">
                             <input type="submit" name="editRating" value="Edit">
-                            <input type="hidden" name="rating_id" value="<?= $myRating->rating_id ?>">
+                            <input type="hidden" name="ratingId" value="<?= $myRating->ratingId ?>">
                             <input type="hidden" name="image_url" value="<?= $myRating->image_url ?>">
                             <input type="hidden" name="product_name" value="<?= $myRating->product_name ?>">
                             <input type="hidden" name="stars" value="<?= $myRating->stars ?>">

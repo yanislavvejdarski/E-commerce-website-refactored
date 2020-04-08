@@ -15,7 +15,7 @@ use model\DAO\ProductDAO;
                 <?php
                 foreach ($favourites as $favourite) {
                     $productDAO = new ProductDAO();
-                    $product = $productDAO->findProduct($favourite["product_id"])
+                    $product = $productDAO->findProduct($favourite["productId"])
                     ?>
 
                     <div class="col-3">

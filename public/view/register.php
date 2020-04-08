@@ -33,12 +33,12 @@ if (isset($msg) && $msg != "") {
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">First Name</label>
-            <input type="text" name="first_name" class="form-control" required>
+            <input type="text" name="firstName" class="form-control" required>
 
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input type="text" name="last_name" class="form-control" required>
+            <input type="text" name="lastName" class="form-control" required>
 
         </div>
         <div class="form-group">
@@ -48,7 +48,7 @@ if (isset($msg) && $msg != "") {
         </div>
         <div class="form-group">
             <label>Phone number</label>
-            +359<input type="number" name="phone_number" class="form-control" placeholder="8## ### ###" required>
+            +359<input type="number" name="phoneNumber" class="form-control" placeholder="8## ### ###" required>
 
         </div>
         <div class="form-group">
