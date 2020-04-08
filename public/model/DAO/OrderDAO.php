@@ -18,7 +18,7 @@ class OrderDAO extends AbstractDAO
         {
             $params = [
                 'orderId' => $orderId,
-                'productId' => $product['product_id'],
+                'productId' => $product['productId'],
                 'quantity' => $product['quantity'],
                 'price' => $product['price']
             ];
@@ -98,7 +98,7 @@ class OrderDAO extends AbstractDAO
             SELECT 
                 o.id,
                 o.address_id,
-                op.product_id,
+                op.product_id AS productId,
                 op.quantity,
                 o.price,
                 op.price as productPrice,
@@ -133,7 +133,7 @@ class OrderDAO extends AbstractDAO
     ) {
         try {
             $this->beginTransaction();
-            $id = $this->addOrder($_POST['address'], $totalPrice, $_SESSION['logged_user_id']);
+            $id = $this->addOrder($_POST['address'], $totalPrice, $_SESSION['loggedUserId']);
             $orderDao = new OrderDAO();
             $orderDao->addOrderProducts(
                 $id,

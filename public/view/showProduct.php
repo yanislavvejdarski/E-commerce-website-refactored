@@ -44,19 +44,19 @@ if (isset($_GET["v"])) {
             <div class="row">
                 <div class="col">
                     <div class="row">
-                        <?= $review->reviews_count ?> reviews
+                        <?= $review->reviewsCount ?> reviews
                     </div>
 
                     <div class="row">
-                        <?= $status["is_in_stock"] ?>
+                        <?= $status["isInStock"] ?>
                     </div>
                     <div class="row">
                         <table>
-                            <?php if ($status["in_promotion"]) {
+                            <?php if ($status["inPromotion"]) {
                                 ?>
                                 <tr>
                                     <td>Old Price:</td>
-                                    <td><?= $status["old_price"] ?> EURO</td>
+                                    <td><?= $status["oldPrice"] ?> EURO</td>
                                 </tr>
                                 <tr>
                                     <td>New Price:</td>
@@ -78,17 +78,17 @@ if (isset($_GET["v"])) {
                         </table>
                     </div>
                     <div class="row">
-                        <?php if (isset($_SESSION["logged_user_role"]) && $_SESSION["logged_user_role"] == "admin") { ?>
+                        <?php if (isset($_SESSION["loggedUserRole"]) && $_SESSION["loggedUserRole"] == "admin") { ?>
 
                             <form action="/admin/editProductPage" method="post">
-                                <input type="hidden" name="product_id" value="<?= $this->id ?>">
+                                <input type="hidden" name="productId" value="<?= $this->id ?>">
                                 <input type="submit" name="editProduct" value="Edit this product">
                             </form>
 
                         <?php } ?>
                     </div>
                     <div class="row">
-                        <?php if (isset($_SESSION["logged_user_role"])) {
+                        <?php if (isset($_SESSION["loggedUserRole"])) {
                             ?>
 
                             <a href="/cart/add/product/<?= $this->id ?>" class="btn btn-primary btn-lg btn-block">Add To
@@ -96,7 +96,7 @@ if (isset($_GET["v"])) {
 
                             <?php
                             $favouriteDAO = new FavouriteDAO;
-                            $checker = $favouriteDAO->checkIfInFavourites($this->id, $_SESSION["logged_user_id"]);
+                            $checker = $favouriteDAO->checkIfInFavourites($this->id, $_SESSION["loggedUserId"]);
 
                             ?>
 
@@ -164,7 +164,7 @@ if (isset($_GET["v"])) {
     <div class="row">
         <div class="col">
             <div class="row">
-                <h2>Average grade: <?= $review->avg_stars ?></h2>
+                <h2>Average grade: <?= $review->avgStars ?></h2>
             </div>
             <div class="row">
                 <div class="col">
@@ -196,7 +196,7 @@ if (isset($_GET["v"])) {
 
             <div class="col">
                 <div class="row">
-                    <h3><?= $comment->full_name ?></h3>
+                    <h3><?= $comment->fullName ?></h3>
                 </div>
                 <div class="row">
                     <h3><?= $comment->date ?></h3>

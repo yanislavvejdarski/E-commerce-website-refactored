@@ -16,7 +16,7 @@ class FavouriteDAO extends AbstractDAO
         $params = ['userId' => $userId];
         $sql = '
             SELECT 
-                product_id 
+                product_id AS productId
             FROM 
                 user_favourite_products 
             WHERE 
@@ -100,7 +100,7 @@ class FavouriteDAO extends AbstractDAO
         ];
         $sql = '
             SELECT 
-                product_id 
+                product_id AS productId
             FROM 
                 user_favourite_products 
             WHERE 

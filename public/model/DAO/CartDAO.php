@@ -22,8 +22,8 @@ class CartDAO extends AbstractDAO
         ];
         $sql = '
             SELECT 
-                user_id,
-                product_id,
+                user_id AS userId,
+                product_id AS productId,
                 quantity 
             FROM 
                 cart 
@@ -107,7 +107,7 @@ class CartDAO extends AbstractDAO
         $params = ['userId' => $id];
         $sql = '
             SELECT 
-                c.product_id,
+                c.product_id AS productId,
                 c.quantity,
                 price * c.quantity AS price 
             FROM 

@@ -26,7 +26,7 @@ $types = $productController->getTypes();
     if (isset($msg) && $msg != "") {
         echo $msg;
     } ?> <br>
-    <form action="admin/addProduct" method="post" enctype="multipart/form-data">
+    <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td>Name</td>
@@ -34,7 +34,7 @@ $types = $productController->getTypes();
             </tr>
             <tr>
                 <td>Producer</td>
-                <td><select name="producer_id" required>
+                <td><select name="producerId" required>
                         <option value="">Select producer</option>
                         <?php foreach ($producers as $producer) {
                             echo "<option value='$producer->id'>$producer->name</option>";
@@ -53,7 +53,7 @@ $types = $productController->getTypes();
 
             <tr>
                 <td>Type</td>
-                <td><select name="type_id" required>
+                <td><select name="typeId" required>
                         <option value="">Select product type</option>
                         <?php foreach ($types as $type) {
                             echo "<option value='$type->id'>$type->name</option>";

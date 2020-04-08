@@ -30,7 +30,7 @@ $types = $typeDAO->getTypes();
                             <ul class='dropdown-menu'>
                                 <?php
                                 foreach ($types as $type) {
-                                    if ($type->categorie_id == $category->id) {
+                                    if ($type->categorieId == $category->id) {
                                         ?>
                                         <a class='dropdown-item' href='/typeId/<?= $type->id ?>'><?= $type->name ?></a>
                                         <?php
@@ -64,9 +64,9 @@ $types = $typeDAO->getTypes();
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <?php if (isset($_SESSION["logged_user_id"])) {
+                <?php if (isset($_SESSION["loggedUserId"])) {
                     ?>
-                    <p>Hello,<?= $_SESSION["logged_user_first_name"] . " " . $_SESSION["logged_user_last_name"] ?> </p>
+                    <p>Hello,<?= $_SESSION["loggedUserFirstName"] . " " . $_SESSION["loggedUserLastName"] ?> </p>
                     <a class="dropdown-item" href="/myAccount">My Account</a>
                     <a class="dropdown-item" href="/orders">My Orders</a>
                     <a class="dropdown-item" href="/address/new">Add Address</a>
@@ -88,7 +88,7 @@ $types = $typeDAO->getTypes();
         </div>
         <?php
 
-        if (isset($_SESSION["logged_user_role"]) && $_SESSION["logged_user_role"] == "admin") {
+        if (isset($_SESSION["loggedUserRole"]) && $_SESSION["loggedUserRole"] == "admin") {
             ?>
             <a href="/admin/addProductPage">
                 <button>Add New Product</button>
