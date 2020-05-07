@@ -1,6 +1,3 @@
-## IT talents Final Project - Eccomerce Store
-
-
 ##### User Functionality
 - Login , Register , Reset Password
 - Edit Profile
